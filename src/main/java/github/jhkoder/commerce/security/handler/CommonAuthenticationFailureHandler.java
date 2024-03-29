@@ -1,7 +1,6 @@
 package github.jhkoder.commerce.security.handler;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import github.jhkoder.commerce.config.exception.ErrorResponse;
 import github.jhkoder.commerce.security.handler.response.SecurityHandlerErrorResponse;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
