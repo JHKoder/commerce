@@ -1,7 +1,7 @@
 package github.jhkoder.commerce.security.filter;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import github.jhkoder.commerce.config.exception.AuthenticationCustomException;
+import github.jhkoder.commerce.exception.AuthenticationCustomException;
 import github.jhkoder.commerce.security.filter.request.LoginRequest;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -15,7 +15,7 @@ import org.springframework.security.web.authentication.AuthenticationSuccessHand
 
 import java.io.IOException;
 
-import static github.jhkoder.commerce.config.exception.ErrorCode.SECURITY_AUTHENTICATION_METHOD_NOT_SUPPORTED;
+import static github.jhkoder.commerce.exception.ErrorCode.SECURITY_AUTHENTICATION_METHOD_NOT_SUPPORTED;
 
 public class JwtTokenIssueFilter extends AbstractAuthenticationProcessingFilter {
     private final ObjectMapper objectMapper;

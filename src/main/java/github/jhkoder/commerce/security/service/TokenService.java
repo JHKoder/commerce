@@ -1,6 +1,5 @@
 package github.jhkoder.commerce.security.service;
 
-import github.jhkoder.commerce.config.exception.ApiException;
 import github.jhkoder.commerce.security.exception.JwtExpiredTokenException;
 import github.jhkoder.commerce.security.service.response.TokenParserResponse;
 import github.jhkoder.commerce.user.domain.Role;
