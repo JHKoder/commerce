@@ -26,10 +26,9 @@ public class JasyptConfig {
         config.setPoolSize("1");
         config.setAlgorithm("PBEWithMD5AndDES");
         config.setStringOutputType("base64");
-        config.setKeyObtentionIterations("1000"); //해시 암호화 하는 횟수
+        config.setKeyObtentionIterations("1000");
         config.setSaltGeneratorClassName("org.jasypt.salt.RandomSaltGenerator");
         encryptor.setConfig(config);
         return encryptor;
     }
-
 }
