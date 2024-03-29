@@ -12,10 +12,10 @@ public class Delivery  extends BaseEntity {
     private Long id;
 
     @Column(name = "shipping", nullable = false,length = 100)
-    private double shipping; // 배송료
+    private int shipping; // 배송료
 
-    @Column(name = "delivery_grade", nullable = false)
-    private boolean deliveryGrade; // 차등배송비 여부
+    @Column(name = "delivery_grade", nullable = false,length = 1)
+    private String deliveryGrade; // 차등배송비 여부
 
     @Column(name = "delivery_detail",length = 100)
     private String deliveryDetail; // 차등 배송비 내용

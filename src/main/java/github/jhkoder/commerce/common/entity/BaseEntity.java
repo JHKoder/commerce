@@ -1,6 +1,7 @@
 package github.jhkoder.commerce.common.entity;
 
 
+import jakarta.persistence.Column;
 import jakarta.persistence.EntityListeners;
 import jakarta.persistence.MappedSuperclass;
 import lombok.AccessLevel;
@@ -17,8 +18,10 @@ import java.time.LocalDateTime;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class BaseEntity {
 
+    @Column(name = "create_time")
     @CreatedDate
-    private LocalDateTime createdDate;
+    private LocalDateTime createTime;
+    @Column(name = "update_time")
     @LastModifiedDate
-    private LocalDateTime lastModifiedDate;
+    private LocalDateTime updateTime;
 }
