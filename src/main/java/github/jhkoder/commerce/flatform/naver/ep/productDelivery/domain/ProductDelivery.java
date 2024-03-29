@@ -8,17 +8,16 @@ import jakarta.persistence.*;
 @Table(name = "product_delivery")
 public class ProductDelivery {
 
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private Long id;
 
-    @ManyToOne
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "product_id", nullable = false)
     private Product product;
 
-    @ManyToOne
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "delivery_id", nullable = false)
     private Delivery delivery;
 }
