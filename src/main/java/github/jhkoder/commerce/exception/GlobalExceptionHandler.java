@@ -1,4 +1,4 @@
-package github.jhkoder.commerce.config.exception;
+package github.jhkoder.commerce.exception;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;

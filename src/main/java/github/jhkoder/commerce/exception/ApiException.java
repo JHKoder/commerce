@@ -1,4 +1,4 @@
-package github.jhkoder.commerce.config.exception;
+package github.jhkoder.commerce.exception;
 
 
 
