@@ -18,7 +18,7 @@ public class ErrorResponse {
     private String code;
     private List<FieldError> errors;
 
-    private ErrorResponse(ErrorCode code) {
+    public ErrorResponse(ErrorCode code) {
         this.status = code.getStatus();
         this.message = code.getMessage();
     }
