@@ -3,10 +3,10 @@ package github.jhkoder.commerce.image.repository;
 import com.jcraft.jsch.ChannelSftp;
 import com.jcraft.jsch.SftpException;
 import github.jhkoder.commerce.exception.ErrorCode;
+import github.jhkoder.commerce.image.adapter.JschOutBoundAdapter;
 import github.jhkoder.commerce.image.exception.ImageException;
 import github.jhkoder.commerce.image.repository.request.ImagePathRequest;
 import github.jhkoder.commerce.image.repository.request.ImageRequest;
-import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 
@@ -16,12 +16,16 @@ import java.util.List;
 import java.util.Vector;
 
 @Configuration
-@RequiredArgsConstructor
 public class ImageJschRepository implements ImageRepository {
     private final ChannelSftp channelSftp;
+    private final String folderPath;
 
-    @Value("${cloud.image-repository.folder-path}")
-    private String folderPath;
+    public ImageJschRepository(JschOutBoundAdapter adapter,
+                               @Value("${cloud.image-repository.folder-path}")String folderPath) {
+        this.channelSftp = adapter.getChannelSftp();
+        this.folderPath = folderPath;
+    }
+
 
     @Override
     public boolean upload(ImageRequest imageRequest, ImagePathRequest pathRequest) throws IOException {
