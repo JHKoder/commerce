@@ -13,10 +13,18 @@ jwt:
     issuer: "jhkoder"
 
 spring:
+  devtools:
+    livereload:
+      enabled: true
+  thymeleaf:
+    prefix: classpath:/templates/
+    cache: false
+# thymeleaf cache 실운영시 true
+
   output:
     ansi.enabled: always
   datasource:
-    url: jdbc:oracle:thin:@commerce_high?TNS_ADMIN=C:\\Users\\Wallet_commerce
+    url: ENC(hDN6pZ+1KfaC9m91mpMBEmJXJp2QL5olPv9pZ8CVrCqWGV13YIfeAG7ih3uOJ8ObwzYJG0O4CzKkFF+czDl++yRIuhkpksNY/b1QgqR3wm4=)
     username: admin
     password: ENC(337YBU7IcDGvqzAIVHiTdG3DYmU1vKCz)
     driver-class-name: oracle.jdbc.OracleDriver
@@ -28,10 +36,13 @@ spring:
       hibernate:
         show_sql: true
         format_sql: true
-
 logging:
   level:
     org.hibernate.type.descriptor.sql: trace
-    org:
-      springframework:
-        security: DEBUG
+
+cloud:
+  image-repository:
+    host: ENC(0NPhRpQb31rBd4E7T8AeE1SywEmUUjMd)
+    username: ENC(krC61j79sImwc1t11M1Rjg==)
+    ppk-path: ENC(3lOCzODtJ0qGt14S1CxfAzC0qwE2Iwr2asnO+4RbMSikjZ7echSdZg==)
+    folder-path: ENC(Az3HmKiT8LbB/mj08Ec4xEGadbkGnbOO)
