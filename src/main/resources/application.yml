@@ -19,13 +19,11 @@ spring:
   thymeleaf:
     prefix: classpath:/templates/
     cache: false
-# thymeleaf cache 실운영시 true
-
   output:
     ansi.enabled: always
   datasource:
     url: ENC(hDN6pZ+1KfaC9m91mpMBEmJXJp2QL5olPv9pZ8CVrCqWGV13YIfeAG7ih3uOJ8ObwzYJG0O4CzKkFF+czDl++yRIuhkpksNY/b1QgqR3wm4=)
-    username: admin
+    username: ENC(tDIsfFk29dW2FPV1YRU7jQ==)
     password: ENC(337YBU7IcDGvqzAIVHiTdG3DYmU1vKCz)
     driver-class-name: oracle.jdbc.OracleDriver
   jpa:
@@ -36,6 +34,17 @@ spring:
       hibernate:
         show_sql: true
         format_sql: true
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: ENC(j7z7KrhuiBMRFQZBtmcSjp/Vmr2A48pVc3U2VWJ8Jr4=)
+    password: ENC(tfrWr6m2T+j1gpJryewo5ymJ/Sve+p2kIew0NZS5AH0=)
+    transport:
+      protocol: smtp
+    smtp:
+      auth: true
+      starttls:
+        enable: true
 logging:
   level:
     org.hibernate.type.descriptor.sql: trace
@@ -46,3 +55,4 @@ cloud:
     username: ENC(krC61j79sImwc1t11M1Rjg==)
     ppk-path: ENC(3lOCzODtJ0qGt14S1CxfAzC0qwE2Iwr2asnO+4RbMSikjZ7echSdZg==)
     folder-path: ENC(Az3HmKiT8LbB/mj08Ec4xEGadbkGnbOO)
+
