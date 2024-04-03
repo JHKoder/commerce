@@ -46,17 +46,69 @@
 ### DefaultSftpSessionFactory 사용하여 ssh 연결시 개인 키 오류  
 - 에러 : 'PuTTY-User-Key-File-3: ssh-rsa': Bad format (no key data delimiter): ssh-rsa
 -  ssh-key-2024-03-31': Bad format (no key data delimiter): ssh-key-2024-03-31 .. 등등 
+rsa sha2 를 지원하는 Jsch 사용하여 해결 
+- ###### [JCraft Jsch에서 Apache MINA로 마이그레이션]
 
 
-참고 자료
-- https://github.com/spring-projects/spring-integration/blob/627cde2050da92f41767243c64be6d815d6b417f/spring-integration-sftp/src/test/java/org/springframework/integration/sftp/session/SftpServerTests.java#L117
-- https://github.com/spring-projects/spring-integration/issues/8693
-  - JCraft Jsch에서 Apache MINA로 마이그레이션
+### querydsl spring boot version 셋팅 변화 
+[Spring boot 3.2 JPA, querydsl 5.0.0 ,gradle 8]
 
+공식 설정에 대한 참고 내용
+
+특징 
+- javax -> jakarta 사용으로 변함 
+  - apt-maven-plugin을 완전히 제거
+  - outputDirectory를 target/generated-sources/annotations로 설정합니다. 이렇게 하면 Java 컴파일러가 Q-클래스를 해당 디렉토리에 생성하게 됩니다.
+  - outputDirectory를 오버라이드하지 않습니다. 이렇게 하면 기본 설정값이 사용되어 Java 컴파일러가 Q-클래스를 적절한 위치에 생성합니다.
+
+##### before 2.x
+```groovy
+dependencies {
+    //querydsl
+    implementation "com.querydsl:querydsl-jpa:${queryDslVersion}"
+    implementation "com.querydsl:querydsl-apt:${queryDslVersion}"
+}
+def querydslDir = "$buildDir/generated/querydsl" 
+querydsl {
+	jpa = true 
+	querydslSourcesDir = querydslDir
+}
+
+sourceSets {
+	main.java.srcDir querydslDir
+}
+
+compileQuerydsl{
+	options.annotationProcessorPath = configurations.querydsl
+}
+
+configurations {
+	compileOnly {
+		extendsFrom annotationProcessor
+	}
+	querydsl.extendsFrom compileClasspath 
+}
+```
+
+##### after 3.x
+```groovy
+
+dependencies {
+    //querydsl 
+    implementation 'com.querydsl:querydsl-jpa:5.0.0:jakarta'
+    annotationProcessor "com.querydsl:querydsl-apt:${dependencyManagement.importedProperties['querydsl.version']}:jakarta"
+    annotationProcessor "jakarta.annotation:jakarta.annotation-api"
+    annotationProcessor "jakarta.persistence:jakarta.persistence-api"
+}
+```
+
+이전 버전 사용시 나타 날 수 있는 오류
+###### [Attempt to recreate a file for type ...QEntity]
 
 ################################################
 ---
 # 참고한 자료
+
 #### DB erd 제작시 참고한 문서 
 - [네이버 쇼핑 EP](https://join.shopping.naver.com/misc/download/ep_guide.nhn)
 
@@ -77,6 +129,9 @@
 
 - [(Blog)이미지 스토리지 서버 구축 및 최적화](https://tecoble.techcourse.co.kr/post/2022-09-13-image-storage-server/)
 
+## sftp private-key 연결에 도움준 자료 (ubuntu20.04,rsa-sha2)
+- https://github.com/spring-projects/spring-integration/blob/627cde2050da92f41767243c64be6d815d6b417f/spring-integration-sftp/src/test/java/org/springframework/integration/sftp/session/SftpServerTests.java#L117
+- https://github.com/spring-projects/spring-integration/issues/8693
 
 ## AWS 프리 티어  대하여 (쓰는 것만)
 750 한달에 한 인스턴스 등 해야 무료 요금이 적용됨
@@ -86,12 +141,6 @@
 - DynamoDB 25GB [평생무료]
 - 스토리지 5GB(750)[12개월]
 
-## Oracle cloud , google cloud , Amazon Cloud 사용사면서 느낀점
-- oracle cloud
-  - 로그인은 휴대폰 인증을 통하여 접근이 까다로움  
-  - 외부 고정 IP 개수 1개제한 으로 서버의 부담이 증가됨
-- google cloud 
-  - 
 
 ## nginx 참고 자료
 https://whatisthenext.tistory.com/123
@@ -103,4 +152,6 @@ https://docs.spring.io/spring-integration/api/org/springframework/integration/fi
 
 [java Example code](https://docs.spring.io/spring-integration/reference/sftp/inbound.html)
 
-이미지 경로 + 이름 = UUID 2글자 + "/" + UUID 2~last +"_"+ name
+
+## querydsl
+- http://querydsl.com/ 
