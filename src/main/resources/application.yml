@@ -57,6 +57,7 @@ cloud:
     folder-path: ENC(Az3HmKiT8LbB/mj08Ec4xEGadbkGnbOO)
 
 sms:
+  from: ENC(gl24yeMqbC5ADgctyV5bVPp+psfSFlhs)
   platform:
     apick:
       uri: https://apick.app/rest/send_sms
