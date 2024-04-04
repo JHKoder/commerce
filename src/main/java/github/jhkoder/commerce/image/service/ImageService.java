@@ -7,7 +7,6 @@ import github.jhkoder.commerce.image.exception.ImageException;
 import github.jhkoder.commerce.image.repository.ImageRepository;
 import github.jhkoder.commerce.image.repository.ImageSftpRepository;
 import github.jhkoder.commerce.image.repository.request.ImageRequest;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -49,7 +48,7 @@ public class ImageService {
 
     private void filter(String name) {
         if(!extendsPattern.matcher(name).find()){
-            throw new ApiException(ErrorCode.IMAGE_FILTER_NAME);
+            throw new ApiException(ErrorCode.IMAGE_REMOTE_SESSION);
         }
     }
 }

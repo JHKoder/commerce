@@ -29,7 +29,7 @@ public class JschOutBoundAdapter implements OutboundAdapter {
             channel.connect();
             return (ChannelSftp) channel;
         } catch (JSchException e) {
-            throw new ImageException(ErrorCode.IMAGE_FILTER_NAME);
+            throw new ImageException(ErrorCode.IMAGE_REMOTE_SESSION);
         }
     }
 
@@ -42,7 +42,7 @@ public class JschOutBoundAdapter implements OutboundAdapter {
             session.connect();
             return session;
         } catch (JSchException e) {
-            throw new ImageException(ErrorCode.IMAGE_FILTER_NAME);
+            throw new ImageException(ErrorCode.IMAGE_REMOTE_SESSION);
         }
     }
 
