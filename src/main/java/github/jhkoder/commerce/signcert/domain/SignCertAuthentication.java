@@ -1,6 +1,6 @@
 package github.jhkoder.commerce.signcert.domain;
 
-public enum SignUpCert {
+public enum SignCertAuthentication {
     PHONE,
     EMAIL
 }

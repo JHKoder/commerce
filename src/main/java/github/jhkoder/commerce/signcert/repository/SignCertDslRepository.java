@@ -1,7 +1,9 @@
 package github.jhkoder.commerce.signcert.repository;
 
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import github.jhkoder.commerce.common.entity.OracleBoolean;
 import github.jhkoder.commerce.signcert.domain.SignCert;
+import github.jhkoder.commerce.signcert.domain.SignCertAuthentication;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
@@ -16,13 +18,34 @@ import static github.jhkoder.commerce.signcert.domain.QSignCert.signCert;
 public class SignCertDslRepository {
     private final JPAQueryFactory factory;
 
-    public Optional<List<SignCert>> findRecentSignCertsWithVerificationSent(String sessionId, String verificationSent) {
+    public Optional<SignCert> findByVerificationSentAndVerificationCode(String verificationSent, int verificationCode, SignCertAuthentication authentication) {
         LocalDateTime oneDayAgo = LocalDateTime.now().minusDays(1);
         return Optional.of(factory.selectFrom(signCert)
                 .where(signCert.verificationSent.eq(verificationSent)
+                        .and(signCert.signCertAuthentication.eq(authentication))
+                        .and(signCert.verificationCode.eq(verificationCode))
                         .and(signCert.createTime.after(oneDayAgo))
-                        .and(signCert.sessionId.eq(sessionId))
                 )
-                .fetch());
+                .orderBy(signCert.createTime.desc())
+                .fetchFirst());
     }
+
+    public int countByVerificationSent(String verificationSent, SignCertAuthentication auth) {
+        LocalDateTime oneDayAgo = LocalDateTime.now().minusDays(1);
+        return factory.selectFrom(signCert)
+                .where(signCert.verificationSent.eq(verificationSent)
+                        .and(signCert.signCertAuthentication.eq(auth))
+                        .and(signCert.createTime.after(oneDayAgo))
+                )
+                .fetch().size();
+    }
+
+    public void updateAuthenticationBySignCertAuthentication(SignCertAuthentication auth, OracleBoolean authentication,String sent){
+        factory.update(signCert)
+                .set(signCert.authentication,authentication)
+                .where(signCert.signCertAuthentication.eq(auth)
+                        .and(signCert.verificationSent.eq(sent)))
+                .execute();
+    }
+
 }
