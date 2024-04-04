@@ -1,14 +1,21 @@
 package github.jhkoder.commerce.mail.service;
 
+import github.jhkoder.commerce.exception.ApiException;
+import github.jhkoder.commerce.exception.ErrorCode;
 import github.jhkoder.commerce.mail.config.EmailConfig;
 import github.jhkoder.commerce.mail.service.request.EmailRequest;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.mail.MailAuthenticationException;
+import org.springframework.mail.MailParseException;
+import org.springframework.mail.MailSendException;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 
+import static github.jhkoder.commerce.mail.output.EmailSignupOutput.*;
+
 @Configuration
-public class EmailSenderService {
+public class EmailSenderService implements EmailService {
     private final JavaMailSender emailConfig;
 
     private final String email;
@@ -18,17 +25,27 @@ public class EmailSenderService {
         this.email=email;
     }
 
-    /**
-     * @MailParseException – 메시지 구문 분석에 실패한 경우
-     * @MailAuthenticationException – 인증이 실패한 경우
-     * @MailSendException – 메시지 전송에 실패한 경우
-     */
     public void sendMessage(EmailRequest request) {
         SimpleMailMessage message = new SimpleMailMessage();
         message.setFrom(email);
-        message.setTo(request.getTo());
-        message.setSubject(request.getSubject());
-        message.setText(request.getText());
+        message.setTo(request.to());
+        message.setSubject(request.subject());
+        message.setText(request.text());
         emailConfig.send(message);
+    }
+
+    @Override
+    public void signupCertSend(String email, int verificationCode) {
+        try {
+            String title = signupTitle();
+            String sendText = signupText(verificationCode);
+            sendMessage(new EmailRequest(email, title, sendText));
+        }catch (MailParseException e1){
+            throw new ApiException(ErrorCode.EMAIL_SEND_PARSE);
+        }catch (MailAuthenticationException e2){
+            throw new ApiException(ErrorCode.EMAIL_SEND_AUTHENTICATION);
+        }catch (MailSendException e3){
+            throw new ApiException(ErrorCode.EMAIL_SEND);
+        }
     }
 }
