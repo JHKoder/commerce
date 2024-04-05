@@ -9,6 +9,7 @@ import github.jhkoder.commerce.signcert.service.request.SignUpValidRequest;
 import github.jhkoder.commerce.sms.service.SmsService;
 import github.jhkoder.commerce.user.service.UserService;
 import github.jhkoder.commerce.user.service.request.SignUpRequest;
+import github.jhkoder.commerce.user.service.response.SignUpCertVerifyResponse;
 import github.jhkoder.commerce.user.service.response.SignUpIdCheckResponse;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
@@ -63,7 +64,7 @@ public class SignUpApiController {
     }
 
     @PostMapping("/cert/email/send")
-    public void emailCertCodeSend(String email) {
+    public void emailCertCodeSend(@RequestBody @NotBlank String email) {
         userService.checkEmailValidAndUnique(email);
         signCertService.validateEmailVerificationExceed(email);
         int verificationCode = signCertService.newVerificationCode();
@@ -72,12 +73,12 @@ public class SignUpApiController {
     }
 
     @PostMapping("/cert/sms/verify")
-    public boolean smsCertVerify(@Valid @RequestBody SignUpCertVerifyRequest verifyRequest) {
+    public SignUpCertVerifyResponse smsCertVerify(@Valid @RequestBody SignUpCertVerifyRequest verifyRequest) {
         return signCertService.smsVerifyCodeCheck(verifyRequest);
     }
 
     @PostMapping("/cert/email/verify")
-    public boolean emailCertVerify(@Valid @RequestBody SignUpCertVerifyRequest verifyRequest) {
+    public SignUpCertVerifyResponse emailCertVerify(@Valid @RequestBody SignUpCertVerifyRequest verifyRequest) {
         return signCertService.emailVerifyCodeCheck(verifyRequest);
     }
 }
