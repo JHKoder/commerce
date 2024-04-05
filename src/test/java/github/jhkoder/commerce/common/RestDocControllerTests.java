@@ -2,7 +2,10 @@ package github.jhkoder.commerce.common;
 
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import github.jhkoder.commerce.common.output.RestDocAsciidocOutput;
+import github.jhkoder.commerce.common.error.ErrorDescriptor;
 import github.jhkoder.commerce.user.web.rest.SignUpApiController;
+import net.minidev.json.parser.JSONParser;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
@@ -20,6 +23,8 @@ import org.springframework.test.web.servlet.result.ContentResultMatchers;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.test.web.servlet.result.StatusResultMatchers;
 
+import java.util.Arrays;
+
 import static org.apache.sshd.common.file.nonefs.NoneFileSystemProvider.SCHEME;
 import static org.springframework.http.HttpHeaders.HOST;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.prettyPrint;
@@ -32,19 +37,14 @@ import static org.springframework.restdocs.operation.preprocess.Preprocessors.pr
 @AutoConfigureRestDocs(uriScheme = SCHEME, uriHost = HOST)
 @AutoConfigureMockMvc(addFilters = false)
 public class RestDocControllerTests {
-
-    // 여기서 문서에 표시될 정보들을 정의
     public static final String SCHEME = "https";
-    public static final String HOST = "io.github.shirohoo";
+    public static final String HOST = "jhkoder-ecommerce.shop";
+    protected static ObjectMapper objectMapper = new ObjectMapper();
+    protected static JSONParser jsonParser = new JSONParser();
 
     @Autowired
     protected MockMvc mockMvc;
 
-    @Autowired
-    protected ObjectMapper objectMapper;
-
-
-    // 나중에 테스트 코드 중 문서작성부에 사용될 편의성 메서드들을 정의
     protected static OperationRequestPreprocessor documentRequest() {
         return Preprocessors.preprocessRequest(
                 Preprocessors.modifyUris()
@@ -68,5 +68,22 @@ public class RestDocControllerTests {
 
     protected static Attributes.Attribute optional() {
         return new Attributes.Attribute("optional", "false"); //default true
+    }
+
+    protected static String strToJson(String id, String value) {
+        try {
+            Object obj = jsonParser.parse("{\"" + id + "\": \"" + value + "\"}");
+            return objectMapper.writeValueAsString(obj);
+        } catch (Exception e) {
+            throw new RuntimeException("RestDocControllerTests.strToJson.parse ERROR");
+        }
+    }
+
+    protected void autoDoc(String path, ErrorDescriptor... descriptors) {
+        new RestDocAsciidocOutput().out(path, Arrays.asList(descriptors));
+    }
+
+    protected void autoDoc(String path) {
+        new RestDocAsciidocOutput().out(path, null);
     }
 }

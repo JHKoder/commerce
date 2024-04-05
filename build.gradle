@@ -119,3 +119,9 @@ asciidoctor.doLast {
 }
 
 sourceSets.main.resources.srcDirs += 'build/generated-snippets/'
+
+tasks.withType(Jar) {
+    manifest {
+        attributes["Add-Opens"] = "java.base/java.io java.base/sun.nio.ch"
+    }
+}

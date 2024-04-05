@@ -8,19 +8,38 @@
 
 == 소개
 
+JHKoder가 만든 e-commerce
+
+GIT: https://github.com/JHKoder/commerce[]
 
 == 환경
 
-=== 도메인
+Java 17, Spring Boot 3.2, Security, JUnit
 
-NOTE: 인프라 팀에서 설정합니다.
+DB: Oracle 19c, JPA, QueryDSL
+
+AWS(Amazon Web Service): 메인 서버 위치
+OCS(Oracle Cloud Service): 이미지 저장 및 읽기용 서버, 데이터베이스 서버
+
+Email: jhkoder.email@gmail.com
+
+=== 초기 셋팅 정보
+
+JASYPT_PASSWORD: {private-key}
+
+데이터베이스 접근은 *TNS*를 사용하므로 접근 폴더를 받아야 합니다.
+
+=== 도메인
 
 |===
 | 환경 | URI
 
 | 개발 & 운영 서버 통합
 | `jhkoder-ecommerce.shop`
-
+| 이미지 서버
+| {private-ip}/image
 |===
 
-include::user/index.adoc[]
+== API
+
+include::signup/index.adoc[]

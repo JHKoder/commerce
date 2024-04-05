@@ -1,0 +1,33 @@
+=== 회원 가입 페이지
+:basedir: {docdir}/../../../
+:snippets: {basedir}/build/generated-snippets
+:icons: font
+:source-highlighter: highlightjs
+:toc: left
+:toclevels: 2
+
+==== 회원 가입 API
+
+include::signup.adoc[]
+
+==== 아이디 체크 API
+
+include::idCheck.adoc[]
+
+==== SMS 인증 번호 보내기 API
+
+include::smsCertSend.adoc[]
+
+==== EMAIL 인증 번호 보내기 API
+
+include::emailCertSend.adoc[]
+
+
+==== SMS 인증 번호 확인 api
+
+include::smsSendVerifyCheck.adoc[]
+
+
+==== EMAIL 인증 번호 확인 api
+
+include::emailSendVerifyCheck.adoc[]

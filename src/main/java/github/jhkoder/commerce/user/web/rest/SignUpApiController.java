@@ -9,7 +9,10 @@ import github.jhkoder.commerce.signcert.service.request.SignUpValidRequest;
 import github.jhkoder.commerce.sms.service.SmsService;
 import github.jhkoder.commerce.user.service.UserService;
 import github.jhkoder.commerce.user.service.request.SignUpRequest;
+import github.jhkoder.commerce.user.service.response.SignUpCertVerifyResponse;
+import github.jhkoder.commerce.user.service.response.SignUpIdCheckResponse;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotBlank;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -22,7 +25,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class SignUpApiController {
     private final SignCertService signCertService;
     private final UserService userService;
-    private final SmsService smsService;
+    private final SmsService smsRealService;
     private final EmailService emailService;
 
     /**
@@ -39,7 +42,7 @@ public class SignUpApiController {
     }
 
     @PostMapping("/idCheck")
-    public boolean idCheck(@RequestBody String id) {
+    public SignUpIdCheckResponse idCheck(@RequestBody String id) {
         return userService.isIdCheck(id);
     }
 
@@ -52,16 +55,16 @@ public class SignUpApiController {
      * @param sms - 휴대폰 번호
      */
     @PostMapping("/cert/sms/send")
-    public void smsCertCodeSend(String sms) {
+    public void smsCertCodeSend(@RequestBody @NotBlank String sms) {
         userService.checkSmsValidAndUnique(sms);
         signCertService.validateSmsVerificationExceed(sms);
         int verificationCode = signCertService.newVerificationCode();
-        smsService.signupCertSend(sms, verificationCode);
+        smsRealService.signupCertSend(sms, verificationCode);
         signCertService.saveCert(new SignUpCertRequest(verificationCode, sms, SignCertAuthentication.PHONE));
     }
 
     @PostMapping("/cert/email/send")
-    public void emailCertCodeSend(String email) {
+    public void emailCertCodeSend(@RequestBody @NotBlank String email) {
         userService.checkEmailValidAndUnique(email);
         signCertService.validateEmailVerificationExceed(email);
         int verificationCode = signCertService.newVerificationCode();
@@ -70,12 +73,12 @@ public class SignUpApiController {
     }
 
     @PostMapping("/cert/sms/verify")
-    public boolean smsCertVerify(@Valid @RequestBody SignUpCertVerifyRequest verifyRequest) {
+    public SignUpCertVerifyResponse smsCertVerify(@Valid @RequestBody SignUpCertVerifyRequest verifyRequest) {
         return signCertService.smsVerifyCodeCheck(verifyRequest);
     }
 
     @PostMapping("/cert/email/verify")
-    public boolean emailCertVerify(@Valid @RequestBody SignUpCertVerifyRequest verifyRequest) {
+    public SignUpCertVerifyResponse emailCertVerify(@Valid @RequestBody SignUpCertVerifyRequest verifyRequest) {
         return signCertService.emailVerifyCodeCheck(verifyRequest);
     }
 }

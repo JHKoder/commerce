@@ -7,6 +7,7 @@ import github.jhkoder.commerce.user.domain.Role;
 import github.jhkoder.commerce.user.domain.User;
 import github.jhkoder.commerce.user.repository.UserRepository;
 import github.jhkoder.commerce.user.service.request.SignUpRequest;
+import github.jhkoder.commerce.user.service.response.SignUpIdCheckResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -29,11 +30,11 @@ public class UserService {
     }
 
     @Transactional(readOnly = true)
-    public boolean isIdCheck(String id) {
+    public SignUpIdCheckResponse isIdCheck(String id) {
         if (userRepository.findByUserId(id).isEmpty()) {
             throw new ApiException(ErrorCode.USER_ID_DUPLICATE);
         }
-        return true;
+        return new SignUpIdCheckResponse(true);
     }
 
     @Transactional(readOnly = true)
