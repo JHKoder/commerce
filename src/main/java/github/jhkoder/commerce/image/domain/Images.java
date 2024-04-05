@@ -10,7 +10,7 @@ import static lombok.AccessLevel.PROTECTED;
 
 @Entity
 @Getter
-@Table(name = "users")
+@Table(name = "images")
 @NoArgsConstructor(access = PROTECTED)
 public class Images extends BaseEntity {
     @Id
@@ -19,7 +19,9 @@ public class Images extends BaseEntity {
     private Long id;
     private String ppid;
     private String path;
-    private Long size;
+
+    @Column(name = "file_size") // "size" 컬럼을 "file_size"로 변경
+    private Long fileSize;
 
     @Enumerated(value = EnumType.STRING)
     private ImageExtension imageExtension;
