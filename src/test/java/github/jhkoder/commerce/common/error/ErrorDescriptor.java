@@ -1,9 +1,6 @@
 package github.jhkoder.commerce.common.error;
 
-import org.springframework.restdocs.payload.FieldDescriptor;
-import org.springframework.restdocs.snippet.IgnorableDescriptor;
-
-public class ErrorDescriptor extends IgnorableDescriptor<FieldDescriptor> {
+public class ErrorDescriptor {
 
     private final int code;
     private final String about;
