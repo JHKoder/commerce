@@ -19,11 +19,12 @@
 - and() 제거
   - 람다식 사용
 - User.withDefaultPasswordEncoder() 더 이상 사용 되지 않음
-  - "password"가 소스 코드로 컴파일된 다음 생성 시 메모리에 포함되기 때문에 프로덕션에서는 안전하지 않습니다
+  - spring security 개발자 답변: "password"가 소스 코드로 컴파일된 다음 생성 시 메모리에 포함되기 때문에 프로덕션에서는 안전하지 않습니다
 
 
 ### oracle 처음 사용시 jpa 고려해야할점
 - oracle은 boolean 타입이 없어 String 타입 선언 후 @Size(max = 1 ) 으로 설정해야한다.  
+  - 2024-04-05일자 기준으로 OracleBoolean Enum 타입 만들어서 T.F 사용 
 
 ### thymeleaf 로그인 여부 확인 오류 
 - 로그인 하지 않는 상태에서 authorization.expression('isAuthenticated()') 를 사용하면 
@@ -152,6 +153,12 @@ https://docs.spring.io/spring-integration/api/org/springframework/integration/fi
 
 [java Example code](https://docs.spring.io/spring-integration/reference/sftp/inbound.html)
 
-
 ## querydsl
 - http://querydsl.com/ 
+
+## **REST-DOC 참고 자료,문서**
+#### [최상의 퀄리티를 보장함] 
+- [spring.io 공식 문서](https://docs.spring.io/spring-restdocs/docs/3.0.x/reference/htmlsingle/)
+- [Adoc 공식 문서 ](https://docs.asciidoctor.org/asciidoc/latest/text/)
+- [Adoc 공식 문서 -> gradle 셋팅 방법 ](https://asciidoctor.github.io/asciidoctor-gradle-plugin/master/user-guide/)
+- [.snippet 커스텀 문서 형식 ](https://github.com/spring-projects/spring-restdocs/tree/v3.0.1/spring-restdocs-core/src/main/resources/org/springframework/restdocs/templates/asciidoctor)
