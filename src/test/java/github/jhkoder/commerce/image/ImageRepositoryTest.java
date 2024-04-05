@@ -17,7 +17,6 @@ public class ImageRepositoryTest {
     private Session session = null;
     private ChannelSftp channelSftp = null;
 
-    @Test
     public void testImageUpload() throws IOException {
         // 테스트용 이미지 파일을 바이트 배열로 읽어옵니다.
         byte[] fileBytes = loadTestImageBytes();

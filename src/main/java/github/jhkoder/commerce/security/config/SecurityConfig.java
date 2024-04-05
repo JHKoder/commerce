@@ -44,7 +44,8 @@ public class SecurityConfig {
                 .sessionManagement(configurer -> configurer.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests((configurer) -> configurer
-                        .requestMatchers("/","/home","/signup",
+                        .requestMatchers("/","/home","/signup","/api/signup","/api/signup/**",
+                                "/docs/**",
                                 "/img/**","/css/**","/js/**","/layout/**","/fragment/**").permitAll()
                         .requestMatchers("/api/admin").hasAnyRole(Role.ADMIN.name())
                         .requestMatchers("/api/user").hasAnyRole(Role.USER.name())

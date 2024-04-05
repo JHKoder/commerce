@@ -1,0 +1,26 @@
+= API DOCUMENTATION
+:icons: font
+:source-highlighter: highlightjs
+:toc: left
+:toclevels: 3
+:sectlinks: /build/asciidoc/html5/
+:sectnums:
+
+== 소개
+
+
+== 환경
+
+=== 도메인
+
+NOTE: 인프라 팀에서 설정합니다.
+
+|===
+| 환경 | URI
+
+| 개발 & 운영 서버 통합
+| `jhkoder-ecommerce.shop`
+
+|===
+
+include::user/index.adoc[]
