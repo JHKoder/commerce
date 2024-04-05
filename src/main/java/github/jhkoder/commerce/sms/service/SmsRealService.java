@@ -15,7 +15,7 @@ import static java.nio.charset.StandardCharsets.UTF_8;
 
 @Service
 @RequiredArgsConstructor
-public class SmsService {
+public class SmsRealService implements SmsService{
     private final WebClientConfig client;
 
     @Value("${sms.platform.apick.api-key}")
@@ -36,7 +36,13 @@ public class SmsService {
             throw new ApiException(ErrorCode.SMS_SEND_FAIL);
         }
     }
-
+    public void send(String sms, int verificationCode) {
+        String signupContext = signupText(verificationCode);
+        SmsSendResponse response = send(sms,signupContext);
+        if(response.data().error().equals("null")){
+            throw new ApiException(ErrorCode.SMS_SEND_FAIL);
+        }
+    }
     private SmsSendResponse send(String to,String text){
         return client.webClient()
                 .post()
