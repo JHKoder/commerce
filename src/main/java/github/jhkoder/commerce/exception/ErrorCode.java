@@ -36,7 +36,7 @@ public enum ErrorCode {
 
     //signup
     SIGNUP_SMS_EXCEED(401, "회원가입 폰 재 인증 횟수 초과"),
-    SIGNUP_SMS_VERIFY_CODE_FAILED(402, "회원가입 sms 문자 인증 실패"),
+    SIGNUP_SMS_VERIFY_CODE_FAILED(402, "회원가입 문자 인증 실패"),
     SIGNUP_SMS_DUPLICATE(403, "회원가입 휴대폰번호가 중복되었습니다."),
     SIGNUP_EMAIL_EXCEED(404, "회원가입 이메일 재 인증 횟수 초과"),
     SIGNUP_EMAIL_VERIFY_CODE_FAILED(405, "회원가입 이메일 인증 실패"),
