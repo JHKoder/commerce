@@ -10,8 +10,7 @@ import static lombok.AccessLevel.PROTECTED;
 
 @Entity
 @Getter
-@Table(name = "users",
-        indexes = @Index(name = "idx_user_id", columnList = "user_id"))
+@Table(name = "users")
 @NoArgsConstructor(access = PROTECTED)
 public class User extends BaseEntity {
     @Id

@@ -44,7 +44,8 @@ public class UserService {
         if (request.authenticationType().equals(SignCertAuthentication.EMAIL) &&
                 userRepository.findByEmail(request.email()).isPresent()) {
             throw new ApiException(ErrorCode.SIGNUP_EMAIL_DUPLICATE);
-        } else if (userRepository.findByPhone(request.phone()).isPresent()) {
+        } else if (request.authenticationType().equals(SignCertAuthentication.PHONE) &&
+                userRepository.findByPhone(request.phone()).isPresent()) {
             throw new ApiException(ErrorCode.SIGNUP_SMS_DUPLICATE);
         }
     }
