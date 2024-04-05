@@ -25,6 +25,7 @@ import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import static github.jhkoder.commerce.common.error.ErrorDocument.errorcode;
+import static github.jhkoder.commerce.exception.ErrorCode.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
@@ -53,8 +54,8 @@ public class SignUpApiControllerTest extends RestDocControllerTests {
     @Mock
     private WebClientConfig webClientConfig;
 
-
     private final String defaultUri = "/api/signup";
+
 
     @Test
     @DisplayName("회원 가입 실행")
@@ -71,12 +72,7 @@ public class SignUpApiControllerTest extends RestDocControllerTests {
                 .signup(any());
 
         // when
-        ResultActions actions = mockMvc.perform(MockMvcRequestBuilders
-                .post(defaultUri)
-                .characterEncoding("UTF-8")
-                .contentType(MediaType.APPLICATION_JSON)
-                .accept(MediaType.APPLICATION_JSON)
-                .content(request));
+        ResultActions actions = jsonWhen( "",request);
 
         // then
         actions.andExpect(status().isOk())
@@ -94,13 +90,13 @@ public class SignUpApiControllerTest extends RestDocControllerTests {
                 ));
 
         autoDoc(pathAdoc,
-                errorcode(401, "휴대폰 인증 횟수 초과"),
-                errorcode(402, "휴대폰 문자 인증 실패"),
-                errorcode(403, "휴대폰번호가 중복되었습니다"),
-                errorcode(404, "이메일 인증 횟수 초과"),
-                errorcode(405, "이메일 인증 실패"),
-                errorcode(406, "이메일이 중복되었습니다."),
-                errorcode(407, "인증코드 미인증")
+                errorcode(SIGNUP_SMS_EXCEED),
+                errorcode(SIGNUP_SMS_VERIFY_CODE_FAILED),
+                errorcode(SIGNUP_SMS_DUPLICATE),
+                errorcode(SIGNUP_EMAIL_EXCEED),
+                errorcode(SIGNUP_EMAIL_VERIFY_CODE_FAILED),
+                errorcode(SIGNUP_EMAIL_DUPLICATE),
+                errorcode(SIGNUP_CERT_CODE_UNVERIFIED)
         );
     }
 
@@ -114,12 +110,7 @@ public class SignUpApiControllerTest extends RestDocControllerTests {
         when(userService.isIdCheck(any())).thenReturn(response);
 
         // when
-        ResultActions actions = mockMvc.perform(MockMvcRequestBuilders
-                .post(defaultUri + "/idCheck")
-                .characterEncoding("UTF-8")
-                .contentType(MediaType.APPLICATION_JSON)
-                .accept(MediaType.APPLICATION_JSON)
-                .content(request));
+        ResultActions actions = jsonWhen( "/idCheck",request);
 
         // then
         actions.andExpect(status().isOk())
@@ -150,12 +141,7 @@ public class SignUpApiControllerTest extends RestDocControllerTests {
         doNothing().when(signCertService).saveCert(any());
 
         // when
-        ResultActions actions = mockMvc.perform(MockMvcRequestBuilders
-                .post(defaultUri + "/cert/sms/send")
-                .characterEncoding("UTF-8")
-                .contentType(MediaType.APPLICATION_JSON)
-                .accept(MediaType.APPLICATION_JSON)
-                .content(request));
+        ResultActions actions = jsonWhen( "/cert/sms/send",request);
 
         // then
         actions.andExpect(status().isOk())
@@ -166,7 +152,11 @@ public class SignUpApiControllerTest extends RestDocControllerTests {
                         )
                 ));
 
-        autoDoc(pathAdoc);
+        autoDoc(pathAdoc,
+                errorcode(USER_PHONE_UNIQUE),
+                errorcode(SIGNUP_SMS_EXCEED),
+                errorcode(SMS_SEND_FAIL)
+        );
     }
 
 
@@ -183,12 +173,7 @@ public class SignUpApiControllerTest extends RestDocControllerTests {
         doNothing().when(signCertService).saveCert(any());
 
         // when
-        ResultActions actions = mockMvc.perform(MockMvcRequestBuilders
-                .post(defaultUri + "/cert/email/send")
-                .characterEncoding("UTF-8")
-                .contentType(MediaType.APPLICATION_JSON)
-                .accept(MediaType.APPLICATION_JSON)
-                .content(request));
+        ResultActions actions = jsonWhen("/cert/email/send", request);
 
         // then
         actions.andExpect(status().isOk())
@@ -199,25 +184,27 @@ public class SignUpApiControllerTest extends RestDocControllerTests {
                         )
                 ));
 
-        autoDoc(pathAdoc);
+        autoDoc(pathAdoc,
+                errorcode(USER_EMAIL_UNIQUE),
+                errorcode(SIGNUP_EMAIL_EXCEED),
+                errorcode(EMAIL_SEND_PARSE),
+                errorcode(EMAIL_SEND_AUTHENTICATION),
+                errorcode(EMAIL_SEND)
+        );
     }
+
     @Test
     @DisplayName("SMS 인증 번호 검증 ")
     void smsSendVerifyCheck() throws Exception {
         //given
         String pathAdoc = "signup/smsSendVerifyCheck";
-        SignUpCertVerifyRequest certVerifyRequest = new SignUpCertVerifyRequest("01012345678",123456);
+        SignUpCertVerifyRequest certVerifyRequest = new SignUpCertVerifyRequest("01012345678", 123456);
         String request = objectMapper.writeValueAsString(certVerifyRequest);
         SignUpCertVerifyResponse response = new SignUpCertVerifyResponse(true);
         when(signCertService.smsVerifyCodeCheck(certVerifyRequest)).thenReturn(response);
 
         // when
-        ResultActions actions = mockMvc.perform(MockMvcRequestBuilders
-                .post(defaultUri + "/cert/sms/verify")
-                .characterEncoding("UTF-8")
-                .contentType(MediaType.APPLICATION_JSON)
-                .accept(MediaType.APPLICATION_JSON)
-                .content(request));
+        ResultActions actions = jsonWhen( "/cert/sms/verify",request);
 
         // then
         actions.andExpect(status().isOk())
@@ -234,7 +221,7 @@ public class SignUpApiControllerTest extends RestDocControllerTests {
                 ));
 
         autoDoc(pathAdoc,
-                errorcode(402,"회원가입 문자 인증 실패"));
+                errorcode(SIGNUP_SMS_VERIFY_CODE_FAILED));
     }
 
 
@@ -243,18 +230,13 @@ public class SignUpApiControllerTest extends RestDocControllerTests {
     void emailSendVerifyCheck() throws Exception {
         //given
         String pathAdoc = "signup/emailSendVerifyCheck";
-        SignUpCertVerifyRequest certVerifyRequest = new SignUpCertVerifyRequest("test@naver.com",123456);
+        SignUpCertVerifyRequest certVerifyRequest = new SignUpCertVerifyRequest("test@naver.com", 123456);
         String request = objectMapper.writeValueAsString(certVerifyRequest);
         SignUpCertVerifyResponse response = new SignUpCertVerifyResponse(true);
         when(signCertService.emailVerifyCodeCheck(certVerifyRequest)).thenReturn(response);
 
         // when
-        ResultActions actions = mockMvc.perform(MockMvcRequestBuilders
-                .post(defaultUri + "/cert/email/verify")
-                .characterEncoding("UTF-8")
-                .contentType(MediaType.APPLICATION_JSON)
-                .accept(MediaType.APPLICATION_JSON)
-                .content(request));
+        ResultActions actions = jsonWhen( "/cert/email/verify",request);
 
         // then
         actions.andExpect(status().isOk())
@@ -271,7 +253,15 @@ public class SignUpApiControllerTest extends RestDocControllerTests {
                 ));
 
         autoDoc(pathAdoc,
-                errorcode(405,"회원가입 이메이 문자 인증 실패"));
+                errorcode(SIGNUP_EMAIL_VERIFY_CODE_FAILED));
     }
 
+    private ResultActions jsonWhen(String uri, String request) throws Exception {
+        return mockMvc.perform(MockMvcRequestBuilders
+                .post(defaultUri + uri)
+                .characterEncoding("UTF-8")
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON)
+                .content(request));
+    }
 }
