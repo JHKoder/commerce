@@ -35,12 +35,12 @@ public enum ErrorCode {
     SMS_SEND_FAIL(401, "문자 전송 실패"),
 
     //signup
-    SIGNUP_SMS_EXCEED(401, "회원가입 폰 재 인증 횟수 초과"),
-    SIGNUP_SMS_VERIFY_CODE_FAILED(402, "회원가입 문자 인증 실패"),
-    SIGNUP_SMS_DUPLICATE(403, "회원가입 휴대폰번호가 중복되었습니다."),
-    SIGNUP_EMAIL_EXCEED(404, "회원가입 이메일 재 인증 횟수 초과"),
+    SIGNUP_SMS_EXCEED(401, "회원가입 휴대폰 인증 횟수 초과"),
+    SIGNUP_SMS_VERIFY_CODE_FAILED(402, "회원가입 휴대폰 문자 인증 실패"),
+    SIGNUP_SMS_DUPLICATE(403, "회원가입 휴대폰 번호 중복"),
+    SIGNUP_EMAIL_EXCEED(404, "회원가입 이메일 인증 횟수 초과"),
     SIGNUP_EMAIL_VERIFY_CODE_FAILED(405, "회원가입 이메일 인증 실패"),
-    SIGNUP_EMAIL_DUPLICATE(406, "회원가입 이메일이 중복되었습니다."),
+    SIGNUP_EMAIL_DUPLICATE(406, "회원가입 이메일 중복"),
     SIGNUP_CERT_CODE_UNVERIFIED(407, "회원가입 인증코드 미인증");
 
     private final int status;

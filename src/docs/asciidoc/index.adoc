@@ -19,6 +19,7 @@ Java 17, Spring Boot 3.2, Security, JUnit
 DB: Oracle 19c, JPA, QueryDSL
 
 AWS(Amazon Web Service): 메인 서버 위치
+
 OCS(Oracle Cloud Service): 이미지 저장 및 읽기용 서버, 데이터베이스 서버
 
 Email: jhkoder.email@gmail.com
@@ -40,6 +41,6 @@ JASYPT_PASSWORD: {private-key}
 | {private-ip}/image
 |===
 
-== API
+== REST API
 
 include::signup/index.adoc[]
