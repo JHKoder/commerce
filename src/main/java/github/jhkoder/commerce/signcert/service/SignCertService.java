@@ -10,6 +10,7 @@ import github.jhkoder.commerce.signcert.repository.SignCertRepository;
 import github.jhkoder.commerce.signcert.service.request.SignUpCertRequest;
 import github.jhkoder.commerce.signcert.service.request.SignUpCertVerifyRequest;
 import github.jhkoder.commerce.signcert.service.request.SignUpValidRequest;
+import github.jhkoder.commerce.user.service.response.SignUpCertVerifyResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -45,18 +46,18 @@ public class SignCertService {
         }
     }
 
-    public boolean smsVerifyCodeCheck(SignUpCertVerifyRequest request) {
+    public SignUpCertVerifyResponse smsVerifyCodeCheck(SignUpCertVerifyRequest request) {
         verifyCodeCheck(request, SignCertAuthentication.PHONE)
                 .orElseThrow(() -> new ApiException(ErrorCode.SIGNUP_SMS_VERIFY_CODE_FAILED));
         updateSignCert(PHONE, request.send());
-        return true;
+        return new SignUpCertVerifyResponse(true);
     }
 
-    public boolean emailVerifyCodeCheck(SignUpCertVerifyRequest request) {
+    public SignUpCertVerifyResponse emailVerifyCodeCheck(SignUpCertVerifyRequest request) {
         verifyCodeCheck(request, EMAIL)
                 .orElseThrow(() -> new ApiException(ErrorCode.SIGNUP_EMAIL_VERIFY_CODE_FAILED));
         updateSignCert(EMAIL, request.send());
-        return true;
+        return new SignUpCertVerifyResponse(true);
     }
 
     public int newVerificationCode() {
