@@ -7,11 +7,13 @@ import github.jhkoder.commerce.signcert.domain.SignCertAuthentication;
 import github.jhkoder.commerce.signcert.repository.SignCertDslRepository;
 import github.jhkoder.commerce.signcert.repository.SignCertRepository;
 import github.jhkoder.commerce.signcert.service.SignCertService;
+import github.jhkoder.commerce.signcert.service.request.SignUpCertVerifyRequest;
 import github.jhkoder.commerce.sms.service.SmsFakeService;
 import github.jhkoder.commerce.user.domain.User;
 import github.jhkoder.commerce.user.repository.UserRepository;
 import github.jhkoder.commerce.user.service.UserService;
 import github.jhkoder.commerce.user.service.request.SignUpRequest;
+import github.jhkoder.commerce.user.service.response.SignUpCertVerifyResponse;
 import github.jhkoder.commerce.user.service.response.SignUpIdCheckResponse;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -165,6 +167,111 @@ public class SignUpApiControllerTest extends RestDocControllerTests {
                 ));
 
         autoDoc(pathAdoc);
+    }
+
+
+    @Test
+    @DisplayName("email 인증 번호 보내기")
+    void emailSend() throws Exception {
+        //given
+        String pathAdoc = "signup/emailCertSend";
+        String request = strToJson("email", "test@naver.com");
+        doNothing().when(userService).checkEmailValidAndUnique(any());
+        doNothing().when(signCertService).validateEmailVerificationExceed(any());
+        when(signCertService.newVerificationCode()).thenReturn(1);
+        doNothing().when(emailService).signupCertSend("test@naver.com", 1);
+        doNothing().when(signCertService).saveCert(any());
+
+        // when
+        ResultActions actions = mockMvc.perform(MockMvcRequestBuilders
+                .post(defaultUri + "/cert/email/send")
+                .characterEncoding("UTF-8")
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON)
+                .content(request));
+
+        // then
+        actions.andExpect(status().isOk())
+                .andDo(document(pathAdoc,
+                        documentRequest(),
+                        requestFields(
+                                fieldWithPath("email").type(JsonFieldType.STRING).description("이메일")
+                        )
+                ));
+
+        autoDoc(pathAdoc);
+    }
+    @Test
+    @DisplayName("SMS 인증 번호 검증 ")
+    void smsSendVerifyCheck() throws Exception {
+        //given
+        String pathAdoc = "signup/smsSendVerifyCheck";
+        SignUpCertVerifyRequest certVerifyRequest = new SignUpCertVerifyRequest("01012345678",123456);
+        String request = objectMapper.writeValueAsString(certVerifyRequest);
+        SignUpCertVerifyResponse response = new SignUpCertVerifyResponse(true);
+        when(signCertService.smsVerifyCodeCheck(certVerifyRequest)).thenReturn(response);
+
+        // when
+        ResultActions actions = mockMvc.perform(MockMvcRequestBuilders
+                .post(defaultUri + "/cert/sms/verify")
+                .characterEncoding("UTF-8")
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON)
+                .content(request));
+
+        // then
+        actions.andExpect(status().isOk())
+                .andDo(document(pathAdoc,
+                        documentRequest(),
+                        documentResponse(),
+                        requestFields(
+                                fieldWithPath("send").type(JsonFieldType.STRING).description("휴대폰 번호"),
+                                fieldWithPath("code").type(JsonFieldType.NUMBER).description("인증 코드")
+                        ),
+                        responseFields(
+                                fieldWithPath("result").type(JsonFieldType.BOOLEAN).description("true : 성공 , false: 실패")
+                        )
+                ));
+
+        autoDoc(pathAdoc,
+                errorcode(402,"회원가입 문자 인증 실패"));
+    }
+
+
+    @Test
+    @DisplayName("Email 인증 번호 검증 ")
+    void emailSendVerifyCheck() throws Exception {
+        //given
+        String pathAdoc = "signup/emailSendVerifyCheck";
+        SignUpCertVerifyRequest certVerifyRequest = new SignUpCertVerifyRequest("test@naver.com",123456);
+        String request = objectMapper.writeValueAsString(certVerifyRequest);
+        SignUpCertVerifyResponse response = new SignUpCertVerifyResponse(true);
+        when(signCertService.emailVerifyCodeCheck(certVerifyRequest)).thenReturn(response);
+
+        // when
+        ResultActions actions = mockMvc.perform(MockMvcRequestBuilders
+                .post(defaultUri + "/cert/email/verify")
+                .characterEncoding("UTF-8")
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON)
+                .content(request));
+
+        // then
+        actions.andExpect(status().isOk())
+                .andDo(document(pathAdoc,
+                        documentRequest(),
+                        documentResponse(),
+                        requestFields(
+                                fieldWithPath("send").type(JsonFieldType.STRING).description("이메이"),
+                                fieldWithPath("code").type(JsonFieldType.NUMBER).description("인증 코드")
+                        ),
+                        responseFields(
+                                fieldWithPath("result").type(JsonFieldType.BOOLEAN).description("true : 성공 , false: 실패")
+                        )
+                ));
+
+        autoDoc(pathAdoc,
+                errorcode(405,"회원가입 이메이 문자 인증 실패"));
     }
 
 }
