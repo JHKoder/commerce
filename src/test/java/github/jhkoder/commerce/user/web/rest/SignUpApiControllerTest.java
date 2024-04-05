@@ -7,11 +7,13 @@ import github.jhkoder.commerce.signcert.domain.SignCertAuthentication;
 import github.jhkoder.commerce.signcert.repository.SignCertDslRepository;
 import github.jhkoder.commerce.signcert.repository.SignCertRepository;
 import github.jhkoder.commerce.signcert.service.SignCertService;
-import github.jhkoder.commerce.sms.service.SmsService;
+import github.jhkoder.commerce.sms.service.SmsFakeService;
 import github.jhkoder.commerce.user.domain.User;
 import github.jhkoder.commerce.user.repository.UserRepository;
 import github.jhkoder.commerce.user.service.UserService;
 import github.jhkoder.commerce.user.service.request.SignUpRequest;
+import github.jhkoder.commerce.user.service.response.SignUpIdCheckResponse;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -20,13 +22,14 @@ import org.springframework.restdocs.payload.JsonFieldType;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
+import static github.jhkoder.commerce.common.error.ErrorDocument.errorcode;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.when;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
-import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
-import static org.springframework.restdocs.payload.PayloadDocumentation.requestFields;
+import static org.springframework.restdocs.payload.PayloadDocumentation.*;
 
-
+@DisplayName("회원 가입 API ")
 public class SignUpApiControllerTest extends RestDocControllerTests {
 
     @MockBean
@@ -34,7 +37,7 @@ public class SignUpApiControllerTest extends RestDocControllerTests {
     @MockBean
     private UserService userService;
     @MockBean
-    private SmsService smsService;
+    private SmsFakeService smsService;
     @MockBean
     private EmailService emailService;
 
@@ -52,13 +55,12 @@ public class SignUpApiControllerTest extends RestDocControllerTests {
     private final String defaultUri = "/api/signup";
 
     @Test
-    void 회원가입() throws Exception {
-
+    @DisplayName("회원 가입 실행")
+    void signup() throws Exception {
         // given
+        String pathAdoc = "signup";
         SignUpRequest signUpRequest = new SignUpRequest("userId", "userName", "password", "mail@email.com", "01012345678", User.Gender.MAN, SignCertAuthentication.EMAIL);
-
         String request = objectMapper.writeValueAsString(signUpRequest);
-
         doNothing().when(signCertService)
                 .validateCert(any());
         doNothing().when(userService)
@@ -68,7 +70,7 @@ public class SignUpApiControllerTest extends RestDocControllerTests {
 
         // when
         ResultActions actions = mockMvc.perform(MockMvcRequestBuilders
-                .post("/api/signup")
+                .post(defaultUri)
                 .characterEncoding("UTF-8")
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
@@ -76,7 +78,7 @@ public class SignUpApiControllerTest extends RestDocControllerTests {
 
         // then
         actions.andExpect(status().isOk())
-                .andDo(document("signup",
+                .andDo(document(pathAdoc,
                         documentRequest(),
                         requestFields(
                                 fieldWithPath("userId").type(JsonFieldType.STRING).description("아이디"),
@@ -84,9 +86,85 @@ public class SignUpApiControllerTest extends RestDocControllerTests {
                                 fieldWithPath("password").type(JsonFieldType.STRING).description("비밀번호"),
                                 fieldWithPath("email").type(JsonFieldType.STRING).description("이메일 ").attributes(optional()),
                                 fieldWithPath("phone").type(JsonFieldType.STRING).description("휴대폰").attributes(optional()),
-                                fieldWithPath("gender").type(User.Gender.MAN +","+ User.Gender.WOMAN).description("성별 타입 enum : [MAN],[WOMAN] "),
-                                fieldWithPath("authenticationType").type(SignCertAuthentication.PHONE + "," + SignCertAuthentication.EMAIL).description("인증 타입 enum: [PHONE],[EMAIL] ")
+                                fieldWithPath("gender").type("Enum").description("성별 타입 : [MAN],[WOMAN] "),
+                                fieldWithPath("authenticationType").type("Enum").description("인증 타입 : [PHONE],[EMAIL] ")
                         )
                 ));
+
+        autoDoc(pathAdoc,
+                errorcode(401, "휴대폰 인증 횟수 초과"),
+                errorcode(402, "휴대폰 문자 인증 실패"),
+                errorcode(403, "휴대폰번호가 중복되었습니다"),
+                errorcode(404, "이메일 인증 횟수 초과"),
+                errorcode(405, "이메일 인증 실패"),
+                errorcode(406, "이메일이 중복되었습니다."),
+                errorcode(407, "인증코드 미인증")
+        );
     }
+
+    @Test
+    @DisplayName("아이디 체크")
+    void idCheck() throws Exception {
+        // given
+        String pathAdoc = "signup/idCheck";
+        String request = strToJson("id", "testId");
+        SignUpIdCheckResponse response = new SignUpIdCheckResponse(true);
+        when(userService.isIdCheck(any())).thenReturn(response);
+
+        // when
+        ResultActions actions = mockMvc.perform(MockMvcRequestBuilders
+                .post(defaultUri + "/idCheck")
+                .characterEncoding("UTF-8")
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON)
+                .content(request));
+
+        // then
+        actions.andExpect(status().isOk())
+                .andDo(document(pathAdoc,
+                        documentRequest(),
+                        documentResponse(),
+                        requestFields(
+                                fieldWithPath("id").type(JsonFieldType.STRING).description("아이디").attributes(optional())
+                        ),
+                        responseFields(
+                                fieldWithPath("isCheck").type(JsonFieldType.BOOLEAN).description("[true]: 아이디 사용 가능 ,[false]: 아이디 중복 으로 사용 불가\n false 대신 error code 403 이 발생함 ")
+                        )
+                ));
+
+        autoDoc(pathAdoc);
+    }
+
+    @Test
+    @DisplayName("SMS 인증 번호 보내기")
+    void smsSend() throws Exception {
+        //given
+        String pathAdoc = "signup/smsCertSend";
+        String request = strToJson("sms", "01022529468");
+        doNothing().when(userService).signup(any());
+        doNothing().when(signCertService).validateSmsVerificationExceed(any());
+        when(signCertService.newVerificationCode()).thenReturn(1);
+        doNothing().when(smsService).signupCertSend("821012345678", 1);
+        doNothing().when(signCertService).saveCert(any());
+
+        // when
+        ResultActions actions = mockMvc.perform(MockMvcRequestBuilders
+                .post(defaultUri + "/cert/sms/send")
+                .characterEncoding("UTF-8")
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON)
+                .content(request));
+
+        // then
+        actions.andExpect(status().isOk())
+                .andDo(document(pathAdoc,
+                        documentRequest(),
+                        requestFields(
+                                fieldWithPath("sms").type(JsonFieldType.STRING).description("휴대폰 번호")
+                        )
+                ));
+
+        autoDoc(pathAdoc);
+    }
+
 }
