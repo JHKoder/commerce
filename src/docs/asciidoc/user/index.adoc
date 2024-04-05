@@ -1,0 +1,12 @@
+== 유저 API
+:basedir: {docdir}/../../../
+:snippets: {basedir}/build/generated-snippets
+:icons: font
+:source-highlighter: highlightjs
+:toc: left
+:toclevels: 3
+
+=== 로그인 API
+
+=== 회원 가입 API
+include::signup.adoc[]
