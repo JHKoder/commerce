@@ -1,4 +1,4 @@
-package github.jhkoder.commerce.common;
+package github.jhkoder.commerce.common.output;
 
 import github.jhkoder.commerce.common.error.ErrorDescriptor;
 
@@ -10,8 +10,8 @@ import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.List;
 
-public class AdocOutput {
-    protected void out(String domain, List<ErrorDescriptor> descriptorList) {
+public class RestDocAsciidocOutput {
+    public void out(String domain, List<ErrorDescriptor> descriptorList) {
         String[] paths = domain.split("/");
         int lastNumber = paths.length - 1;
         String path;
@@ -73,7 +73,7 @@ public class AdocOutput {
             content += """
                     |%d
                     3+|%s
-                    """.formatted(descriptor.getCode(), descriptor.getAbout());
+                    """.formatted(descriptor.code(), descriptor.description());
         }
         return content + "|======";
     }

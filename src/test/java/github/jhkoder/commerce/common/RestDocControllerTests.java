@@ -2,6 +2,7 @@ package github.jhkoder.commerce.common;
 
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import github.jhkoder.commerce.common.output.RestDocAsciidocOutput;
 import github.jhkoder.commerce.common.error.ErrorDescriptor;
 import github.jhkoder.commerce.user.web.rest.SignUpApiController;
 import net.minidev.json.parser.JSONParser;
@@ -79,10 +80,10 @@ public class RestDocControllerTests {
     }
 
     protected void autoDoc(String path, ErrorDescriptor... descriptors) {
-        new AdocOutput().out(path, Arrays.asList(descriptors));
+        new RestDocAsciidocOutput().out(path, Arrays.asList(descriptors));
     }
 
     protected void autoDoc(String path) {
-        new AdocOutput().out(path, null);
+        new RestDocAsciidocOutput().out(path, null);
     }
 }
