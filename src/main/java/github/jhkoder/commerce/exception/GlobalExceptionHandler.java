@@ -1,7 +1,10 @@
 package github.jhkoder.commerce.exception;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 @Slf4j
@@ -15,10 +18,19 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(errorResponse.getStatus()).body(errorResponse);
     }
 
+
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    protected ResponseEntity<ErrorResponse> handleMethodArgumentNotValidException(MethodArgumentNotValidException e) {
+        log.error(e.getMessage(), e);
+        ErrorResponse errorResponse = ErrorResponse.of(e.getStatusCode().value(),e.getMessage());
+        return ResponseEntity.status(errorResponse.getStatus()).body(errorResponse);
+    }
+
+
     @ExceptionHandler(value = ApiException.class)
     public ResponseEntity<ErrorResponse> handlerApiException(ApiException e) {
-        ErrorResponse errorResponse = ErrorResponse.of(e.getErrorCode());
-        return ResponseEntity.status(e.getErrorCode().getStatus()).body(errorResponse);
+        ErrorResponse errorResponse = ErrorResponse.of(e.getErrorCode());;
+        return ResponseEntity.status(errorResponse.getStatus()).body(errorResponse);
     }
 
     @ExceptionHandler(value = IllegalArgumentException.class)

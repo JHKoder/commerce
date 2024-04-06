@@ -15,7 +15,7 @@ import static java.nio.charset.StandardCharsets.UTF_8;
 
 @Service
 @RequiredArgsConstructor
-public class SmsRealService implements SmsService{
+public class SmsRealService implements SmsService {
     private final WebClientConfig client;
 
     @Value("${sms.platform.apick.api-key}")
@@ -25,36 +25,42 @@ public class SmsRealService implements SmsService{
     @Value("${sms.from}")
     private String from;
 
-    public SmsSendResponse send(SmsSendRequest request){
-        return send(request.to(),request.text());
+    public SmsSendResponse send(SmsSendRequest request) {
+        return send(request.to(), request.text());
     }
 
     public void signupCertSend(String sms, int verificationCode) {
         String signupContext = signupText(verificationCode);
-        SmsSendResponse response = send(sms,signupContext);
-        if(response.data().error().equals("null")){
+        SmsSendResponse response = send(sms, signupContext);
+        if (!response.data().isError()) {
             throw new ApiException(ErrorCode.SMS_SEND_FAIL);
         }
     }
+
     public void send(String sms, int verificationCode) {
         String signupContext = signupText(verificationCode);
-        SmsSendResponse response = send(sms,signupContext);
-        if(response.data().error().equals("null")){
+        SmsSendResponse response = send(sms, signupContext);
+        if (response.data().error().equals("null")) {
             throw new ApiException(ErrorCode.SMS_SEND_FAIL);
         }
     }
-    private SmsSendResponse send(String to,String text){
-        return client.webClient()
-                .post()
-                .uri(uri)
-                .body(BodyInserters.fromFormData("from",from)
-                        .with("to",to)
-                        .with("text",text)
-                )
-                .acceptCharset(UTF_8)
-                .header("CL_AUTH_KEY", apiKey)
-                .retrieve()
-                .bodyToMono(SmsSendResponse.class)
-                .block();
+
+    private SmsSendResponse send(String to, String text) {
+        try {
+            return client.webClient()
+                    .post()
+                    .uri(uri)
+                    .body(BodyInserters.fromFormData("from", from)
+                            .with("to", to)
+                            .with("text", text)
+                    )
+                    .acceptCharset(UTF_8)
+                    .header("CL_AUTH_KEY", apiKey)
+                    .retrieve()
+                    .bodyToMono(SmsSendResponse.class)
+                    .block();
+        } catch (Exception e) {
+            throw new ApiException(ErrorCode.SMS_SEND_FAIL);
+        }
     }
 }

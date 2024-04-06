@@ -6,10 +6,11 @@ import github.jhkoder.commerce.signcert.domain.SignCertAuthentication;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 
 @Repository
 public interface SignCertRepository extends JpaRepository<SignCert, Long> {
 
-    Optional<SignCert> findBySignCertAuthenticationAndVerificationSentAndAuthentication(SignCertAuthentication signCertAuthentication, String email, OracleBoolean oracleBoolean);
+    Optional<List<SignCert>> findBySignCertAuthenticationAndVerificationSentAndAuthentication(SignCertAuthentication signCertAuthentication, String email, OracleBoolean oracleBoolean);
 }

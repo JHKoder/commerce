@@ -6,6 +6,7 @@ import github.jhkoder.commerce.signcert.domain.SignCert;
 import github.jhkoder.commerce.signcert.domain.SignCertAuthentication;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -20,7 +21,7 @@ public class SignCertDslRepository {
 
     public Optional<SignCert> findByVerificationSentAndVerificationCode(String verificationSent, int verificationCode, SignCertAuthentication authentication) {
         LocalDateTime oneDayAgo = LocalDateTime.now().minusDays(1);
-        return Optional.of(factory.selectFrom(signCert)
+        return Optional.ofNullable(factory.selectFrom(signCert)
                 .where(signCert.verificationSent.eq(verificationSent)
                         .and(signCert.signCertAuthentication.eq(authentication))
                         .and(signCert.verificationCode.eq(verificationCode))
@@ -40,6 +41,7 @@ public class SignCertDslRepository {
                 .fetch().size();
     }
 
+    @Transactional
     public void updateAuthenticationBySignCertAuthentication(SignCertAuthentication auth, OracleBoolean authentication,String sent){
         factory.update(signCert)
                 .set(signCert.authentication,authentication)

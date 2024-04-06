@@ -34,11 +34,16 @@
                         <h3 class="card-title text-center mb-4">회원가입</h3>
                         <form id="signupForm">
                             <!-- 아이디 입력란 -->
-                            <div class="form-group">
-                                <label for="userId">아이디:</label>
-                                <input type="text" class="form-control" id="userId" name="userId" required minlength="5" maxlength="20">
+
+                            <label for="userId">아이디:</label>
+                            <div class="input-group">
+                                <input type="tel" class="form-control" id="userId" name="phone" required minlength="5" maxlength="20">
+                                <div class="input-group-append">
+                                    <button class="btn btn-outline-secondary" type="button" id="idVerificationButton" onclick="idCheck()">아이디 중복 체크 인증</button>
+                                </div>
                                 <div class="invalid-feedback" id="userIdValidation">5~20자의 영문 소문자, 숫자와 특수기호(_),(-)만 사용 가능합니다.</div>
                             </div>
+
                             <!-- 비밀번호 입력란 -->
                             <div class="form-group">
                                 <label for="password">비밀번호:</label>
@@ -47,25 +52,23 @@
                             </div>
                             <div class="form-group">
                                 <label for="userName">이름:</label>
-                                <input type="text" class="form-control" id="userName" name="userName" required>
+                                <input type="text" class="form-control" id="userName" name="userName" required minlength="2" maxlength="30">
+                                <div class="invalid-feedback" id="userNameValidation">2~30자의 영문과 숫자를 사용해 주세요.</div>
                             </div>
-                            <div class="form-group">
-                                <label for="birthdate">생년월일:</label>
-                                <input type="text" class="form-control" id="birthdate" name="birthdate" required pattern="[0-9]{8}" placeholder="YYYYMMDD">
-                            </div>
-                            <!-- 성별 선택 -->
+                            <!-- 성별 선택  -->
+                            <br>
                             <div class="form-group">
                                 <label for="gender">성별:</label>
                                 <select id="gender" name="gender" required>
-                                    <option value="">성별 선택</option>
-                                    <option value="MALE">남성</option>
-                                    <option value="FEMALE">여성</option>
+                                    <option value="MAN">남성</option>
+                                    <option value="WOMAN">여성</option>
                                 </select>
                             </div>
+                            <br>
                             <!-- 인증 방법 선택 -->
                             <div class="form-group">
                                 <label for="verificationMethod">인증 방법 선택:</label>
-                                <div>
+                                <div id="verificationMethod">
                                     <div class="form-check form-check-inline">
                                         <input class="form-check-input" type="radio" name="verificationMethod" id="phoneVerification" value="phone">
                                         <label class="form-check-label" for="phoneVerification">휴대폰 인증</label>
@@ -79,28 +82,17 @@
 
                             <!-- 휴대폰 번호 입력란 -->
                             <div class="form-group" id="phoneInput" style="display: none;">
-                                <div class="form-group">
-                                    <label for="telecom">통신사 선택:</label>
-                                    <select id="telecom" name="telecom" class="form-control" required>
-                                        <option value="">통신사 선택</option>
-                                        <option value="SKT">SKT</option>
-                                        <option value="KT">KT</option>
-                                        <option value="LGU+">LG U+</option>
-                                        <option value="SKT알뜰폰">SKT 알뜰폰</option>
-                                        <option value="KT알뜰폰">KT 알뜰폰</option>
-                                        <option value="LGU+알뜰폰">LG U+ 알뜰폰</option>
-                                    </select>
-                                </div>
                                 <label for="phone">전화번호:</label>
                                 <div class="input-group">
                                     <input type="tel" class="form-control" id="phone" name="phone">
                                     <div class="input-group-append">
-                                        <button class="btn btn-outline-secondary" type="button" id="phoneVerificationButton">휴대폰 인증</button>
+                                        <button class="btn btn-outline-secondary" type="button" id="phoneVerificationButton" onclick="smsSend()">휴대폰 인증</button>
                                     </div>
                                 </div>
                                 <input type="text" class="form-control mt-2" id="phoneVerificationCode" name="phoneVerificationCode" placeholder="휴대폰 인증 코드">
-                                <button type="button" class="btn btn-primary mt-2" id="phoneConfirmButton" disabled>인증 확인</button>
-                                <span class="verification-timer ml-2" id="phoneVerificationTimer"  style="display:none">남은 시간: 10:00</span>
+                                <div class="invalid-feedback" id="phoneValidation">휴대폰: ex) 01012345678</div>
+                                <button type="button" class="btn btn-primary mt-2" id="phoneConfirmButton" onclick="smsVerifyCode()" disabled>인증 확인</button>
+                                <span class="verification-timer ml-2" id="phoneVerificationTimer" style="display:none">남은 시간: 10:00</span>
                             </div>
                             <!-- 이메일 입력란 -->
                             <div class="form-group" id="emailInput" style="display: none;">
@@ -108,11 +100,12 @@
                                 <div class="input-group">
                                     <input type="email" class="form-control" id="email" name="email" required minlength="5" maxlength="255">
                                     <div class="input-group-append">
-                                        <button class="btn btn-outline-secondary" type="button" id="emailVerificationButton">이메일 인증</button>
+                                        <button class="btn btn-outline-secondary" type="button" id="emailVerificationButton" onclick="emailSend()">이메일 인증</button>
                                     </div>
                                 </div>
                                 <input type="text" class="form-control mt-2" id="emailVerificationCode" name="emailVerificationCode" placeholder="이메일 인증 코드">
-                                <button type="button" class="btn btn-primary mt-2" id="emailConfirmButton" disabled>인증 확인</button>
+                                <div class="invalid-feedback" id="emailValidation">이메일을 입력해 주세요.</div>
+                                <button type="button" class="btn btn-primary mt-2" id="emailConfirmButton" onclick="emailVerifyCode()" disabled>인증 확인</button>
                                 <span class="verification-timer ml-2" id="emailVerificationTimer" style="display:none">남은 시간: 10:00</span>
                             </div>
                             <button type="button" class="btn btn-primary btn-block" onclick="signup()">회원가입 요청하기</button>
@@ -122,11 +115,8 @@
             </div>
         </div>
     </div>
-
-
-<script>
-
-        // 선택한 인증 방법에 따라 해당 입력 칸을 표시하거나 감추는 함수
+    <script language="JavaScript">
+        // 선택한 인증 방법에 따라 해당 입력 칸을 표시 하거나 감추는 함수
         document.querySelectorAll('input[type="radio"]').forEach(function(radio) {
             radio.addEventListener('change', function() {
                 var verificationMethod = this.value;
@@ -142,63 +132,331 @@
 
 
 
-        // 회원가입 폼 유효성 검사
-        function validateSignupForm() {
-            var userId = document.getElementById('userId');
-            var password = document.getElementById('password');
-            var userIdValidation = document.getElementById('userIdValidation');
-            var passwordValidation = document.getElementById('passwordValidation');
-            // 아이디 유효성 검사
-            if (!userId.checkValidity()) {
-                userId.classList.add('is-invalid');
-                userIdValidation.style.display = 'block';
-            } else {
-                userId.classList.remove('is-invalid');
-                userIdValidation.style.display = 'none';
-            }
 
-            // 비밀번호 유효성 검사
-            if (!password.checkValidity()) {
-                password.classList.add('is-invalid');
-                passwordValidation.style.display = 'block';
-            } else {
-                password.classList.remove('is-invalid');
-                passwordValidation.style.display = 'none';
-            }
+// 정규식 패턴들
+var userIdPattern = /^[a-z0-9_-]{5,20}$/;
+var passwordPattern = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,16}$/;
+var userNamePattern = /^[a-zA-Z0-9]{2,30}$/;
+var phonePattern = /^\d{3}\d{3,4}\d{4}$/;
+var emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 
-            // 유효성 검사 통과 여부 반환
-            return userId.checkValidity() && password.checkValidity();
+// 회원가입 폼 유효성 검사
+function validateSignupForm() {
+    var userId = document.getElementById('userId');
+    var password = document.getElementById('password');
+    var userName = document.getElementById('userName');
+    var userIdValidation = document.getElementById('userIdValidation');
+    var passwordValidation = document.getElementById('passwordValidation');
+    var userNameValidation = document.getElementById('userNameValidation');
+    var verificationMethodRadio = document.querySelector('input[name="verificationMethod"]:checked');
+    var verificationMethod = verificationMethodRadio ? verificationMethodRadio.value : null;
+
+    // 아이디 유효성 검사
+    idValid(userId,userIdValidation);
+
+    // 비밀번호 유효성 검사
+    if (!passwordPattern.test(password.value)) {
+        password.classList.add('is-invalid');
+        passwordValidation.style.display = 'block';
+    } else {
+        password.classList.remove('is-invalid');
+        passwordValidation.style.display = 'none';
+    }
+
+    // 이름 유효성 검사
+    if (!userNamePattern.test(userName.value)) {
+        userName.classList.add('is-invalid');
+        userNameValidation.style.display = 'block';
+    } else {
+        userName.classList.remove('is-invalid');
+        userNameValidation.style.display = 'none';
+    }
+
+    // 선택한 인증 방법에 따라 정규식 검사
+    validEmailSms();
+
+console.log("userId validity:", userId.checkValidity());
+console.log("password validity:", password.checkValidity());
+console.log("userName validity:", userName.checkValidity());
+console.log("verificationMethod validity:", verificationMethod);
+
+
+if (verificationMethod === 'phone') {
+    console.log("phone validity:", phone.checkValidity());
+} else if (verificationMethod === 'email') {
+    console.log("email validity:", email.checkValidity());
+}
+    // 유효성 검사 통과 여부 반환
+    return userId.checkValidity() &&
+    password.checkValidity() &&
+    userName.checkValidity() &&
+    (verificationMethod === 'phone' ? phone.checkValidity() : email.checkValidity());
+}
+
+function phoneValid(phone,phoneValidation){
+        var phonePattern = /^\d{3}\d{3,4}\d{4}$/; // 휴대폰 번호 정규식
+        if (!phone.value.match(phonePattern)) {
+            phone.classList.add('is-invalid');
+            phoneValidation.style.display = 'block';
+        } else {
+            phone.classList.remove('is-invalid');
+            phoneValidation.style.display = 'none';
         }
+}
+
+function idValid(userId,idValidation){
+ // 아이디 유효성 검사
+    if (!userIdPattern.test(userId.value)) {
+        userId.classList.add('is-invalid');
+        userIdValidation.style.display = 'block';
+        return true;
+    } else {
+        userId.classList.remove('is-invalid');
+        userIdValidation.style.display = 'none';
+        return false;
+    }
+}
+
+function validEmailSms(){
+    var verificationMethodRadio = document.querySelector('input[name="verificationMethod"]:checked');
+    var verificationMethod = verificationMethodRadio ? verificationMethodRadio.value : null;
+    var phone = document.getElementById('phone');
+    var email = document.getElementById('email');
+    var phoneValidation = document.getElementById('phoneValidation');
+    var emailValidation = document.getElementById('emailValidation');
+    if (verificationMethod === 'phone') {
+        if(phoneValid(phone,phoneValidation) === true){
+            return true;
+        }else{
+            return false;
+        }
+    } else if (verificationMethod === 'email') {
+        var emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/; // 이메일 정규식
+        if (!email.value.match(emailPattern)) {
+            email.classList.add('is-invalid');
+            emailValidation.style.display = 'block';
+            return true;
+        } else {
+            email.classList.remove('is-invalid');
+            emailValidation.style.display = 'none';
+            return false;
+        }
+    }
+}
+
+function idCheck() {
+    var userId = document.getElementById('userId');
+    var userIdValidation = document.getElementById('userIdValidation');
+    if (idValid(userId, userIdValidation)) {
+        return false;
+    };
+    var data = {
+        id: userId.value
+    };
+    var jsonData = JSON.stringify(data);
+    fetch('/api/signup/idCheck', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: jsonData
+    }).then(function(response) {
+        console.log("signup");
+        console.log(response);
+        console.log(response.json);
+        if (response.ok) {
+            alert('아이디 중복 없음 ');
+        } else {
+            alert(response.status + ": " + response.statusText);
+        }
+        return response.json();
+    });
+}
+
+function smsSend(){
+    if(validEmailSms()){
+        return false;
+    }
+    document.getElementById('phoneConfirmButton').removeAttribute('disabled');
+    document.getElementById('phoneVerificationTimer').style.display = 'block';
+    clearInterval(phoneIntervalId);
+    startVerificationTimer(600, document.getElementById('phoneVerificationTimer'), true);
+
+    var apiUri = "/api/signup/cert/sms/send";
+    var phone = document.getElementById('phone');
+    var data = {
+        sms: phone.value
+    };
+    var jsonData = JSON.stringify(data);
+
+    fetch(apiUri, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json'},
+        body: jsonData
+        }).then ((response) => {
+            if(response.ok){
+                alert("문자 전송(1~10분)");
+            }
+            return response.json()
+        }).then(response => {
+            alert("ERROR CODE : " + response.status+", message : "+response.message);
+        }).catch(error => {
+            console.log("error" + error);
+        });
+}
+
+function emailSend(){
+    if(validEmailSms()){
+        return false;
+    }
+    document.getElementById('emailConfirmButton').removeAttribute('disabled');
+    document.getElementById('emailVerificationTimer').style.display = 'block';
+    clearInterval(emailIntervalId);
+    startVerificationTimer(600, document.getElementById('emailVerificationTimer'), false);
+
+
+    var apiUri = "/api/signup/cert/email/send";
+    var email = document.getElementById('email');
+    var data = {
+        email: email.value
+    };
+    var jsonData = JSON.stringify(data);
+    fetch(apiUri, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json'},
+        body: jsonData
+        }).then ((response) => {
+            if(response.ok){
+                alert("메일 전송");
+            }
+            return response.json()
+        }).then(response => {
+            alert("ERROR CODE : " + response.status+", message : "+response.message);
+        }).catch(error => {
+            console.log("error" + error);
+        });
+
+}
+
+function smsVerifyCode(){
+    var apiUri = "/api/signup/cert/sms/verify";
+    var phone = document.getElementById('phone');
+    var code = document.getElementById('phoneVerificationCode');
+    var data ={
+        send: phone.value,
+        code: code.value
+    };
+    var jsonData = JSON.stringify(data);
+    fetch(apiUri, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json'},
+        body: jsonData
+    }).then ((response) => {
+            if(response.ok){
+                alert("인증 성공 ");
+                return undefined;
+            }
+            return response.json()
+        }).then(response => {
+            if(undefined === response){
+                console.log(" then   "+ response);
+                return ;
+            }
+            alert("ERROR CODE : " + response.status+", message : "+response.message);
+        }).catch(error => {
+            console.log("error" + error);
+        });
+
+}
+
+function emailVerifyCode(){
+    var apiUri = "/api/signup/cert/email/verify";
+    var code = document.getElementById('emailVerificationCode');
+    var email = document.getElementById('email');
+    var data ={
+        send: email.value,
+        code: code.value
+    };
+    var jsonData = JSON.stringify(data);
+    fetch(apiUri, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json'},
+        body: jsonData
+    }).then ((response) => {
+            if(response.ok){
+                alert("인증 성공 ");
+                return undefined;
+            }
+            return response.json()
+        }).then(response => {
+            if(undefined === response){
+                console.log(" then   "+ response);
+                return ;
+            }
+            alert("ERROR CODE : " + response.status+", message : "+response.message);
+        }).catch(error => {
+            console.log("error" + error);
+        });
+
+}
+
 
         // 회원가입 요청 함수
         function signup() {
+            console.log("signup ");
             var isValid = validateSignupForm();
             if (!isValid) {
+                console.log("유효성 검사 실패로 중지");
                 return; // 유효성 검사 실패 시 요청 중지
             }
 
-            var form = document.getElementById("signupForm");
-            var formData = new FormData(form);
+            var genderSelect = document.getElementById("gender");
+            var selectedGender = genderSelect.value;
 
-            fetch('/api/user/signup', {
+
+            var verificationMethodRadios = document.querySelectorAll('input[name="verificationMethod"]');
+
+var selectedVerificationMethod = '';
+
+verificationMethodRadios.forEach(function(radio) {
+    if (radio.checked) {
+        selectedVerificationMethod = radio.value.toUpperCase();
+    }
+});
+
+            console.log("유효성 검사 성공" + gender);
+            // 회원가입 정보
+            var userData = {
+                userId: document.getElementById('userId').value,
+                userName: document.getElementById('userName').value,
+                password: document.getElementById('password').value,
+                email: document.getElementById('email').value,
+                phone: document.getElementById('phone').value,
+                gender: selectedGender,
+                authenticationType: selectedVerificationMethod
+            };
+
+            var jsonData = JSON.stringify(userData);
+
+            console.log("signup json 변환 실패");
+            fetch('/api/signup', {
                 method: 'POST',
-                body: formData
-            })
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error('서버 응답 오류');
-                }
-                return response.json();
-            })
-            .then(data => {
-                console.log(data);
-                alert('회원가입이 성공적으로 완료되었습니다.');
-                window.location.href = "/";
-            })
-            .catch(error => {
-                alert('오류가 발생했습니다: ' + error.message);
-                console.error('오류:', error);
-            });
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: jsonData
+            }).then ((response) => {
+                    if(response.ok){
+                        console.log(response);
+                        alert("회원가입이 성공적으로 완료되었습니다.");
+                        window.location.href = "/";
+                    }
+            return response.json()
+        }).then(response => {
+            alert("ERROR CODE : " + response.status+", message : "+response.message);
+        }).catch(error => {
+            console.log("error" + error);
+        });
         }
 
 
@@ -246,24 +504,9 @@ function startVerificationTimer(duration, display, isPhone) {
         emailIntervalId = intervalId;
     }
 }
-// 버튼 클릭 시 이벤트 처리
-// 이메일 인증
-document.getElementById('emailVerificationButton').addEventListener('click', function() {
-    // emailConfirmButton 활성화
-    document.getElementById('emailConfirmButton').removeAttribute('disabled');
-    document.getElementById('emailVerificationTimer').style.display = 'block';
-    clearInterval(emailIntervalId);
-    startVerificationTimer(600, document.getElementById('emailVerificationTimer'), false);
-});
-// 휴대폰 인증
-document.getElementById('phoneVerificationButton').addEventListener('click', function() {
-    document.getElementById('phoneConfirmButton').removeAttribute('disabled');
-    document.getElementById('phoneVerificationTimer').style.display = 'block';
-    clearInterval(phoneIntervalId);    // 기존 타이머 초기화
-    startVerificationTimer(600, document.getElementById('phoneVerificationTimer'), true);
-});
 
-</script>
-</body>
+
+    </script>
+    </body>
 </th:block>
 </html>
