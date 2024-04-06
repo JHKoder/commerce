@@ -8,11 +8,12 @@ import github.jhkoder.commerce.signcert.service.request.SignUpCertVerifyRequest;
 import github.jhkoder.commerce.signcert.service.request.SignUpValidRequest;
 import github.jhkoder.commerce.sms.service.SmsService;
 import github.jhkoder.commerce.user.service.UserService;
+import github.jhkoder.commerce.user.service.request.SignUpEmailSendRequest;
 import github.jhkoder.commerce.user.service.request.SignUpRequest;
+import github.jhkoder.commerce.user.service.request.SignUpSmsSendRequest;
 import github.jhkoder.commerce.user.service.response.SignUpCertVerifyResponse;
 import github.jhkoder.commerce.user.service.response.SignUpIdCheckResponse;
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.NotBlank;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -25,12 +26,13 @@ import org.springframework.web.bind.annotation.RestController;
 public class SignUpApiController {
     private final SignCertService signCertService;
     private final UserService userService;
-    private final SmsService smsRealService;
+    private final SmsService smsService;
     private final EmailService emailService;
 
     /**
      * 1. 가입된 회원인지 재확인
      * 2. 인증된 [이메일,휴대폰] 재확인
+     * 3. 회원가입 승인
      *
      * @param request
      */
@@ -51,25 +53,25 @@ public class SignUpApiController {
      * 1. 회원가입된 휴대폰 중복 검증
      * 2. 같은 인증은 하루 최대 5번으로 제한
      * 3. 휴대폰으로 인증번호 전달
-     *
-     * @param sms - 휴대폰 번호
+     * # 휴대폰 인증의 경우 하루 최대 5번 으로 제약
+     * # 이메일 인증의 경우 하루 최대 10번 으로 제약
      */
     @PostMapping("/cert/sms/send")
-    public void smsCertCodeSend(@RequestBody @NotBlank String sms) {
-        userService.checkSmsValidAndUnique(sms);
-        signCertService.validateSmsVerificationExceed(sms);
+    public void smsCertCodeSend(@Valid @RequestBody SignUpSmsSendRequest request) {
+        userService.checkSmsValidAndUnique(request.sms());
+        signCertService.validateSmsVerificationExceed(request.sms());
         int verificationCode = signCertService.newVerificationCode();
-        smsRealService.signupCertSend(sms, verificationCode);
-        signCertService.saveCert(new SignUpCertRequest(verificationCode, sms, SignCertAuthentication.PHONE));
+        smsService.signupCertSend(request.sms(), verificationCode);
+        signCertService.saveCert(new SignUpCertRequest(verificationCode, request.sms(), SignCertAuthentication.PHONE));
     }
 
     @PostMapping("/cert/email/send")
-    public void emailCertCodeSend(@RequestBody @NotBlank String email) {
-        userService.checkEmailValidAndUnique(email);
-        signCertService.validateEmailVerificationExceed(email);
+    public void emailCertCodeSend(@Valid @RequestBody SignUpEmailSendRequest request) {
+        userService.checkEmailValidAndUnique(request.email());
+        signCertService.validateEmailVerificationExceed(request.email());
         int verificationCode = signCertService.newVerificationCode();
-        emailService.signupCertSend(email, verificationCode);
-        signCertService.saveCert(new SignUpCertRequest(verificationCode, email, SignCertAuthentication.EMAIL));
+        emailService.signupCertSend(request.email(), verificationCode);
+        signCertService.saveCert(new SignUpCertRequest(verificationCode, request.email(), SignCertAuthentication.EMAIL));
     }
 
     @PostMapping("/cert/sms/verify")
