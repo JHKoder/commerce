@@ -15,13 +15,17 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 
 @Component
-@RequiredArgsConstructor
-
 public class JwtAuthenticationProvider implements AuthenticationProvider {
     private final TokenService tokenService;
 
+    public JwtAuthenticationProvider(TokenService tokenService) {
+        System.out.println("JwtAuthenticationProvider @Component 등록");
+        this.tokenService = tokenService;
+    }
+
     @Override
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
+        System.out.println("JwtAuthenticationProvider - authenticate() 호출");
         return authenticate((JwtAuthenticationToken) authentication);
     }
 

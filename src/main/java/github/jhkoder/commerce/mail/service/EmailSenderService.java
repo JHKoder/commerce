@@ -11,6 +11,7 @@ import org.springframework.mail.MailParseException;
 import org.springframework.mail.MailSendException;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.scheduling.annotation.Async;
 
 import static github.jhkoder.commerce.mail.output.EmailSignupOutput.*;
 
@@ -31,6 +32,10 @@ public class EmailSenderService implements EmailService {
         message.setTo(request.to());
         message.setSubject(request.subject());
         message.setText(request.text());
+        send(message);
+    }
+
+    private void send(SimpleMailMessage message){
         emailConfig.send(message);
     }
 

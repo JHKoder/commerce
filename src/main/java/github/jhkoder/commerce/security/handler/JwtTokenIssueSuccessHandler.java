@@ -33,10 +33,12 @@ public class JwtTokenIssueSuccessHandler implements AuthenticationSuccessHandler
 
     private void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
                                          UsernamePasswordAuthenticationToken authentication) throws IOException {
+        System.out.println("start success");
         String username = authentication.getPrincipal().toString();
         var authorities = authentication.getAuthorities();
 
         var tokenResponse = new TokenResponse(tokenService.createToken(username, authorities));
+        System.out.println(tokenResponse);
 
         response.setStatus(HttpStatus.OK.value());
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
@@ -44,7 +46,9 @@ public class JwtTokenIssueSuccessHandler implements AuthenticationSuccessHandler
 
         var session = request.getSession(false);
         if (!isNull(session)) {
+            System.out.println("isNull session");
             session.removeAttribute(WebAttributes.AUTHENTICATION_EXCEPTION);
         }
+        System.out.println("end success");
     }
 }

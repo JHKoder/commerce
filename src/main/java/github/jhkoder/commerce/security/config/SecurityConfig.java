@@ -11,10 +11,13 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.config.annotation.web.configurers.AuthorizeHttpRequestsConfigurer;
+import org.springframework.security.config.annotation.web.configurers.FormLoginConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -31,47 +34,55 @@ import java.util.List;
 public class SecurityConfig {
 
     public static final String AUTHENTICATION_URL = "/api/auth/login";
-    public static final String API_ROOT_URL = "/api/user";
+    public static final String API_ROOT_URL = "/api/dev/**";
 
     private final AuthenticationSuccessHandler successHandler;
     private final AuthenticationFailureHandler failureHandler;
 
     private final ObjectMapper objectMapper;
 
+
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http, AuthenticationManager authenticationManager) throws Exception {
+        System.out.println("config" + authenticationManager.getClass().getPackageName());
         return http
                 .sessionManagement(configurer -> configurer.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .csrf(AbstractHttpConfigurer::disable)
-                .authorizeHttpRequests((configurer) -> configurer
-                        .requestMatchers("/","/home","/signup","/api/signup/**","/api/signup/idCheck",
-
-                                "/docs/**","/img/**","/css/**","/js/**","/layout/**","/fragment/**").permitAll()
-                        .requestMatchers("/api/admin").hasAnyRole(Role.ADMIN.name())
-                        .requestMatchers("/api/user").hasAnyRole(Role.USER.name())
-                        .anyRequest().authenticated()
-                )
-                .formLogin((form) -> form
-                        .loginPage("/login")
-                        .permitAll()
-                )
+                .authorizeHttpRequests(this::authorizeHttpRequests)
+                .formLogin(this::formLogin)
                 .addFilterBefore(jwtTokenIssueFilter(authenticationManager), UsernamePasswordAuthenticationFilter.class)
                 .addFilterBefore(jwtTokenAuthenticationFilter(List.of(AUTHENTICATION_URL), authenticationManager), UsernamePasswordAuthenticationFilter.class)
                 .build();
     }
 
+
     @Bean
-    public AuthenticationManager authenticationManager(HttpSecurity http, JwtTokenIssueProvider jwtTokenIssueProvider, JwtAuthenticationProvider jwtAuthenticationProvider) throws Exception {
+    public AuthenticationManager authenticationManager(HttpSecurity http,JwtTokenIssueProvider jwtTokenIssueProvider, JwtAuthenticationProvider jwtAuthenticationProvider) throws Exception {
+        System.out.println("AuthenticationManager @Bean 등록 ");
         var authenticationManagerBuilder = http.getSharedObject(AuthenticationManagerBuilder.class);
         authenticationManagerBuilder.authenticationProvider(jwtAuthenticationProvider);
         authenticationManagerBuilder.authenticationProvider(jwtTokenIssueProvider);
-
         return authenticationManagerBuilder.build();
     }
 
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
+    }
+
+    private void authorizeHttpRequests(AuthorizeHttpRequestsConfigurer<HttpSecurity>.AuthorizationManagerRequestMatcherRegistry configurer) {
+        configurer
+                .requestMatchers("/","/home","/signup").permitAll()
+                .requestMatchers("/api/signup").permitAll()
+                .requestMatchers( "/docs/**","/img/**","/css/**","/js/**","/layout/**","/fragment/**").permitAll()
+                .requestMatchers("/api/dev/admin").hasAnyRole(Role.ADMIN.name())
+                .requestMatchers("/api/dev/user").hasAnyRole(Role.USER.name())
+                .anyRequest().authenticated();
+    }
+
+    private void formLogin(FormLoginConfigurer<HttpSecurity> httpSecurityFormLoginConfigurer) {
+        httpSecurityFormLoginConfigurer
+                .loginPage("/login") .permitAll();
     }
 
 
