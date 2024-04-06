@@ -5,6 +5,7 @@ import github.jhkoder.commerce.exception.AuthenticationCustomException;
 import github.jhkoder.commerce.security.filter.request.LoginRequest;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -17,6 +18,7 @@ import java.io.IOException;
 
 import static github.jhkoder.commerce.exception.ErrorCode.SECURITY_AUTHENTICATION_METHOD_NOT_SUPPORTED;
 
+@Slf4j
 public class JwtTokenIssueFilter extends AbstractAuthenticationProcessingFilter {
     private final ObjectMapper objectMapper;
 
@@ -32,6 +34,7 @@ public class JwtTokenIssueFilter extends AbstractAuthenticationProcessingFilter 
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response)
             throws AuthenticationException, IOException {
+        System.out.println("attemptAuthentication () ");
         if (!isPostMethod(request)) {
             throw new AuthenticationCustomException(SECURITY_AUTHENTICATION_METHOD_NOT_SUPPORTED);
         }
