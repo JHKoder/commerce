@@ -31,7 +31,7 @@ import java.util.List;
 public class SecurityConfig {
 
     public static final String AUTHENTICATION_URL = "/api/auth/login";
-    public static final String API_ROOT_URL = "/api/**";
+    public static final String API_ROOT_URL = "/api/user";
 
     private final AuthenticationSuccessHandler successHandler;
     private final AuthenticationFailureHandler failureHandler;
@@ -44,9 +44,9 @@ public class SecurityConfig {
                 .sessionManagement(configurer -> configurer.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests((configurer) -> configurer
-                        .requestMatchers("/","/home","/signup","/api/signup","/api/signup/**",
-                                "/docs/**",
-                                "/img/**","/css/**","/js/**","/layout/**","/fragment/**").permitAll()
+                        .requestMatchers("/","/home","/signup","/api/signup/**","/api/signup/idCheck",
+
+                                "/docs/**","/img/**","/css/**","/js/**","/layout/**","/fragment/**").permitAll()
                         .requestMatchers("/api/admin").hasAnyRole(Role.ADMIN.name())
                         .requestMatchers("/api/user").hasAnyRole(Role.USER.name())
                         .anyRequest().authenticated()
@@ -73,6 +73,7 @@ public class SecurityConfig {
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
+
 
     private JwtTokenIssueFilter jwtTokenIssueFilter(AuthenticationManager authenticationManager) {
         var filter = new JwtTokenIssueFilter(AUTHENTICATION_URL, objectMapper, successHandler, failureHandler);
