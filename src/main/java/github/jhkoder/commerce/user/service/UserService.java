@@ -31,7 +31,7 @@ public class UserService {
 
     @Transactional(readOnly = true)
     public SignUpIdCheckResponse isIdCheck(String id) {
-        if (userRepository.findByUserId(id).isEmpty()) {
+        if (userRepository.findByUserId(id).isPresent()) {
             throw new ApiException(ErrorCode.USER_ID_DUPLICATE);
         }
         return new SignUpIdCheckResponse(true);
@@ -53,14 +53,14 @@ public class UserService {
 
     @Transactional(readOnly = true)
     public void checkSmsValidAndUnique(String phone) {
-        if (!userRepository.existsByPhone(phone)) {
+        if (userRepository.existsByPhone(phone)) {
             throw new ApiException(ErrorCode.USER_PHONE_UNIQUE);
         }
     }
 
     @Transactional(readOnly = true)
     public void checkEmailValidAndUnique(String email) {
-        if (!userRepository.existsByEmail(email)) {
+        if (userRepository.existsByEmail(email)) {
             throw new ApiException(ErrorCode.USER_EMAIL_UNIQUE);
         }
     }

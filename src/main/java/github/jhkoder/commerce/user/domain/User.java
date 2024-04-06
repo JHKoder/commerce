@@ -21,11 +21,11 @@ public class User extends BaseEntity {
     @Size(min = 4, max = 20)
     @Column(name = "user_id", unique = true)
     private String userId;
+    @Size(min = 2,max=30)
     @Column(name = "user_name")
     private String userName;
     private String password;
 
-    @Size(min = 5, max = 255)
     @Column(name = "email", unique = true)
     private String email;
     @Column(unique = true)
