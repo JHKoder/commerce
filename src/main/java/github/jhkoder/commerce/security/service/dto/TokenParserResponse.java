@@ -1,4 +1,5 @@
-package github.jhkoder.commerce.security.service.response;
+package github.jhkoder.commerce.security.service.dto;
+
 
 import github.jhkoder.commerce.user.domain.Role;
 

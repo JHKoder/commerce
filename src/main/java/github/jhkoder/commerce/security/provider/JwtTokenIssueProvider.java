@@ -1,7 +1,7 @@
 package github.jhkoder.commerce.security.provider;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.context.annotation.Configuration;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -9,33 +9,29 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
-
+@Slf4j
 @Component
+@RequiredArgsConstructor
 public class JwtTokenIssueProvider implements AuthenticationProvider {
     private final PasswordEncoder passwordEncoder;
     private final UserDetailsService userDetailsService;
 
-    public JwtTokenIssueProvider(PasswordEncoder passwordEncoder, UserDetailsService userDetailsService) {
-
-        System.out.println("JwtTokenIssueProvider @Component 등록");
-        this.passwordEncoder = passwordEncoder;
-        this.userDetailsService = userDetailsService;
-    }
-
     @Override
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
-        System.out.println("---authenticate");
         var username = (String) authentication.getPrincipal();
         var password = (String) authentication.getCredentials();
 
-        System.out.println(username+","+password);
-        return authenticate(username, password);
+
+        UsernamePasswordAuthenticationToken token= authenticate(username, password);
+
+        return token;
     }
 
     @Override
@@ -44,21 +40,20 @@ public class JwtTokenIssueProvider implements AuthenticationProvider {
     }
 
     private UsernamePasswordAuthenticationToken authenticate(String username, String password) {
-        System.out.println("user service authenticate start  UserDetails");
+        log.info("로그인 처리 provider - 인증 시도중 ... ");
         UserDetails user = userDetailsService.loadUserByUsername(username);
-        System.out.println("user service authenticate end   ");
-        System.out.println(password +" , "+ user.getPassword());
         if (!passwordEncoder.matches(password, user.getPassword())) {
             throw new BadCredentialsException("인증 실패. username or password 불일치");
         }
-
+        log.info("로그인 처리 provider - ["+user.getUsername()+"] - 인증 성공");
         return UsernamePasswordAuthenticationToken.authenticated(user.getUsername(), null, authorities(user));
     }
 
     private List<SimpleGrantedAuthority> authorities(UserDetails user) {
         return user.getAuthorities().stream()
-                .map(GrantedAuthority::getAuthority)
-                .map(SimpleGrantedAuthority::new)
-                .toList();
+                .map(authority -> {
+                    log.info("인증자 ["+user.getUsername() + "] 의 권한 부여 LEVEL: " + authority.getAuthority());
+                    return new SimpleGrantedAuthority(authority.getAuthority());
+                }).toList();
     }
 }

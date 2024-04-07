@@ -1,7 +1,7 @@
 package github.jhkoder.commerce.security.filter;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import github.jhkoder.commerce.exception.AuthenticationCustomException;
+import github.jhkoder.commerce.security.exception.AuthMethodNotSupportedException;
 import github.jhkoder.commerce.security.filter.request.LoginRequest;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -15,8 +15,6 @@ import org.springframework.security.web.authentication.AuthenticationFailureHand
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 
 import java.io.IOException;
-
-import static github.jhkoder.commerce.exception.ErrorCode.SECURITY_AUTHENTICATION_METHOD_NOT_SUPPORTED;
 
 @Slf4j
 public class JwtTokenIssueFilter extends AbstractAuthenticationProcessingFilter {
@@ -34,9 +32,10 @@ public class JwtTokenIssueFilter extends AbstractAuthenticationProcessingFilter 
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response)
             throws AuthenticationException, IOException {
-        System.out.println("attemptAuthentication () ");
+
+        log.info("JwtTokenIssueFilter-attemptAuthentication");
         if (!isPostMethod(request)) {
-            throw new AuthenticationCustomException(SECURITY_AUTHENTICATION_METHOD_NOT_SUPPORTED);
+            throw new AuthMethodNotSupportedException("Authentication method not supported");
         }
 
         var loginRequest = objectMapper.readValue(request.getReader(), LoginRequest.class);

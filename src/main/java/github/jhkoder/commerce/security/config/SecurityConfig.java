@@ -11,13 +11,12 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.annotation.web.configurers.AuthorizeHttpRequestsConfigurer;
-import org.springframework.security.config.annotation.web.configurers.FormLoginConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -28,41 +27,30 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 import java.util.List;
 
+
 @Configuration
+@EnableWebSecurity
 @EnableMethodSecurity
 @RequiredArgsConstructor
 public class SecurityConfig {
 
     public static final String AUTHENTICATION_URL = "/api/auth/login";
-    public static final String API_ROOT_URL = "/api/dev/**";
+    public static final String API_ROOT_URL = "/api/**";
 
     private final AuthenticationSuccessHandler successHandler;
     private final AuthenticationFailureHandler failureHandler;
 
     private final ObjectMapper objectMapper;
 
-
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http, AuthenticationManager authenticationManager) throws Exception {
-        System.out.println("config" + authenticationManager.getClass().getPackageName());
-        return http
-                .sessionManagement(configurer -> configurer.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .csrf(AbstractHttpConfigurer::disable)
+        http.csrf(AbstractHttpConfigurer::disable)
+                .sessionManagement(security -> security.sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED))
                 .authorizeHttpRequests(this::authorizeHttpRequests)
-                .formLogin(this::formLogin)
                 .addFilterBefore(jwtTokenIssueFilter(authenticationManager), UsernamePasswordAuthenticationFilter.class)
                 .addFilterBefore(jwtTokenAuthenticationFilter(List.of(AUTHENTICATION_URL), authenticationManager), UsernamePasswordAuthenticationFilter.class)
-                .build();
-    }
-
-
-    @Bean
-    public AuthenticationManager authenticationManager(HttpSecurity http,JwtTokenIssueProvider jwtTokenIssueProvider, JwtAuthenticationProvider jwtAuthenticationProvider) throws Exception {
-        System.out.println("AuthenticationManager @Bean 등록 ");
-        var authenticationManagerBuilder = http.getSharedObject(AuthenticationManagerBuilder.class);
-        authenticationManagerBuilder.authenticationProvider(jwtAuthenticationProvider);
-        authenticationManagerBuilder.authenticationProvider(jwtTokenIssueProvider);
-        return authenticationManagerBuilder.build();
+                .formLogin(login -> login.loginPage("/login").permitAll());
+        return http.build();
     }
 
     @Bean
@@ -70,21 +58,21 @@ public class SecurityConfig {
         return new BCryptPasswordEncoder();
     }
 
+    @Bean
+    public AuthenticationManager authenticationManager(HttpSecurity http, JwtTokenIssueProvider jwtTokenIssueProvider, JwtAuthenticationProvider jwtAuthenticationProvider) throws Exception {
+        var authenticationManagerBuilder = http.getSharedObject(AuthenticationManagerBuilder.class);
+        authenticationManagerBuilder.authenticationProvider(jwtAuthenticationProvider);
+        authenticationManagerBuilder.authenticationProvider(jwtTokenIssueProvider);
+        return authenticationManagerBuilder.build();
+    }
+
     private void authorizeHttpRequests(AuthorizeHttpRequestsConfigurer<HttpSecurity>.AuthorizationManagerRequestMatcherRegistry configurer) {
         configurer
-                .requestMatchers("/","/home","/signup").permitAll()
-                .requestMatchers("/api/signup").permitAll()
-                .requestMatchers( "/docs/**","/img/**","/css/**","/js/**","/layout/**","/fragment/**").permitAll()
-                .requestMatchers("/api/dev/admin").hasAnyRole(Role.ADMIN.name())
-                .requestMatchers("/api/dev/user").hasAnyRole(Role.USER.name())
-                .anyRequest().authenticated();
+                .requestMatchers("/", "/home", "/signup", "/signup/api/**").permitAll()
+                .requestMatchers("/docs/**", "/img/**", "/css/**", "/js/**", "/layout/**", "/fragment/**").permitAll()
+                .requestMatchers("/user/**").hasAnyRole(Role.USER.name())
+                .requestMatchers("/admin/**").hasAnyRole(Role.ADMIN.name());
     }
-
-    private void formLogin(FormLoginConfigurer<HttpSecurity> httpSecurityFormLoginConfigurer) {
-        httpSecurityFormLoginConfigurer
-                .loginPage("/login") .permitAll();
-    }
-
 
     private JwtTokenIssueFilter jwtTokenIssueFilter(AuthenticationManager authenticationManager) {
         var filter = new JwtTokenIssueFilter(AUTHENTICATION_URL, objectMapper, successHandler, failureHandler);
@@ -100,4 +88,6 @@ public class SecurityConfig {
 
         return filter;
     }
+
+
 }
