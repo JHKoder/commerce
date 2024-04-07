@@ -1,7 +1,7 @@
 package github.jhkoder.commerce.security.service;
 
 import github.jhkoder.commerce.security.exception.JwtExpiredTokenException;
-import github.jhkoder.commerce.security.service.response.TokenParserResponse;
+import github.jhkoder.commerce.security.service.dto.TokenParserResponse;
 import github.jhkoder.commerce.user.domain.Role;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
