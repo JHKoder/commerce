@@ -116,6 +116,8 @@
         </div>
     </div>
     <script language="JavaScript">
+
+        var defaultApiPath = "/signup/api";
         // 선택한 인증 방법에 따라 해당 입력 칸을 표시 하거나 감추는 함수
         document.querySelectorAll('input[type="radio"]').forEach(function(radio) {
             radio.addEventListener('change', function() {
@@ -254,7 +256,7 @@ function idCheck() {
         id: userId.value
     };
     var jsonData = JSON.stringify(data);
-    fetch('/api/signup/idCheck', {
+    fetch(defaultApiPath + "/idCheck", {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
@@ -282,7 +284,7 @@ function smsSend(){
     clearInterval(phoneIntervalId);
     startVerificationTimer(600, document.getElementById('phoneVerificationTimer'), true);
 
-    var apiUri = "/api/signup/cert/sms/send";
+    var apiUri = defaultApiPath+"/cert/sms/send";
     var phone = document.getElementById('phone');
     var data = {
         sms: phone.value
@@ -315,7 +317,7 @@ function emailSend(){
     startVerificationTimer(600, document.getElementById('emailVerificationTimer'), false);
 
 
-    var apiUri = "/api/signup/cert/email/send";
+    var apiUri =  defaultApiPath+"/cert/email/send";
     var email = document.getElementById('email');
     var data = {
         email: email.value
@@ -339,7 +341,7 @@ function emailSend(){
 }
 
 function smsVerifyCode(){
-    var apiUri = "/api/signup/cert/sms/verify";
+    var apiUri =  defaultApiPath+"/cert/sms/verify";
     var phone = document.getElementById('phone');
     var code = document.getElementById('phoneVerificationCode');
     var data ={
@@ -370,7 +372,7 @@ function smsVerifyCode(){
 }
 
 function emailVerifyCode(){
-    var apiUri = "/api/signup/cert/email/verify";
+    var apiUri =  defaultApiPath+"/cert/email/verify";
     var code = document.getElementById('emailVerificationCode');
     var email = document.getElementById('email');
     var data ={
@@ -403,7 +405,7 @@ function emailVerifyCode(){
 
         // 회원가입 요청 함수
         function signup() {
-            console.log("signup ");
+            console.log("signup");
             var isValid = validateSignupForm();
             if (!isValid) {
                 console.log("유효성 검사 실패로 중지");
@@ -439,7 +441,7 @@ verificationMethodRadios.forEach(function(radio) {
             var jsonData = JSON.stringify(userData);
 
             console.log("signup json 변환 실패");
-            fetch('/api/signup', {
+            fetch( defaultApiPath, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
