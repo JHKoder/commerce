@@ -32,14 +32,10 @@ OCS (oracle cloud service)
 
 아래는 과정을 순서대로 나열한 것 입니다.
 
-```text
-1. Git PR 
-2. Git action 
-3. Git security 에서 인증값, 설정값을 획득 
-4. 주 서버에 sftp 형식으로 파일 전송 ex) temp_filename.jar
-5. 이전 파일 백업후 temp_filename -> filename 으로 변경
-6. 서비스 재시작 
-```
+
+### DB ERD V1
+
+![image](https://github.com/JHKoder/commerce/assets/105915960/f0fb75d3-db03-4202-bf6f-20edcf0868a4)
 
 ## 웹 구축  
 
