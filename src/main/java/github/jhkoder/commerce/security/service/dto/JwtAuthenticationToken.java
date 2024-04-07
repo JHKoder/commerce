@@ -1,4 +1,4 @@
-package github.jhkoder.commerce.security;
+package github.jhkoder.commerce.security.service.dto;
 
 import org.springframework.security.authentication.AbstractAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;

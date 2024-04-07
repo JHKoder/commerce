@@ -1,10 +1,11 @@
 package github.jhkoder.commerce.security.filter;
 
-import github.jhkoder.commerce.security.JwtAuthenticationToken;
+import github.jhkoder.commerce.security.service.dto.JwtAuthenticationToken;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.Authentication;
@@ -19,7 +20,7 @@ import java.io.IOException;
 
 import static java.util.Objects.isNull;
 
-
+@Slf4j
 public class JwtTokenAuthenticationFilter extends AbstractAuthenticationProcessingFilter {
     public JwtTokenAuthenticationFilter(RequestMatcher matcher, AuthenticationFailureHandler failureHandler) {
         super(matcher);
@@ -29,6 +30,7 @@ public class JwtTokenAuthenticationFilter extends AbstractAuthenticationProcessi
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response)
             throws AuthenticationException {
+        log.info("JwtTokenAuthenticationFilter-attemptAuthentication");
         String tokenPayload = extractToken(request.getHeader(HttpHeaders.AUTHORIZATION));
 
         return getAuthenticationManager().authenticate(new JwtAuthenticationToken(tokenPayload));
@@ -37,6 +39,9 @@ public class JwtTokenAuthenticationFilter extends AbstractAuthenticationProcessi
     @Override
     protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain,
                                             Authentication authentication) throws IOException, ServletException {
+
+
+        log.info("JwtTokenAuthenticationFilter-successfulAuthentication");
         SecurityContext context = SecurityContextHolder.createEmptyContext();
         context.setAuthentication(authentication);
 
@@ -47,6 +52,8 @@ public class JwtTokenAuthenticationFilter extends AbstractAuthenticationProcessi
     @Override
     protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response,
                                               AuthenticationException authenticationException) throws IOException, ServletException {
+
+        log.info("JwtTokenAuthenticationFilter-fail");
         SecurityContextHolder.clearContext();
         getFailureHandler().onAuthenticationFailure(request, response, authenticationException);
     }
