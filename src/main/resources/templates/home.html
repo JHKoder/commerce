@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:th="http://www.thymeleaf.org"
-      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" xmlns:sec="http://www.w3.org/1999/xhtml"
       layout:decorate="~{layout/default}">
 <head>
     <meta charset="UTF-8">
@@ -31,6 +31,9 @@
             </nav>
         </div>
     </nav>
+    <div sec:authorize="isAuthenticated()">
+        Authenticated as <span sec:authentication="name"></span>
+    </div>
     <div th:if="${#authorization.expression('hasRole(''ROLE_ADMIN'')')}">
         <p>You have admin privileges.</p>
     </div>

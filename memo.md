@@ -106,6 +106,11 @@ dependencies {
 이전 버전 사용시 나타 날 수 있는 오류
 ###### [Attempt to recreate a file for type ...QEntity]
 
+
+### spring security 6.x 권한부여 이상
+순서 상으로 이렇게 부여가 될텐데 
+![img.png](img.png)
+
 ################################################
 ---
 # 참고한 자료
