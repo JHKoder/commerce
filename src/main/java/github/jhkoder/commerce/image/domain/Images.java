@@ -17,7 +17,6 @@ public class Images extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private Long id;
-    private String ppid;
     private String path;
 
     @Column(name = "file_size") // "size" 컬럼을 "file_size"로 변경
