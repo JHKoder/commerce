@@ -1,16 +1,16 @@
 package github.jhkoder.commerce.user.web.rest;
 
 import github.jhkoder.commerce.mail.service.EmailService;
-import github.jhkoder.commerce.signcert.domain.SignCertAuthentication;
-import github.jhkoder.commerce.signcert.service.SignCertService;
-import github.jhkoder.commerce.signcert.service.request.SignUpCertRequest;
-import github.jhkoder.commerce.signcert.service.request.SignUpCertVerifyRequest;
-import github.jhkoder.commerce.signcert.service.request.SignUpValidRequest;
+import github.jhkoder.commerce.cert.domain.CertAuthentication;
+import github.jhkoder.commerce.cert.service.SignCertService;
+import github.jhkoder.commerce.cert.service.request.SignUpCertRequest;
+import github.jhkoder.commerce.cert.service.request.SignUpCertVerifyRequest;
+import github.jhkoder.commerce.cert.service.request.SignUpValidRequest;
 import github.jhkoder.commerce.sms.service.SmsService;
 import github.jhkoder.commerce.user.service.UserService;
-import github.jhkoder.commerce.user.service.request.SignUpEmailSendRequest;
-import github.jhkoder.commerce.user.service.request.SignUpRequest;
-import github.jhkoder.commerce.user.service.request.SignUpSmsSendRequest;
+import github.jhkoder.commerce.user.service.request.signup.SignUpEmailSendRequest;
+import github.jhkoder.commerce.user.service.request.signup.SignUpRequest;
+import github.jhkoder.commerce.user.service.request.signup.SignUpSmsSendRequest;
 import github.jhkoder.commerce.user.service.response.SignUpCertVerifyResponse;
 import github.jhkoder.commerce.user.service.response.SignUpIdCheckResponse;
 import jakarta.validation.Valid;
@@ -41,6 +41,7 @@ public class SignUpApiController {
         signCertService.validateCert(SignUpValidRequest.of(request.email(), request.phone(), request.authenticationType()));
         userService.validateMemberRegistration(request);
         userService.signup(request);
+        signCertService.deleteAuthenticationComplete(request);
     }
 
     @PostMapping("/idCheck")
@@ -62,7 +63,8 @@ public class SignUpApiController {
         signCertService.validateSmsVerificationExceed(request.sms());
         int verificationCode = signCertService.newVerificationCode();
         smsService.signupCertSend(request.sms(), verificationCode);
-        signCertService.saveCert(new SignUpCertRequest(verificationCode, request.sms(), SignCertAuthentication.PHONE));
+        signCertService.saveCert(new SignUpCertRequest(verificationCode, request.sms(), CertAuthentication.PHONE));
+
     }
 
     @PostMapping("/cert/email/send")
@@ -71,7 +73,7 @@ public class SignUpApiController {
         signCertService.validateEmailVerificationExceed(request.email());
         int verificationCode = signCertService.newVerificationCode();
         emailService.signupCertSend(request.email(), verificationCode);
-        signCertService.saveCert(new SignUpCertRequest(verificationCode, request.email(), SignCertAuthentication.EMAIL));
+        signCertService.saveCert(new SignUpCertRequest(verificationCode, request.email(), CertAuthentication.EMAIL));
     }
 
     @PostMapping("/cert/sms/verify")

@@ -1,5 +1,4 @@
-package github.jhkoder.commerce.image.domain;
-
+package github.jhkoder.commerce.flatform.local.ep.category.domain;
 
 import github.jhkoder.commerce.common.entity.BaseEntity;
 import jakarta.persistence.*;
@@ -10,18 +9,14 @@ import static lombok.AccessLevel.PROTECTED;
 
 @Entity
 @Getter
-@Table(name = "images")
+@Table(name = "local_category",indexes = @Index(name = "idx_category_title", columnList = "category_title"))
 @NoArgsConstructor(access = PROTECTED)
-public class Images extends BaseEntity {
+public class Category extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private Long id;
-    private String path;
 
-    @Column(name = "file_size") // "size" 컬럼을 "file_size"로 변경
-    private Long fileSize;
-
-    @Enumerated(value = EnumType.STRING)
-    private ImageExtension imageExtension;
+    @Column(name = "category_title", nullable = false)
+    private String title;
 }

@@ -1,6 +1,7 @@
 package github.jhkoder.commerce.user.domain;
 
 import github.jhkoder.commerce.common.entity.BaseEntity;
+import github.jhkoder.commerce.common.entity.Gender;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
@@ -47,14 +48,23 @@ public class User extends BaseEntity {
         this.role = role;
     }
 
-    @Getter
-    public enum Gender {
-        MAN("남성"),
-        WOMAN("여성");
-        private final String gender;
+    public void roleUpdate(Role role){
+        this.role=role;
+    }
 
-        Gender(String gender) {
-            this.gender = gender;
-        }
+    public void updatePassword(String encodePassword) {
+        this.password=encodePassword;
+    }
+
+    public void updatePhone(String phone) {
+        this.phone = phone;
+    }
+
+    public void updateEmail(String email) {
+        this.email=email;
+    }
+
+    public void updateRole(Role role) {
+        this.role = role;
     }
 }

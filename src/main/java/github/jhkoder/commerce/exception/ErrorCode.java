@@ -25,6 +25,9 @@ public enum ErrorCode {
     USER_EMAIL_UNIQUE(401, "이메일 중복 에러"),
     USER_PHONE_UNIQUE(402, "휴대폰 중복 에러"),
     USER_ID_DUPLICATE(403, "아이디 중복 에러"),
+    USER_NOT_FOUND(404,"유저 정보 없음"),
+    USER_NOT_EMAIL(405,"이메일 정보 없음"),
+    USER_NOT_PHONE(406,"휴대폰 정보 없음"),
 
     //email
     EMAIL_SEND_PARSE(401, "메시지 구문 분석에 실패"),
@@ -41,7 +44,10 @@ public enum ErrorCode {
     SIGNUP_EMAIL_EXCEED(404, "회원가입 이메일 인증 횟수 초과"),
     SIGNUP_EMAIL_VERIFY_CODE_FAILED(405, "회원가입 이메일 인증 실패"),
     SIGNUP_EMAIL_DUPLICATE(406, "회원가입 이메일 중복"),
-    SIGNUP_CERT_CODE_UNVERIFIED(407, "회원가입 인증코드 미인증");
+    SIGNUP_CERT_CODE_UNVERIFIED(407, "회원가입 인증코드 미인증"),
+
+    ADMIN_NOT(401,"관리자가 아님"),
+    ADMIN_TARGET_USER_NO_PERMISSION_REQUEST(402,"권한 신청자가 아님" );
 
     private final int status;
     private final String message;
