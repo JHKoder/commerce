@@ -13,6 +13,7 @@ import java.util.Arrays;
 public enum Role implements GrantedAuthority {
 
     USER("일반 사용자", "ROLE_USER"),
+    SELLER("판매자","ROLE_SELLER"),
     ADMIN("관리자", "ROLE_ADMIN");
 
     private final String title;
