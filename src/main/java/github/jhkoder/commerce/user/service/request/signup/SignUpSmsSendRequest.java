@@ -1,4 +1,4 @@
-package github.jhkoder.commerce.user.service.request;
+package github.jhkoder.commerce.user.service.request.signup;
 
 import jakarta.validation.constraints.NotNull;
 

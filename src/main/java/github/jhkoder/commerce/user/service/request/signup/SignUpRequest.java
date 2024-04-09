@@ -1,7 +1,7 @@
-package github.jhkoder.commerce.user.service.request;
+package github.jhkoder.commerce.user.service.request.signup;
 
-import github.jhkoder.commerce.signcert.domain.SignCertAuthentication;
-import github.jhkoder.commerce.user.domain.User;
+import github.jhkoder.commerce.cert.domain.CertAuthentication;
+import github.jhkoder.commerce.common.entity.Gender;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
@@ -19,8 +19,8 @@ public record SignUpRequest(
         String email,
         String phone,
         @NotNull(message = "성별 을 입력해주세요.")
-        User.Gender gender,
+        Gender gender,
         @NotNull(message = "인증타입 선택해주세요.")
-        SignCertAuthentication authenticationType
+        CertAuthentication authenticationType
 ) {
 }

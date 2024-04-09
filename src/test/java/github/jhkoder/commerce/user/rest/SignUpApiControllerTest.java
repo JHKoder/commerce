@@ -1,18 +1,18 @@
-package github.jhkoder.commerce.user.web.rest;
+package github.jhkoder.commerce.user.rest;
 
+import github.jhkoder.commerce.cert.domain.CertAuthentication;
 import github.jhkoder.commerce.common.RestDocControllerTests;
+import github.jhkoder.commerce.common.entity.Gender;
 import github.jhkoder.commerce.config.WebClientConfig;
 import github.jhkoder.commerce.mail.service.EmailService;
-import github.jhkoder.commerce.signcert.domain.SignCertAuthentication;
-import github.jhkoder.commerce.signcert.repository.SignCertDslRepository;
-import github.jhkoder.commerce.signcert.repository.SignCertRepository;
-import github.jhkoder.commerce.signcert.service.SignCertService;
-import github.jhkoder.commerce.signcert.service.request.SignUpCertVerifyRequest;
+import github.jhkoder.commerce.cert.repository.CertDslRepository;
+import github.jhkoder.commerce.cert.repository.CertRepository;
+import github.jhkoder.commerce.cert.service.SignCertService;
+import github.jhkoder.commerce.cert.service.request.SignUpCertVerifyRequest;
 import github.jhkoder.commerce.sms.service.SmsFakeService;
-import github.jhkoder.commerce.user.domain.User;
 import github.jhkoder.commerce.user.repository.UserRepository;
 import github.jhkoder.commerce.user.service.UserService;
-import github.jhkoder.commerce.user.service.request.SignUpRequest;
+import github.jhkoder.commerce.user.service.request.signup.SignUpRequest;
 import github.jhkoder.commerce.user.service.response.SignUpCertVerifyResponse;
 import github.jhkoder.commerce.user.service.response.SignUpIdCheckResponse;
 import org.junit.jupiter.api.DisplayName;
@@ -48,13 +48,13 @@ public class SignUpApiControllerTest extends RestDocControllerTests {
     @Mock
     private UserRepository userRepository;
     @Mock
-    private SignCertDslRepository signCertDslRepository;
+    private CertDslRepository certDslRepository;
     @Mock
-    private SignCertRepository signCertRepository;
+    private CertRepository certRepository;
     @Mock
     private WebClientConfig webClientConfig;
 
-    private final String defaultUri = "/api/signup";
+    private final String defaultUri = "/signup/api";
 
 
     @Test
@@ -62,7 +62,7 @@ public class SignUpApiControllerTest extends RestDocControllerTests {
     void signup() throws Exception {
         // given
         String pathAdoc = "signup";
-        SignUpRequest signUpRequest = new SignUpRequest("userId", "userName", "password", "mail@email.com", "01012345678", User.Gender.MAN, SignCertAuthentication.EMAIL);
+        SignUpRequest signUpRequest = new SignUpRequest("userId", "userName", "password", "mail@email.com", "01012345678", Gender.MAN, CertAuthentication.EMAIL);
         String request = objectMapper.writeValueAsString(signUpRequest);
         doNothing().when(signCertService)
                 .validateCert(any());
