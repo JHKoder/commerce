@@ -24,4 +24,5 @@ public class BaseEntity {
     @Column(name = "update_time")
     @LastModifiedDate
     private LocalDateTime updateTime;
+    private OracleBoolean isDelete;
 }
