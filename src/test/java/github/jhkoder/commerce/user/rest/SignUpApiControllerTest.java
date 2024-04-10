@@ -1,26 +1,29 @@
 package github.jhkoder.commerce.user.rest;
 
 import github.jhkoder.commerce.cert.domain.CertAuthentication;
-import github.jhkoder.commerce.common.RestDocControllerTests;
-import github.jhkoder.commerce.common.entity.Gender;
-import github.jhkoder.commerce.config.WebClientConfig;
-import github.jhkoder.commerce.mail.service.EmailService;
 import github.jhkoder.commerce.cert.repository.CertDslRepository;
 import github.jhkoder.commerce.cert.repository.CertRepository;
 import github.jhkoder.commerce.cert.service.SignCertService;
 import github.jhkoder.commerce.cert.service.request.SignUpCertVerifyRequest;
+import github.jhkoder.commerce.common.RestDocControllerTests;
+import github.jhkoder.commerce.common.entity.Gender;
+import github.jhkoder.commerce.config.WebClientConfig;
+import github.jhkoder.commerce.mail.service.EmailService;
 import github.jhkoder.commerce.sms.service.SmsFakeService;
 import github.jhkoder.commerce.user.repository.UserRepository;
 import github.jhkoder.commerce.user.service.UserService;
 import github.jhkoder.commerce.user.service.request.signup.SignUpRequest;
 import github.jhkoder.commerce.user.service.response.SignUpCertVerifyResponse;
 import github.jhkoder.commerce.user.service.response.SignUpIdCheckResponse;
+import github.jhkoder.commerce.user.web.rest.SignUpApiController;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.restdocs.payload.JsonFieldType;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
@@ -31,7 +34,10 @@ import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.payload.PayloadDocumentation.*;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 
+@WithMockUser
+@WebMvcTest(SignUpApiController.class)
 @DisplayName("회원 가입 API ")
 public class SignUpApiControllerTest extends RestDocControllerTests {
 
@@ -72,7 +78,7 @@ public class SignUpApiControllerTest extends RestDocControllerTests {
                 .signup(any());
 
         // when
-        ResultActions actions = jsonWhen( "",request);
+        ResultActions actions = jsonWhen("", request);
 
         // then
         actions.andExpect(status().isOk())
@@ -89,15 +95,19 @@ public class SignUpApiControllerTest extends RestDocControllerTests {
                         )
                 ));
 
-        autoDoc(pathAdoc,
-                errorcode(SIGNUP_SMS_EXCEED),
-                errorcode(SIGNUP_SMS_VERIFY_CODE_FAILED),
-                errorcode(SIGNUP_SMS_DUPLICATE),
-                errorcode(SIGNUP_EMAIL_EXCEED),
-                errorcode(SIGNUP_EMAIL_VERIFY_CODE_FAILED),
-                errorcode(SIGNUP_EMAIL_DUPLICATE),
-                errorcode(SIGNUP_CERT_CODE_UNVERIFIED)
-        );
+
+        autoDoc(pathAdoc, CustomAdocBuilder.bulider()
+                .adocErrors(
+                        SIGNUP_SMS_EXCEED,
+                        SIGNUP_SMS_VERIFY_CODE_FAILED,
+                        SIGNUP_SMS_DUPLICATE,
+                        SIGNUP_EMAIL_EXCEED,
+                        SIGNUP_EMAIL_VERIFY_CODE_FAILED,
+                        SIGNUP_EMAIL_DUPLICATE,
+                        SIGNUP_CERT_CODE_UNVERIFIED
+                )
+                .disabledResponseFields()
+                .build());
     }
 
     @Test
@@ -110,7 +120,7 @@ public class SignUpApiControllerTest extends RestDocControllerTests {
         when(userService.isIdCheck(any())).thenReturn(response);
 
         // when
-        ResultActions actions = jsonWhen( "/idCheck",request);
+        ResultActions actions = jsonWhen("/idCheck", request);
 
         // then
         actions.andExpect(status().isOk())
@@ -141,7 +151,7 @@ public class SignUpApiControllerTest extends RestDocControllerTests {
         doNothing().when(signCertService).saveCert(any());
 
         // when
-        ResultActions actions = jsonWhen( "/cert/sms/send",request);
+        ResultActions actions = jsonWhen("/cert/sms/send", request);
 
         // then
         actions.andExpect(status().isOk())
@@ -152,11 +162,14 @@ public class SignUpApiControllerTest extends RestDocControllerTests {
                         )
                 ));
 
-        autoDoc(pathAdoc,
-                errorcode(USER_PHONE_UNIQUE),
-                errorcode(SIGNUP_SMS_EXCEED),
-                errorcode(SMS_SEND_FAIL)
-        );
+        autoDoc(pathAdoc, CustomAdocBuilder.bulider()
+                .adocErrors(
+                        USER_PHONE_UNIQUE,
+                        SIGNUP_SMS_EXCEED,
+                        SMS_SEND_FAIL
+                )
+                .disabledResponseFields()
+                .build());
     }
 
 
@@ -184,13 +197,16 @@ public class SignUpApiControllerTest extends RestDocControllerTests {
                         )
                 ));
 
-        autoDoc(pathAdoc,
-                errorcode(USER_EMAIL_UNIQUE),
-                errorcode(SIGNUP_EMAIL_EXCEED),
-                errorcode(EMAIL_SEND_PARSE),
-                errorcode(EMAIL_SEND_AUTHENTICATION),
-                errorcode(EMAIL_SEND)
-        );
+        autoDoc(pathAdoc, CustomAdocBuilder.bulider()
+                .adocErrors(
+                        USER_EMAIL_UNIQUE,
+                        SIGNUP_EMAIL_EXCEED,
+                        EMAIL_SEND_PARSE,
+                        EMAIL_SEND_AUTHENTICATION,
+                        EMAIL_SEND
+                )
+                .disabledResponseFields()
+                .build());
     }
 
     @Test
@@ -204,7 +220,7 @@ public class SignUpApiControllerTest extends RestDocControllerTests {
         when(signCertService.smsVerifyCodeCheck(certVerifyRequest)).thenReturn(response);
 
         // when
-        ResultActions actions = jsonWhen( "/cert/sms/verify",request);
+        ResultActions actions = jsonWhen("/cert/sms/verify", request);
 
         // then
         actions.andExpect(status().isOk())
@@ -220,8 +236,12 @@ public class SignUpApiControllerTest extends RestDocControllerTests {
                         )
                 ));
 
-        autoDoc(pathAdoc,
-                errorcode(SIGNUP_SMS_VERIFY_CODE_FAILED));
+
+        autoDoc(pathAdoc, CustomAdocBuilder.bulider()
+                .adocErrors(
+                        SIGNUP_SMS_VERIFY_CODE_FAILED)
+                .disabledRequestFields()
+                .build());
     }
 
 
@@ -236,7 +256,7 @@ public class SignUpApiControllerTest extends RestDocControllerTests {
         when(signCertService.emailVerifyCodeCheck(certVerifyRequest)).thenReturn(response);
 
         // when
-        ResultActions actions = jsonWhen( "/cert/email/verify",request);
+        ResultActions actions = jsonWhen("/cert/email/verify", request);
 
         // then
         actions.andExpect(status().isOk())
@@ -262,6 +282,8 @@ public class SignUpApiControllerTest extends RestDocControllerTests {
                 .characterEncoding("UTF-8")
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
-                .content(request));
+                .content(request)
+                .with(csrf())
+        );
     }
 }

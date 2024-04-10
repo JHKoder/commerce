@@ -11,7 +11,13 @@ import java.util.Arrays;
 import java.util.List;
 
 public class RestDocAsciidocOutput {
-    public void out(String domain, List<ErrorDescriptor> descriptorList) {
+
+    public void out(String domain, AdocRequest request) {
+        out(domain,request.descriptorList(), request);
+
+    }
+
+    public void out(String domain, List<ErrorDescriptor> descriptorList,AdocRequest request) {
         String[] paths = domain.split("/");
         int lastNumber = paths.length - 1;
         String path;
@@ -19,11 +25,13 @@ public class RestDocAsciidocOutput {
             path = domain;
         }else{
             path = String.join("/", Arrays.copyOfRange(paths, 0, lastNumber));
-
         }
         String name = paths[lastNumber];
         String outputDir = "src/docs/asciidoc/" + path;
 
+        String role ="";
+
+        System.out.println(request.isRequestBody()+","+request.isRequestFields());
         String content = ":basedir: {docdir}/../../../\n" +
                 ":snippets: {basedir}/build/generated-snippets\n" +
                 ":icons: font\n" +
@@ -31,15 +39,35 @@ public class RestDocAsciidocOutput {
                 ":toc: left\n" +
                 ":toclevels: 3\n" +
                 ":domain: " + domain + "\n\n" +
-                "===== Request \n\n" +
-                "====== parameter Json\n" +
-                "include::{snippets}/{domain}/request-body.adoc[]\n\n" +
-                "====== Request fields\n" +
-                "include::{snippets}/{domain}/request-fields.adoc[]\n\n" +
-                "====== curl\n" +
-                "include::{snippets}/{domain}/curl-request.adoc[]\n\n" +
-                "===== response\n" +
-                "include::{snippets}/{domain}/http-response.adoc[]\n";
+
+                ":isRequestBody: " + request.isRequestBody() + System.lineSeparator() +
+                ":isRequestFields: " + request.isRequestFields() + System.lineSeparator() +
+                ":isResponseBody: " + request.isResponseBody() + System.lineSeparator() +
+                ":isResponseFields: " + request.isResponseFields() + System.lineSeparator() +
+
+                "* 권한 : " + role +System.lineSeparator()+System.lineSeparator()+
+                "---" + System.lineSeparator() +System.lineSeparator() +
+                "===== Request\n" +
+                "ifeval::[{isRequestBody} == true]\n" +
+                "====== Body\n" +
+                "include::{snippets}/{domain}/request-body.adoc[]\n" +
+                "endif::[]\n" +
+                "ifeval::[{isRequestFields} == true]\n" +
+                "====== fields\n" +
+                "include::{snippets}/{domain}/request-fields.adoc[]\n" +
+                "endif::[]\n" +
+                "===== Response\n" +
+                "ifeval::[{isResponseBody} == true]\n" +
+                "====== body\n" +
+                "include::{snippets}/{domain}/response-body.adoc[]\n" +
+                "endif::[]\n" +
+                "ifeval::[{isResponseFields} == true]\n" +
+                "====== fields\n" +
+                "include::{snippets}/{domain}/response-fields.adoc[]\n" +
+                "endif::[]\n\n";
+
+
+
 
         content = errorTable(content, descriptorList);
 
