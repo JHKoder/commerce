@@ -44,3 +44,6 @@ JASYPT_PASSWORD: {private-key}
 == REST API
 
 include::signup/index.adoc[]
+
+
+include::mypage/index.adoc[]
