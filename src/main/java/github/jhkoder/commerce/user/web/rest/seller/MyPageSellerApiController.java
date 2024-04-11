@@ -11,8 +11,9 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
+@RestController
 @PreAuthorize("hasRole('SELLER')")
-@RestController("/api/seller/mypage")
+@RequestMapping("/api/seller/mypage")
 @RequiredArgsConstructor
 public class MyPageSellerApiController {
 
@@ -26,7 +27,8 @@ public class MyPageSellerApiController {
     @PostMapping("/store")
     public SellerStoreResponse saveStore(@AuthenticationPrincipal UserDetails userDetails,
                                          @Valid @RequestBody AddStoreRequest request){
-        return storeService.save(userDetails.getUsername(),request);
+        return storeService.addStore(userDetails.getUsername(),request);
+
     }
 
     @PatchMapping("/store")

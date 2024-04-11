@@ -1,13 +1,13 @@
 package github.jhkoder.commerce.exception;
 
-import lombok.Getter;
+
+import lombok.ToString;
 
 import java.util.Arrays;
 
 /**
  * 에러 코드
  */
-@Getter
 public enum ErrorCode {
     //Server
     INTERNAL_SERVER_ERROR(500, "서버 오류"),
@@ -39,10 +39,10 @@ public enum ErrorCode {
 
     //signup
     SIGNUP_SMS_EXCEED(401, "회원가입 휴대폰 인증 횟수 초과"),
-    SIGNUP_SMS_VERIFY_CODE_FAILED(402, "회원가입 휴대폰 문자 인증 실패"),
+    SIGNUP_SMS_VERIFY_CODE_FAILED(402, "휴대폰 문자 인증 실패"),
     SIGNUP_SMS_DUPLICATE(403, "회원가입 휴대폰 번호 중복"),
     SIGNUP_EMAIL_EXCEED(404, "회원가입 이메일 인증 횟수 초과"),
-    SIGNUP_EMAIL_VERIFY_CODE_FAILED(405, "회원가입 이메일 인증 실패"),
+    SIGNUP_EMAIL_VERIFY_CODE_FAILED(405, "이메일 인증 실패"),
     SIGNUP_EMAIL_DUPLICATE(406, "회원가입 이메일 중복"),
     SIGNUP_CERT_CODE_UNVERIFIED(407, "회원가입 인증코드 미인증"),
 
@@ -62,5 +62,13 @@ public enum ErrorCode {
                 .filter(errorCode -> errorCode.getMessage().equals(message))
                 .findFirst()
                 .orElse(null);
+    }
+
+    public int getStatus() {
+        return status;
+    }
+
+    public String getMessage() {
+        return message;
     }
 }

@@ -6,4 +6,6 @@ public interface EmailService {
     void sendMessage(EmailRequest emailRequest);
 
     void signupCertSend(String email, int verificationCode);
+
+    void certSend(String email, int verificationCode);
 }

@@ -85,6 +85,24 @@ public class RestDocControllerTests {
         }
     }
 
+    protected static String strToJson(String id, int value) {
+        try {
+            Object obj = jsonParser.parse("{\"" + id + "\": " + value + "}");
+            return objectMapper.writeValueAsString(obj);
+        } catch (Exception e) {
+            throw new RuntimeException("RestDocControllerTests.strToJson.parse ERROR");
+        }
+    }
+
+    protected static String strToJson(String id, Long value) {
+        try {
+            Object obj = jsonParser.parse("{\"" + id + "\": " + value + "}");
+            return objectMapper.writeValueAsString(obj);
+        } catch (Exception e) {
+            throw new RuntimeException("RestDocControllerTests.strToJson.parse ERROR");
+        }
+    }
+
 
     protected void autoDoc(String path, ErrorDescriptor... descriptors) {
         new RestDocAsciidocOutput().out(path, Arrays.asList(descriptors), defaultAdoc());
@@ -103,6 +121,17 @@ public class RestDocControllerTests {
         return new AdocRequest(new ArrayList<>(), true, true, true, true);
     }
 
+
+    protected ResultActions jsonGetWhen(String uri, String request) throws Exception {
+        return mockMvc.perform(MockMvcRequestBuilders
+                .get(uri)
+                .characterEncoding("UTF-8")
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON)
+                .content(request)
+                .with(csrf())
+        );
+    }
 
     protected ResultActions jsonPostWhen(String uri, String request) throws Exception {
         return mockMvc.perform(MockMvcRequestBuilders
@@ -144,6 +173,17 @@ public class RestDocControllerTests {
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
                 .content(request)
+                .with(csrf())
+        );
+    }
+
+
+    protected ResultActions jsonGetWhen(String uri) throws Exception {
+        return mockMvc.perform(MockMvcRequestBuilders
+                .get(uri)
+                .characterEncoding("UTF-8")
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON)
                 .with(csrf())
         );
     }
@@ -192,12 +232,11 @@ public class RestDocControllerTests {
 
     public static class CustomAdocBuilder {
 
-
-        private List<ErrorDescriptor> descriptors;
+        private List<ErrorDescriptor> descriptors = new ArrayList<>();
         private boolean isRequestBody = true;
-        private boolean isRequestFields= true;
-        private boolean isResponseBody= true;
-        private boolean isResponseFields= true;
+        private boolean isRequestFields = true;
+        private boolean isResponseBody = true;
+        private boolean isResponseFields = true;
 
         public CustomAdocBuilder disabledRequestBody() {
             isRequestBody = false;
@@ -224,9 +263,19 @@ public class RestDocControllerTests {
         }
 
         public CustomAdocBuilder adocErrors(ErrorCode... errorCode) {
-            this.descriptors = Arrays.stream(errorCode)
+            this.descriptors.addAll(Arrays.stream(errorCode)
                     .map(ErrorDescriptor::of)
-                    .toList();
+                    .toList());
+            return this;
+        }
+
+        public CustomAdocBuilder addError(int status, String messaage) {
+            this.descriptors.add(new ErrorDescriptor(status, messaage));
+            return this;
+        }
+
+        public CustomAdocBuilder addErrorValid(int status, String messaage) {
+            this.descriptors.add(new ErrorDescriptor(status, messaage));
             return this;
         }
 

@@ -23,7 +23,8 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
-@RestController("/api/user/mypage")
+@RestController
+@RequestMapping("/api/user/mypage")
 @RequiredArgsConstructor
 public class MyPageUserApiController {
     private final UserAuthorizationApplicationService uaaService;
@@ -32,7 +33,7 @@ public class MyPageUserApiController {
     private final UserService userService;
     private final SmsService smsService;
 
-    @GetMapping("/view")
+    @PostMapping
     public MyPageUserResponse view(@AuthenticationPrincipal UserDetails userDetails){
         return userService.findByMyPageUser(userDetails.getUsername());
     }
@@ -55,7 +56,7 @@ public class MyPageUserApiController {
         userService.passwordChange(userDetails.getUsername(),request);
     }
 
-    @GetMapping("/auth")
+    @GetMapping("/auth/check")
     public ValidEmailAndPhoneResponse isEmailAndPhoneCheck(@AuthenticationPrincipal UserDetails userDetails){
         return userService.validEmailAndPhoneCheck(userDetails.getUsername());
     }
@@ -74,7 +75,7 @@ public class MyPageUserApiController {
         userService.checkEmailValidAndUnique(request.email());
         certService.validateEmailVerificationExceed(request.email());
         int verificationCode = certService.newVerificationCode();
-        emailService.signupCertSend(request.email(), verificationCode);
+        emailService.certSend(request.email(), verificationCode);
         certService.saveCert(new SignUpCertRequest(verificationCode, request.email(), CertAuthentication.EMAIL));
     }
 

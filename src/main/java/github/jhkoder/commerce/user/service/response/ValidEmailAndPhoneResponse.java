@@ -1,4 +1,4 @@
 package github.jhkoder.commerce.user.service.response;
 
-public record ValidEmailAndPhoneResponse(boolean email,boolean phone) {
+public record ValidEmailAndPhoneResponse(String email,String phone) {
 }
