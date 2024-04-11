@@ -28,10 +28,7 @@ public class RestDocAsciidocOutput {
         }
         String name = paths[lastNumber];
         String outputDir = "src/docs/asciidoc/" + path;
-
         String role ="";
-
-        System.out.println(request.isRequestBody()+","+request.isRequestFields());
         String content = ":basedir: {docdir}/../../../\n" +
                 ":snippets: {basedir}/build/generated-snippets\n" +
                 ":icons: font\n" +
@@ -45,9 +42,11 @@ public class RestDocAsciidocOutput {
                 ":isResponseBody: " + request.isResponseBody() + System.lineSeparator() +
                 ":isResponseFields: " + request.isResponseFields() + System.lineSeparator() +
 
-                "* 권한 : " + role +System.lineSeparator()+System.lineSeparator()+
                 "---" + System.lineSeparator() +System.lineSeparator() +
                 "===== Request\n" +
+                "\n" +
+                "====== HTTP \n" +
+                "include::{snippets}/{domain}/http-request.adoc[]\n\n"+
                 "ifeval::[{isRequestBody} == true]\n" +
                 "====== Body\n" +
                 "include::{snippets}/{domain}/request-body.adoc[]\n" +
@@ -65,9 +64,6 @@ public class RestDocAsciidocOutput {
                 "====== fields\n" +
                 "include::{snippets}/{domain}/response-fields.adoc[]\n" +
                 "endif::[]\n\n";
-
-
-
 
         content = errorTable(content, descriptorList);
 

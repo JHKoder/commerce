@@ -19,7 +19,11 @@ public class UserDetailsCustom implements UserDetails {
         this.password=password;
         this.role.add(role);
     }
-
+    public UserDetailsCustom(String username, String password, List<Role> role) {
+        this.name=username;
+        this.password=password;
+        this.role.addAll(role);
+    }
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return null;
