@@ -26,7 +26,7 @@ public class StoreService {
     }
 
     @Transactional
-    public SellerStoreResponse save(String username, AddStoreRequest request) {
+    public SellerStoreResponse addStore(String username, AddStoreRequest request) {
         User user = findUser(username);
 
         Store store = new Store(user, request.tradeName(), request.accountNumber(), request.bankName());

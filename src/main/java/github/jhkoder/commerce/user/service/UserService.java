@@ -93,10 +93,7 @@ public class UserService {
         User user = userRepository.findByUserId(userId)
                 .orElseThrow(() -> new ApiException(ErrorCode.USER_NOT_FOUND));
 
-        boolean isEmailValid = user.getEmail() != null;
-        boolean isPhoneValid = user.getPhone() != null;
-
-        return new ValidEmailAndPhoneResponse(isEmailValid, isPhoneValid);
+        return new ValidEmailAndPhoneResponse(user.getEmail(), user.getPhone());
     }
 
     @Transactional

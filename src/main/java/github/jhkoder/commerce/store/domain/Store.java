@@ -21,17 +21,17 @@ public class Store extends BaseEntity {
     @OneToOne(fetch = FetchType.LAZY)
     private User user;
     private String tradeName;
-    private int accountNumber;
+    private String accountNumber;
     private String bankName;
 
-    public Store(User user, String tradeName, int accountNumber, String bankName) {
+    public Store(User user, String tradeName, String accountNumber, String bankName) {
         this.user = user;
         this.tradeName = tradeName;
         this.accountNumber = accountNumber;
         this.bankName = bankName;
     }
 
-    public void update(String tradeName, int accountNumber, String bankName) {
+    public void update(String tradeName, String accountNumber, String bankName) {
         this.tradeName = tradeName;
         this.accountNumber = accountNumber;
         this.bankName = bankName;
