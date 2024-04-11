@@ -6,12 +6,14 @@ import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.test.context.support.WithSecurityContextFactory;
 
+import java.util.List;
+
 public class WithUserDetailsSecurityContextFactory implements WithSecurityContextFactory<WithMockCustomUser> {
     @Override
     public SecurityContext createSecurityContext(WithMockCustomUser user) {
         SecurityContext context = SecurityContextHolder.createEmptyContext();
 
-        UserDetailsCustom principal = new UserDetailsCustom(user.username(), user.password(), user.role());
+        UserDetailsCustom principal = new UserDetailsCustom(user.username(), user.password(), List.of(user.role()));
 
         Authentication auth =
                 new UsernamePasswordAuthenticationToken(principal, "password", principal.getAuthorities());
