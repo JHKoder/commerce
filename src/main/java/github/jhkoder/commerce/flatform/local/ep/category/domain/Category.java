@@ -19,4 +19,8 @@ public class Category extends BaseEntity {
 
     @Column(name = "category_title", nullable = false)
     private String title;
+
+    public Category(String title) {
+        this.title = title;
+    }
 }

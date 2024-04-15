@@ -15,6 +15,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.jpa.mapping.JpaMetamodelMappingContext;
 import org.springframework.http.MediaType;
 import org.springframework.restdocs.RestDocumentationExtension;
+import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders;
 import org.springframework.restdocs.operation.preprocess.OperationRequestPreprocessor;
 import org.springframework.restdocs.operation.preprocess.OperationResponsePreprocessor;
 import org.springframework.restdocs.operation.preprocess.Preprocessors;
@@ -134,13 +135,14 @@ public class RestDocControllerTests {
     }
 
     protected ResultActions jsonPostWhen(String uri, String request) throws Exception {
-        return mockMvc.perform(MockMvcRequestBuilders
-                .post(uri)
-                .characterEncoding("UTF-8")
-                .contentType(MediaType.APPLICATION_JSON)
-                .accept(MediaType.APPLICATION_JSON)
-                .content(request)
-                .with(csrf())
+        return mockMvc.perform(
+                MockMvcRequestBuilders
+                        .post(uri)
+                        .characterEncoding("UTF-8")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON)
+                        .content(request)
+                        .with(csrf())
         );
     }
 
@@ -177,7 +179,7 @@ public class RestDocControllerTests {
         );
     }
 
-
+    //        mockMvc.perform(get(uri,))
     protected ResultActions jsonGetWhen(String uri) throws Exception {
         return mockMvc.perform(MockMvcRequestBuilders
                 .get(uri)
@@ -225,6 +227,58 @@ public class RestDocControllerTests {
                 .characterEncoding("UTF-8")
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
+                .with(csrf())
+        );
+    }
+
+    protected ResultActions jsonGetPathWhen(String uri, Object... path) throws Exception {
+        return mockMvc.perform(RestDocumentationRequestBuilders
+                .get(uri, path)
+                .characterEncoding("UTF-8")
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON)
+                .with(csrf())
+        );
+    }
+
+    protected ResultActions jsonPostPathWhen(String uri, Object... path) throws Exception {
+        return mockMvc.perform(RestDocumentationRequestBuilders
+                .post(uri, path)
+                .characterEncoding("UTF-8")
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON)
+                .with(csrf())
+        );
+    }
+
+    protected ResultActions jsonDeletePathWhen(String uri, Object... path) throws Exception {
+        return mockMvc.perform(RestDocumentationRequestBuilders
+                .delete(uri, path)
+                .characterEncoding("UTF-8")
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON)
+                .with(csrf())
+        );
+    }
+
+    protected ResultActions jsonUpdatePathWhen(String uri, Object... path) throws Exception {
+        return mockMvc.perform(RestDocumentationRequestBuilders
+                .patch(uri, path)
+                .characterEncoding("UTF-8")
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON)
+                .with(csrf())
+        );
+    }
+
+
+    protected ResultActions jsonUpdatePathAndJsonWhen(String uri, int path, String json) throws Exception {
+        return mockMvc.perform(RestDocumentationRequestBuilders
+                .patch(uri, path)
+                .characterEncoding("UTF-8")
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON)
+                .content(json)
                 .with(csrf())
         );
     }

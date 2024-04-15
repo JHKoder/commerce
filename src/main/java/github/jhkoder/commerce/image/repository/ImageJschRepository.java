@@ -10,6 +10,7 @@ import github.jhkoder.commerce.image.repository.request.ImageRequest;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
@@ -21,7 +22,7 @@ public class ImageJschRepository implements ImageRepository {
     private final String folderPath;
 
     public ImageJschRepository(JschOutBoundAdapter adapter,
-                               @Value("${cloud.image-repository.folder-path}")String folderPath) {
+                               @Value("${cloud.image-repository.folder-path}") String folderPath) {
         this.channelSftp = adapter.getChannelSftp();
         this.folderPath = folderPath;
     }
@@ -29,7 +30,7 @@ public class ImageJschRepository implements ImageRepository {
 
     @Override
     public boolean upload(ImageRequest imageRequest, ImagePathRequest pathRequest) throws IOException {
-        return upload(imageRequest.getInputStream(), pathRequest.getPaths(), pathRequest.getFileName());
+        return upload(imageRequest.getFile().getInputStream(), pathRequest.getPaths(), pathRequest.getFileName());
     }
 
     public boolean upload(InputStream is, List<String> paths, String name) {
@@ -69,6 +70,29 @@ public class ImageJschRepository implements ImageRepository {
                 return false;
             }
             throw new ImageException(ErrorCode.IMAGE_REMOTE_UPLOAD);
+        }
+    }
+
+    public boolean delete(String fileName) {
+        try {
+            channelSftp.rm(folderPath + fileName);
+            return true;
+        } catch (SftpException ignored) {
+            throw new ImageException(ErrorCode.IMAGE_REMOTE_DELETE_FAIL);
+        }
+    }
+
+    public byte[] read(String path) {
+        try (InputStream is = channelSftp.get(folderPath + path);
+                ByteArrayOutputStream outputStream = new ByteArrayOutputStream()) {
+            byte[] buffer = new byte[1024];
+            int bytesRead;
+            while ((bytesRead = is.read(buffer)) != -1) {
+                outputStream.write(buffer, 0, bytesRead);
+            }
+            return outputStream.toByteArray();
+        } catch (IOException | SftpException e) {
+            throw new RuntimeException(e);
         }
     }
 }
