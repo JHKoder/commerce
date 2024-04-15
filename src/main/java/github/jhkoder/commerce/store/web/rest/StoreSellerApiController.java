@@ -26,13 +26,14 @@ public class StoreSellerApiController {
 
     @PostMapping("/product")
     public void addProduct(@AuthenticationPrincipal UserDetails userDetails,
-                            @Valid @RequestBody StoreAddProductRequest request) {
-        ItemProduct itemProduct = storeService.add(userDetails.getUsername(),request);
-        List<Images> imagePaths = imageService.upload(request.product().imageLinks());
-        storeService.updateProductImages(itemProduct,imagePaths);
+                           @Valid @RequestBody StoreAddProductRequest request) {
+        ItemProduct itemProduct = storeService.add(userDetails.getUsername(), request);
+
+        List<Images> imagePaths = imageService.upload(itemProduct, request.images());
+        storeService.updateProductImages(itemProduct, imagePaths);
     }
 
-    @GetMapping("/products/page/{page}") // 물품 리스트 조회 페이징
+    @GetMapping("/products/page/{page}")
     public Page<StoreSellerProductsPageResponse> findProducts(@AuthenticationPrincipal UserDetails userDetails,
                                                               @PathVariable int page) {
         return storeService.findPageProducts(userDetails.getUsername(), page);
@@ -41,21 +42,21 @@ public class StoreSellerApiController {
     @GetMapping("/products/{productId}")
     public StoreSellerProductResponse findProduct(@AuthenticationPrincipal UserDetails userDetails,
                                                   @PathVariable Long productId) {
-        return storeService.findProduct(userDetails.getUsername(),productId);
+        return storeService.findProduct(userDetails.getUsername(), productId);
     }
 
     @PatchMapping("/products/{productId}")
     public void updateProduct(@AuthenticationPrincipal UserDetails userDetails,
                               @Valid @RequestBody StoreUpdateProductRequest request,
                               @PathVariable Long productId) {
-        storeService.updateProduct(userDetails.getUsername(),request,productId);
-        imageService.change(request.product().links());
+        storeService.updateProduct(userDetails.getUsername(), request, productId);
+        imageService.change(userDetails.getUsername(), request.file());
     }
 
     @DeleteMapping("/products/{productId}")
     public void deleteProduct(@AuthenticationPrincipal UserDetails userDetails,
                               @PathVariable Long productId) {
-
-        storeService.deleteProduct(userDetails.getUsername(),productId);
+        List<Images> images = storeService.deleteProduct(userDetails.getUsername(), productId);
+        imageService.delete(images);
     }
 }
