@@ -47,3 +47,5 @@ include::signup/index.adoc[]
 
 
 include::mypage/index.adoc[]
+
+include::store/index.adoc[]
