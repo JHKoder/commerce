@@ -2,22 +2,26 @@ package github.jhkoder.commerce.image.service;
 
 import github.jhkoder.commerce.exception.ApiException;
 import github.jhkoder.commerce.exception.ErrorCode;
+import github.jhkoder.commerce.flatform.local.ep.itemproduct.domain.ItemProduct;
 import github.jhkoder.commerce.image.domain.Images;
+import github.jhkoder.commerce.image.exception.ImageException;
 import github.jhkoder.commerce.image.repository.ImageJpaRepository;
 import github.jhkoder.commerce.image.repository.ImageJschRepository;
-import github.jhkoder.commerce.image.repository.request.ImagePathRequest;
-import github.jhkoder.commerce.image.exception.ImageException;
 import github.jhkoder.commerce.image.repository.ImageRepository;
-import github.jhkoder.commerce.image.repository.ImageSftpRepository;
+import github.jhkoder.commerce.image.repository.request.ImagePathRequest;
 import github.jhkoder.commerce.image.repository.request.ImageRequest;
-import github.jhkoder.commerce.store.service.request.StoreUpdateProductRequest;
+import github.jhkoder.commerce.image.service.request.ImageUpdateRequest;
+import github.jhkoder.commerce.store.service.request.StoreAddProductRequest;
 import github.jhkoder.commerce.user.domain.User;
 import github.jhkoder.commerce.user.repository.UserRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+import java.util.UUID;
 import java.util.regex.Pattern;
 
 @Service
@@ -43,6 +47,12 @@ public class ImageService {
     }
 
 
+    public List<Images> upload(ItemProduct itemProduct, StoreAddProductRequest.CustomMultiPartFile paths) {
+
+        return upload(itemProduct.getUser(),
+                paths.getImage().stream().map(ImageRequest::new).toList());
+    }
+
     public String upload(ImageRequest request) {
         String name = request.getFileName();
         try {
@@ -53,20 +63,20 @@ public class ImageService {
             }
             throw new ImageException(ErrorCode.IMAGE_REMOTE_UPLOAD);
         } catch (IOException e) {
-            throw new ApiException(ErrorCode.IMAGE_REMOTE_UPLOAD);
+            throw new ImageException(ErrorCode.IMAGE_REMOTE_UPLOAD);
         }
     }
 
 
     @Transactional
-    public void change(String username, List<StoreUpdateProductRequest.StoreImageRequest> links) {
+    public void change(String username, List<ImageUpdateRequest> links) {
         User user = findByUserName(username);
-        for (StoreUpdateProductRequest.StoreImageRequest link : links) {
+        for (ImageUpdateRequest link : links) {
             if (!link.isUpdate()) {
-                return;
+                continue;
             }
 
-            Images images = imageJpaRepository.findById(link.imageId())
+            Images images = imageJpaRepository.findById(link.getImageId())
                     .orElseThrow(() -> new ApiException(ErrorCode.IMAGE_NOT_ID));
 
             if (!Objects.equals(images.getUser().getId(), user.getId())) {
@@ -74,7 +84,7 @@ public class ImageService {
             }
 
             imageRepository.delete(images.getPath());
-            images.updatePath(upload(new ImageRequest(link.multipartFile())));
+            images.updatePath(upload(new ImageRequest(link.getImage())));
             imageJpaRepository.save(images);
         }
     }
@@ -105,5 +115,12 @@ public class ImageService {
     private User findByUserName(String username) {
         return userRepository.findByUserId(username)
                 .orElseThrow(() -> new ApiException(ErrorCode.USER_NOT_FOUND));
+    }
+
+    public void delete(List<Images> images) {
+        for (Images image : images) {
+            imageRepository.delete(image.getPath());
+            imageJpaRepository.delete(image);
+        }
     }
 }

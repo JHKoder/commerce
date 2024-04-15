@@ -40,7 +40,6 @@ public class ImageServiceTest {
 
     @Test
     void 쓰기_시간() throws IOException {
-        // 테스트용 이미지 파일을 바이트 배열로 읽어옵니다.
         ImageRequest request = file("src/main/resources/static/img/testimg.png",
                 "testimg.png", "image/png");
 

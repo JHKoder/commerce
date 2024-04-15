@@ -11,6 +11,7 @@ import java.io.IOException;
 import java.io.InputStream;
 
 
+@Deprecated
 @Configuration
 @RequiredArgsConstructor
 public class ImageSftpRepository implements ImageRepository {
@@ -21,7 +22,8 @@ public class ImageSftpRepository implements ImageRepository {
     @Override
     @Deprecated
     public boolean upload(ImageRequest imageRequest, ImagePathRequest pathRequest) throws IOException {
-        try (InputStream inputStream = imageRequest.getMultipartFile().getInputStream()) {
+        System.out.println("error");
+        try (InputStream inputStream = imageRequest.getFile().getInputStream()) {
             try (SftpSession sftpSession = (SftpSession) sftpRemoteFileTemplate.getSession()) {
                 sftpSession.write(inputStream, pathRequest.getFileName());
                 return true;
@@ -30,5 +32,16 @@ public class ImageSftpRepository implements ImageRepository {
             }
         }
         return false;
+    }
+
+    @Override
+    public boolean delete(String fileName) {
+
+        return false;
+    }
+
+    @Override
+    public byte[] read(String path) {
+        return new byte[0];
     }
 }
