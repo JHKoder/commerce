@@ -4,6 +4,7 @@ import github.jhkoder.commerce.common.entity.BaseEntity;
 import github.jhkoder.commerce.common.entity.Gender;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Size;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -12,6 +13,7 @@ import static lombok.AccessLevel.PROTECTED;
 @Entity
 @Getter
 @Table(name = "users")
+@EqualsAndHashCode(onlyExplicitlyIncluded = true, callSuper = false)
 @NoArgsConstructor(access = PROTECTED)
 public class User extends BaseEntity {
     @Id
@@ -20,8 +22,10 @@ public class User extends BaseEntity {
     private Long id;
 
     @Size(min = 4, max = 20)
+
     @Column(name = "user_id", unique = true)
     private String userId;
+
     @Size(min = 2,max=30)
     @Column(name = "user_name")
     private String userName;

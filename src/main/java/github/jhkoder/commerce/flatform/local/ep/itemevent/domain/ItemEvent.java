@@ -40,4 +40,15 @@ public class ItemEvent extends BaseEntity {
     private OracleBoolean coupon;
     private LocalDateTime startTime;
     private LocalDateTime endTime;
+
+    public ItemEvent(ItemProduct product, Item item, Category category, int discountAmount, String eventWords, boolean coupon, LocalDateTime startTime, LocalDateTime endTime) {
+        this.product = product;
+        this.item = item;
+        this.category = category;
+        this.discountAmount = discountAmount;
+        this.eventWords = eventWords;
+        this.coupon = OracleBoolean.of(coupon);
+        this.startTime = startTime;
+        this.endTime = endTime;
+    }
 }

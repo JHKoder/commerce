@@ -2,6 +2,7 @@ package github.jhkoder.commerce.image.domain;
 
 
 import github.jhkoder.commerce.common.entity.BaseEntity;
+import github.jhkoder.commerce.user.domain.User;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -17,11 +18,19 @@ public class Images extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private Long id;
+
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    private User user;
+
     private String path;
 
-    @Column(name = "file_size") // "size" 컬럼을 "file_size"로 변경
-    private Long fileSize;
+    public Images(User user,String path) {
+        this.user =user;
+        this.path = path;
+    }
 
-    @Enumerated(value = EnumType.STRING)
-    private ImageExtension imageExtension;
+    public void updatePath(String path) {
+        this.path=path;
+    }
 }
