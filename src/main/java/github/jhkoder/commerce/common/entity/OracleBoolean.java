@@ -11,4 +11,9 @@ public enum OracleBoolean {
     T(true),
     F(false);
     private final boolean bool;
+
+    public static OracleBoolean of(boolean bool){
+        if(bool) return T;
+        return F;
+    }
 }
