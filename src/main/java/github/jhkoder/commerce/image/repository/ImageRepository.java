@@ -8,4 +8,6 @@ import java.io.IOException;
 public interface ImageRepository {
 
     boolean upload(ImageRequest imageRequest, ImagePathRequest pathRequest) throws IOException;
+    boolean  delete(String fileName);
+    byte[] read(String path);
 }
