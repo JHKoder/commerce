@@ -1,8 +1,6 @@
 package github.jhkoder.commerce.exception;
 
 
-import lombok.ToString;
-
 import java.util.Arrays;
 
 /**
@@ -20,6 +18,9 @@ public enum ErrorCode {
     //image
     IMAGE_REMOTE_UPLOAD(401, "이미지 원격 업로드 실패"),
     IMAGE_REMOTE_SESSION(402, "이미지 세션 오류"),
+    IMAGE_REMOTE_DELETE_FAIL(403, "이미지 삭제 실패"),
+    IMAGE_NOT_ID(404,"이미지의 고유한 ID 가 존재하지 않음"),
+    IMAGE_AUTHOR_MISMATCH(404,"이미지의 작성자가 일치하지 않음"),
 
     //USER
     USER_EMAIL_UNIQUE(401, "이메일 중복 에러"),
@@ -47,7 +48,10 @@ public enum ErrorCode {
     SIGNUP_CERT_CODE_UNVERIFIED(407, "회원가입 인증코드 미인증"),
 
     ADMIN_NOT(401,"관리자가 아님"),
-    ADMIN_TARGET_USER_NO_PERMISSION_REQUEST(402,"권한 신청자가 아님" );
+    ADMIN_TARGET_USER_NO_PERMISSION_REQUEST(402,"권한 신청자가 아님" ),
+    CATEGORY_NOT_FOUND(401,"카테고리 정보 없음"),
+    PRODUCT_NOT_FOUND(402,"상품 정보 없음"),
+    PRODUCT_NOT_SELLER_USER(403,"아이템 조회 대상자와 일치 하지 않음");
 
     private final int status;
     private final String message;
