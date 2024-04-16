@@ -121,6 +121,7 @@ TNS 를 사용하여 연결정보를 관리합니다.
 | /signup | 회원가입 페이지 |
 | /mypage | 마이 페이지   |
 | /store  | 상점 페이지   |
+| /store/seller  | 판매자 전용 상점 페이지   |
 
 
 [REST API docs](/md/rest_doc_sample.html)  
