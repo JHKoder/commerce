@@ -2,11 +2,14 @@ package github.jhkoder.commerce.flatform.local.ep.category.web.rest;
 
 import github.jhkoder.commerce.flatform.local.ep.category.service.CategoryService;
 import github.jhkoder.commerce.flatform.local.ep.category.service.request.CategoryAddRequest;
+import github.jhkoder.commerce.flatform.local.ep.category.service.request.CategoryChangeRequest;
 import github.jhkoder.commerce.flatform.local.ep.category.service.request.CategoryUpdateRequest;
 import github.jhkoder.commerce.flatform.local.ep.category.service.response.CategoryResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/admin/category")
@@ -15,7 +18,7 @@ public class CategoryApiController {
     private final CategoryService categoryService;
 
     @GetMapping
-    public CategoryResponse find() {
+    public List<CategoryResponse> find() {
         return categoryService.findAll();
     }
 
@@ -24,7 +27,7 @@ public class CategoryApiController {
         categoryService.add(request);
     }
 
-    @PatchMapping("/{categoryId}")
+    @PatchMapping
     public void update(@Valid @RequestBody CategoryUpdateRequest request) {
         categoryService.update(request);
     }
@@ -34,4 +37,8 @@ public class CategoryApiController {
         categoryService.delete(categoryId);
     }
 
+    @PatchMapping("/move")
+    public void change(@Valid @RequestBody CategoryChangeRequest request){
+        categoryService.move(request);
+    }
 }
