@@ -84,7 +84,7 @@ OCS (oracle cloud service)
 │          |              ├── rest              #  rest api 테스트로 rest doc 문서를 만들 수 있음 
 │          |              └── service           #  기능 테스트
 |          └─ resources
-|               └─ org.springframework.restdocs # rest doc api .snippet 을 커스텀 함 
+|               └─ org.springframework.restdocs # rest doc api .snippet 을 커스텀 
 |               └─ static.img                   # 테스트 용 img
 ├─ build.gradle                                 # spring boot 셋팅 
 └─.editconfig                                   # ide 코드 컨벤션 자동화 
@@ -124,7 +124,9 @@ TNS 를 사용하여 연결정보를 관리합니다.
 | /store/seller  | 판매자 전용 상점 페이지   |
 
 
-[REST API docs](/md/rest_doc_sample.html)  
+개발 단계 : [REST API docs](https://jhkoder.github.io/JHKoder/rest-doc.html)
+
+최신 버전 : 
 
 
 ## 모델
@@ -145,6 +147,16 @@ ORM 을 사용하며 도메인으로 분리되어 있으며 클린 아키텍처 
 - BasicEntity 을 상속 받아 추가,수정 일자와 삭제 여부 값을 가지고 있습니다. 
 - Oracle 에서 boolean 타입 을 사용하지 못하므로 enum 으로 대처하여 boolean 타입처럼 사용되고 있습니다.
 - ID(Long) 는 필수 기본 키 이며 자동으로 증가합니다.
+
+
+#### user
+#### cert
+#### image
+#### category
+#### item
+#### product
+#### coupon
+#### event
 
 
 ## 서비스
@@ -174,3 +186,11 @@ ORM 을 사용하며 도메인으로 분리되어 있으며 클린 아키텍처 
 - Controller 
   - rest doc 
 - Service 
+
+
+
+---
+## memo 
+
+---
+
