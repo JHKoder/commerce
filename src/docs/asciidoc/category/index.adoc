@@ -1,0 +1,31 @@
+=== 관리자용 카테고리
+:basedir: {docdir}/../../../
+:snippets: {basedir}/build/generated-snippets
+:icons: font
+:source-highlighter: highlightjs
+:toc: left
+:toclevels: 2
+
+
+
+==== 보기
+
+include::admin/find.adoc[]
+
+
+==== 추가
+
+include::admin/add.adoc[]
+
+==== 수정
+
+include::admin/update.adoc[]
+
+==== 삭제
+
+include::admin/delete.adoc[]
+
+==== 이동
+
+include::admin/move.adoc[]
+
