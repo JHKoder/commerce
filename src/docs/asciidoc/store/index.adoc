@@ -1,0 +1,27 @@
+=== 판매자 스토어 페이지
+:basedir: {docdir}/../../../
+:snippets: {basedir}/build/generated-snippets
+:icons: font
+:source-highlighter: highlightjs
+:toc: left
+:toclevels: 2
+
+==== 추가 API
+
+include::seller/product/add.adoc[]
+
+==== 물품 조회 페이지 API
+
+include::seller/product/page.adoc[]
+
+==== 물품 ID 조회 API
+
+include::seller/product/id.adoc[]
+
+==== 물품 수정 API
+
+include::seller/product/update.adoc[]
+
+==== 물품 삭제 API
+
+include::seller/product/delete.adoc[]

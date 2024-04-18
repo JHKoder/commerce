@@ -1,0 +1,80 @@
+=== 마이 페이지
+:basedir: {docdir}/../../../
+:snippets: {basedir}/build/generated-snippets
+:icons: font
+:source-highlighter: highlightjs
+:toc: left
+:toclevels: 2
+
+
+
+==== 내 정보 보기
+
+include::user/view.adoc[]
+
+==== 권한 업그레이드 요청
+
++SELLER 권한 요청+
+
+include::role/seller.adoc[]
+
++ADMIN 권한 요청+
+
+include::role/admin.adoc[]
+
+==== 비밀 번호 변경
+
+include::passwordChange.adoc[]
+
+==== 2차 인증 체크
+
+include::auth/check.adoc[]
+
+==== 휴대폰 인증 번호 보내기
+
+include::sms/send.adoc[]
+
+==== 휴대폰 인증 번호 완료 확인
+
+include::sms/check.adoc[]
+
+==== 이메일 인증 번호 보내기
+
+include::email/send.adoc[]
+
+==== 이메일 인증 번호 완료 확인
+
+include::email/check.adoc[]
+
+### 판매자 페이지
+
+==== 판매자 내 스토어 조회
+
+include::store/get.adoc[]
+
+==== 판매자 내 스토어 추가
+
+include::store/add.adoc[]
+
+==== 판매자 내 스토어 수정
+
+include::store/update.adoc[]
+
+==== 판매자 내 스토어 삭제
+
+include::store/delete.adoc[]
+
+### 관리자 페이지
+
+==== 유저,판매자 현황 보기
+
+include::admin/users.adoc[]
+==== 권한 변경 요청이 온 리스트 보기
+
+include::admin/role/list.adoc[]
+
+==== 권한 변경 요청 수락&거절
+
+include::admin/role/accept.adoc[]
+
+
