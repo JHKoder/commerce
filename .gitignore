@@ -8,9 +8,9 @@ src/main/resources/static/docs/**
 
 ### docs ###
 
-!src/docs/asciidoc/**/index.adoc
 !src/docs/asciidoc/index.adoc
-src/docs/asciidoc/**
+src/docs/asciidoc/*/*[^index]*.adoc
+src/docs/asciidoc/*/*/**
 
 ### STS ###
 .apt_generated
