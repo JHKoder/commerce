@@ -51,7 +51,12 @@ public enum ErrorCode {
     ADMIN_TARGET_USER_NO_PERMISSION_REQUEST(402,"권한 신청자가 아님" ),
     CATEGORY_NOT_FOUND(401,"카테고리 정보 없음"),
     PRODUCT_NOT_FOUND(402,"상품 정보 없음"),
-    PRODUCT_NOT_SELLER_USER(403,"아이템 조회 대상자와 일치 하지 않음");
+    PRODUCT_NOT_SELLER_USER(403,"아이템 조회 대상자와 일치 하지 않음"),
+    CATEGORY_NOT_TOP_ID(402,"상위 카테고리 정보 없음" ),
+    CATEGORY_CHANGE_NOT_MOVE(404,"카테고리 상한선 제한 으로 이동 실패" ),
+    CATEGORY_MOVE_UP_INDEX_OUT(405,"카테고리 상단 이동 실패" ),
+    CATEGORY_MOVE_DOWN_INDEX_OUT(406,"카테고리 하단 이동 실패" ),
+    CATEGORY_NOT_TOP_EXIST(407,"카테고리가 상위에 존재하지 않습니다." );
 
     private final int status;
     private final String message;
