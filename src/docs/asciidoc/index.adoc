@@ -1,6 +1,7 @@
 = API DOCUMENTATION
 :icons: font
 :source-highlighter: highlightjs
+:toc-title: API Docs
 :toc: left
 :toclevels: 3
 :sectlinks: /build/asciidoc/html5/
@@ -45,7 +46,9 @@ JASYPT_PASSWORD: {private-key}
 
 include::signup/index.adoc[]
 
-
 include::mypage/index.adoc[]
 
 include::store/index.adoc[]
+
+include::category/index.adoc[]
+
