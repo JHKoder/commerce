@@ -383,7 +383,7 @@ public class StoreSellerApiControllerTest extends RestDocControllerTests {
 
     private ItemProduct getProduct() {
         User user = new User("testUser", "testname", "password12", "test@gmail.com", "01012341234", Gender.MAN, Role.USER);
-        Category category = new Category("TestCategory");
+        Category category = new Category("TestCategory",null);
         Item item = new Item("TestItem", 100, "TestMaker", "TestOrigin", "TestBrand",
                 true, "TestBarcode");
         List<Images> links = new ArrayList<>();

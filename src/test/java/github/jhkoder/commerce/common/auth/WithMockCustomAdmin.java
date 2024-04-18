@@ -12,6 +12,6 @@ public @interface WithMockCustomAdmin {
 
     String username() default "userName";
     String password() default "password";
-    Role role() default Role.USER;
+    Role role() default Role.ADMIN;
 
 }
