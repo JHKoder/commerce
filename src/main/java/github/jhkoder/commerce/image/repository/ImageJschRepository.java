@@ -10,6 +10,7 @@ import github.jhkoder.commerce.image.repository.request.ImageRequest;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -31,6 +32,10 @@ public class ImageJschRepository implements ImageRepository {
     @Override
     public boolean upload(ImageRequest imageRequest, ImagePathRequest pathRequest) throws IOException {
         return upload(imageRequest.getFile().getInputStream(), pathRequest.getPaths(), pathRequest.getFileName());
+    }
+
+    public boolean upload(ByteArrayInputStream is , ImagePathRequest pathRequest){
+        return upload(is, pathRequest.getPaths(), pathRequest.getFileName());
     }
 
     public boolean upload(InputStream is, List<String> paths, String name) {
