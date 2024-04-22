@@ -56,10 +56,7 @@ public enum ErrorCode {
     CATEGORY_CHANGE_NOT_MOVE(404,"카테고리 상한선 제한 으로 이동 실패" ),
     CATEGORY_MOVE_UP_INDEX_OUT(405,"카테고리 상단 이동 실패" ),
     CATEGORY_MOVE_DOWN_INDEX_OUT(406,"카테고리 하단 이동 실패" ),
-    CATEGORY_NOT_TOP_EXIST(407,"카테고리가 상위에 존재하지 않습니다." ),
-    COUPON_QR_REGISTRATION_LIMIT(401,"스토어 쿠폰 등록 제한" ),
-    COUPON_CODE_NOT_FOUND(402,"쿠폰 코드 없음" ),
-    COUPON_CODE_MISMATCH(403,"쿠폰 코드 비일치");
+    CATEGORY_NOT_TOP_EXIST(407,"카테고리가 상위에 존재하지 않습니다." );
 
     private final int status;
     private final String message;

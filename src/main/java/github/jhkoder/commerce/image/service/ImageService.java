@@ -17,7 +17,6 @@ import github.jhkoder.commerce.user.repository.UserRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -49,6 +48,7 @@ public class ImageService {
 
 
     public List<Images> upload(ItemProduct itemProduct, StoreAddProductRequest.CustomMultiPartFile paths) {
+
         return upload(itemProduct.getUser(),
                 paths.getImage().stream().map(ImageRequest::new).toList());
     }
@@ -67,17 +67,6 @@ public class ImageService {
         }
     }
 
-
-    @Transactional
-    public Images upload(String username, String name, ByteArrayInputStream is) {
-        filter(name);
-        ImagePathRequest adapterRequest = onlyNameChange(name);
-        if (imageRepository.upload(is, adapterRequest)) {
-            String path = adapterRequest.getFullName();
-            imageJpaRepository.save(new Images(findByUserName(username), path));
-        }
-        throw new ImageException(ErrorCode.IMAGE_REMOTE_UPLOAD);
-    }
 
     @Transactional
     public void change(String username, List<ImageUpdateRequest> links) {
