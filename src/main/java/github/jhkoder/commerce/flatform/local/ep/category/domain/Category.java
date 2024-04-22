@@ -34,7 +34,7 @@ public class Category extends BaseEntity {
         this.level=level;
     }
 
-    public void updateCategory(Category category){
+    public void updateCategoryChild(Category category){
         this.child.add(category);
     }
 
