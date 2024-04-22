@@ -9,6 +9,7 @@ import github.jhkoder.commerce.flatform.local.ep.category.service.request.Catego
 import github.jhkoder.commerce.flatform.local.ep.category.service.request.CategoryChangeRequest;
 import github.jhkoder.commerce.flatform.local.ep.category.service.request.CategoryUpdateRequest;
 import github.jhkoder.commerce.flatform.local.ep.category.service.response.CategoryResponse;
+import github.jhkoder.commerce.flatform.local.ep.category.service.response.CategoryTopResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -36,6 +37,16 @@ public class CategoryService {
     }
 
 
+    @Transactional(readOnly = true)
+    public List<CategoryTopResponse> findTopCategory() {
+        return categoryRepository.findByLevel(CategoryLevel.TOP)
+                .orElse(List.of())
+                .stream()
+                .map(top ->  new CategoryTopResponse(top.getName(),top.getId()))
+                .toList();
+    }
+
+
     private List<CategoryResponse.MiddleCategory> mapToResponse(List<Category> categoryList) {
         return categoryList.stream()
                 .map(category -> new CategoryResponse.MiddleCategory(
@@ -60,7 +71,7 @@ public class CategoryService {
         if (request.isTop()) {
             Category top = categoryRepository.findById(request.topId())
                     .orElseThrow(() -> new ApiException(ErrorCode.CATEGORY_NOT_TOP_ID));
-            top.updateCategory(new Category(request.name(), request.level()));
+            top.updateCategoryChild(new Category(request.name(), request.level()));
             return;
         }
         categoryRepository.save( new Category(request.name(), CategoryLevel.TOP));
