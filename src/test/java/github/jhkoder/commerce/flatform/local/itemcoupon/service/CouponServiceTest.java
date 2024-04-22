@@ -2,23 +2,36 @@ package github.jhkoder.commerce.flatform.local.itemcoupon.service;
 
 import fixture.CategoryFixture;
 import fixture.UserFixture;
+import github.jhkoder.commerce.config.WebClientConfigTest;
 import github.jhkoder.commerce.flatform.local.ep.category.domain.Category;
 import github.jhkoder.commerce.flatform.local.ep.item.domain.Item;
 import github.jhkoder.commerce.flatform.local.ep.itemcoupon.domain.ItemCoupon;
 import github.jhkoder.commerce.flatform.local.ep.itemevent.domain.ItemEvent;
 import github.jhkoder.commerce.flatform.local.ep.itemproduct.domain.ItemProduct;
+import github.jhkoder.commerce.image.repository.request.ImageRequest;
 import github.jhkoder.commerce.user.domain.User;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.runner.RunWith;
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.mock.web.MockMultipartFile;
+import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.reactive.function.client.WebClient;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
 import static fixture.ItemFixture.getItemFixture;
 import static fixture.ItemProductFixture.getItemProductFixture;
 
-//@SpringBootTest
+@RunWith(SpringRunner.class)
+@DataJpaTest
 @DisplayName("쿠폰")
 public class CouponServiceTest {
 
@@ -29,8 +42,15 @@ public class CouponServiceTest {
     ItemProduct itemProduct;
     ItemEvent event;
 
+    private ImageRequest file(String imagePath, String imageName, String type) throws IOException {
+        Path path = Paths.get(imagePath);
+        byte[] content = Files.readAllBytes(path);
+        MultipartFile multipartFile = new MockMultipartFile("file", imageName, type, content);
+        return new ImageRequest(multipartFile);
+    }
+
     @BeforeEach
-    void setup() {
+    void setup() throws IOException {
         user = UserFixture.getFixtureUser();
         category = CategoryFixture.getCategoryFixture();
         item = getItemFixture();
@@ -39,16 +59,37 @@ public class CouponServiceTest {
         int amount = 10_000; // 가격 인하
         String work = " 할인 문구 "; // 차후 이미지도 추가 할 수 있는 여지를 두자
 
-        event = new ItemEvent(itemProduct, item, category, amount, work, false, LocalDateTime.now(), LocalDateTime.now().plusDays(1));
+        ImageRequest request = file("src/main/resources/static/img/testimg.png",
+                "testimg.png", "image/png");
+
+
+        event = new ItemEvent(itemProduct, category, amount, work, false, LocalDateTime.now(), LocalDateTime.now().plusDays(1));
     }
 
     @Test
-    void 생성() {
+    void 등록() {
         // 판매자가 쿠폰을 생성합니다. 이때 쿠폰의 유형, 할인 금액 또는 비율, 사용 가능 기간 등을 지정합니다.
         String code = UUID.randomUUID().toString();
         int downPrice = 10_000;
-        ItemCoupon coupon = new ItemCoupon(itemProduct, item, category,
-                code, 1, LocalDateTime.now(), LocalDateTime.now().plusDays(1));
+        ItemCoupon coupon = new ItemCoupon(itemProduct, category,1, LocalDateTime.now(), LocalDateTime.now().plusDays(1));
+
+
+    }
+
+
+    @Test
+    void QR생성() {
+        // qr 코드 하루에 최대 99,999 권 까지 생성 가능
+        int size = 150;
+        int size_max = 1000;
+        int size_min = 10;
+        String pattern = "PNG|GIF|JPEG|JPG|SVG|EPS"; //  전부 소문자 형태 & default : png
+
+        WebClientConfigTest client = new WebClientConfigTest();
+        WebClient webClient = client.webClient();
+        String host = "https://api.qrserver.com/v1/create-qr-code";
+        String code = UUID.randomUUID().toString();
+        String data = "http://localhost:8080/coupon/qr/products/" + itemProduct.getId() + "/" + code;
 
     }
 
