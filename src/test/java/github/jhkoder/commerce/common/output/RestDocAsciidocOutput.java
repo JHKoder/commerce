@@ -42,7 +42,6 @@ public class RestDocAsciidocOutput {
                 ":isResponseBody: " + request.isResponseBody() + System.lineSeparator() +
                 ":isResponseFields: " + request.isResponseFields() + System.lineSeparator() +
 
-                "---" + System.lineSeparator() +System.lineSeparator() +
                 "===== Request\n" +
                 "\n" +
                 "====== HTTP \n" +

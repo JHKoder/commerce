@@ -3,6 +3,7 @@ package github.jhkoder.commerce.flatform.local.ep.itemproduct.repository;
 import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import github.jhkoder.commerce.flatform.local.ep.itemproduct.repository.dto.StoreSellerProductsPageResponse;
+import github.jhkoder.commerce.flatform.local.ep.itemproduct.service.response.ProductsCategoryPageResponse;
 import github.jhkoder.commerce.user.domain.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -32,6 +33,28 @@ public class ItemProductDslRepository {
                         )
                 )
                 .from(itemProduct)
+                .where(itemProduct.user.eq(user))
+                .orderBy(itemProduct.createTime.desc())
+                .limit(page.getPageSize())
+                .offset(page.getOffset())
+                .fetch();
+
+        return new PageImpl<>(result, page, result.size());
+    }
+
+    public Page<ProductsCategoryPageResponse> findbyCategoryPage(Long categoryId, Pageable page) {
+
+        List<ProductsCategoryPageResponse> result = factory
+                .select(Projections.constructor(ProductsCategoryPageResponse.class,
+                                itemProduct.item.id,
+                                itemProduct.item.mainImage,
+                                itemProduct.price,
+                                itemProduct.clickCount,
+                                itemProduct.deliveryPrice
+                        )
+                )
+                .from(itemProduct)
+                .where(itemProduct.category.id.eq(categoryId))
                 .orderBy(itemProduct.createTime.desc())
                 .limit(page.getPageSize())
                 .offset(page.getOffset())

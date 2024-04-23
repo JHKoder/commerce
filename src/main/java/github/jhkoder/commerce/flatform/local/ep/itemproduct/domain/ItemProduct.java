@@ -106,4 +106,7 @@ public class ItemProduct extends BaseEntity {
 
     }
 
+    public void updateMainImage(Images mainImage) {
+        this.item.updateMainImage(mainImage);
+    }
 }

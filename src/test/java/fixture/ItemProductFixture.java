@@ -13,9 +13,9 @@ import java.util.List;
 
 public class ItemProductFixture {
 
-    public ItemProduct getFixtureItemProduct(){
+    public ItemProduct getItemProductFixture(){
         User user = new User("testUser", "testname","password12","test@gmail.com","01012341234",Gender.MAN,Role.USER);
-        Category category = new Category("TestCategory");
+        Category category = new Category("TestCategory",null);
         Item item = new Item("TestItem", 100, "TestMaker", "TestOrigin", "TestBrand",
                 true, "TestBarcode");
         List<Images> links = new ArrayList<>();
@@ -40,8 +40,8 @@ public class ItemProductFixture {
                 shippingSetting, fastDelivery, regularDelivery, dawnDelivery, isbn, stock);
     }
 
-    public static ItemProduct getFixtureItemProduct(User user){
-        Category category = new Category("TestCategory");
+    public static ItemProduct getItemProductFixture(User user){
+        Category category = new Category("TestCategory",null);
         Item item = new Item("TestItem", 100, "TestMaker", "TestOrigin", "TestBrand",
                 true, "TestBarcode");
         List<Images> links = new ArrayList<>();
@@ -66,7 +66,7 @@ public class ItemProductFixture {
                 shippingSetting, fastDelivery, regularDelivery, dawnDelivery, isbn, stock);
     }
 
-    public static ItemProduct getFixtureItemProduct(User user,Category category,Item item){
+    public static ItemProduct getItemProductFixture(User user, Category category, Item item){
         List<Images> links = new ArrayList<>();
         int price = 200;
         boolean orderMode = true;
