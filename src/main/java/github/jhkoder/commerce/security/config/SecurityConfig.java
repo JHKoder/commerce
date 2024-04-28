@@ -24,6 +24,8 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.thymeleaf.context.IExpressionContext;
+import org.thymeleaf.spring6.expression.Fields;
 
 import java.util.List;
 
@@ -45,13 +47,14 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http, AuthenticationManager authenticationManager) throws Exception {
         http.csrf(AbstractHttpConfigurer::disable)
-                .sessionManagement(security -> security.sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED))
+                .sessionManagement(security -> security.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(this::authorizeHttpRequests)
                 .addFilterBefore(jwtTokenIssueFilter(authenticationManager), UsernamePasswordAuthenticationFilter.class)
-//                .addFilterBefore(jwtTokenAuthenticationFilter(List.of(AUTHENTICATION_URL), authenticationManager), UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(jwtTokenAuthenticationFilter(List.of(AUTHENTICATION_URL), authenticationManager), UsernamePasswordAuthenticationFilter.class)
                 .formLogin(login -> login.loginPage("/login").permitAll());
         return http.build();
     }
+
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -69,13 +72,14 @@ public class SecurityConfig {
     private void authorizeHttpRequests(AuthorizeHttpRequestsConfigurer<HttpSecurity>.AuthorizationManagerRequestMatcherRegistry configurer) {
         configurer
                 .requestMatchers("/", "/home", "/signup", "/signup/api/**").permitAll()
-                .requestMatchers("/docs/**", "/img/**", "/css/**", "/js/**", "/layout/**", "/fragment/**").permitAll()
+                .requestMatchers("/docs/**", "/img/**", "/css/**", "/js/**", "/layout/**", "/fragment/**","/login",
+                        "/store","/store/**","/products/**").permitAll()
+                .requestMatchers("/api/all/**","/api/token","/api/token/**").permitAll()
                 .requestMatchers("/user/**").hasAnyRole(Role.USER.name())
                 .requestMatchers("/admin/**").hasAnyRole(Role.ADMIN.name())
-                .requestMatchers("/api/user/**").hasAnyRole(Role.USER.name(), Role.ADMIN.name(), Role.SELLER.name())
-                .requestMatchers("/api/seller/**").hasAnyRole(Role.SELLER.name())
+                .requestMatchers("/api/user/**").hasAnyRole(Role.USER.name(), Role.SELLER.name(), Role.ADMIN.name())
+                .requestMatchers("/api/seller/**").hasAnyRole(Role.SELLER.name(),Role.ADMIN.name())
                 .requestMatchers("/api/admin/**").hasAnyRole(Role.ADMIN.name())
-
         ;
     }
 
@@ -93,6 +97,4 @@ public class SecurityConfig {
 
         return filter;
     }
-
-
 }
