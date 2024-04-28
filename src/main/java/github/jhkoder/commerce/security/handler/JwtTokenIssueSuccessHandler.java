@@ -11,14 +11,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.WebAttributes;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
-import java.util.Collection;
 
 import static java.util.Objects.isNull;
 
@@ -32,6 +29,7 @@ public class JwtTokenIssueSuccessHandler implements AuthenticationSuccessHandler
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
                                         Authentication authentication) throws IOException {
+        log.info("AuthenticationSuccessHandler - ");
         onAuthenticationSuccess(request, response, (UsernamePasswordAuthenticationToken) authentication);
     }
 
@@ -40,8 +38,10 @@ public class JwtTokenIssueSuccessHandler implements AuthenticationSuccessHandler
 
         String username = authentication.getPrincipal().toString();
         var authorities = authentication.getAuthorities();
+        var token = tokenService.createToken(username, authorities);
+        var refreshToken = tokenService.createRefreshToken(username, authorities);
 
-        var tokenResponse = new TokenResponse(tokenService.createToken(username, authorities));
+        var tokenResponse = new TokenResponse(token,refreshToken);
 
         response.setStatus(HttpStatus.OK.value());
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
