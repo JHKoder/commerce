@@ -1,8 +1,11 @@
 package github.jhkoder.commerce.security.service;
 
 import github.jhkoder.commerce.security.exception.JwtExpiredTokenException;
+import github.jhkoder.commerce.security.rest.dto.JwtAccessTokenResponse;
+import github.jhkoder.commerce.security.rest.dto.JwtRefreshTokenResponse;
 import github.jhkoder.commerce.security.service.dto.TokenParserResponse;
 import github.jhkoder.commerce.user.domain.Role;
+import github.jhkoder.commerce.user.repository.UserRepository;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import io.jsonwebtoken.security.SignatureException;
@@ -14,9 +17,13 @@ import org.springframework.stereotype.Service;
 import javax.crypto.SecretKey;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
+
+import static java.util.Objects.isNull;
 
 @Service
 public class TokenService {
@@ -24,14 +31,34 @@ public class TokenService {
 
     private final SecretKey key;
     private final long expirationTime;
+    private final long refreshTime;
     private final String issuer;
+    private final UserRepository userRepository;
 
     public TokenService(@Value("${jwt.token.secret-key}") String key,
                         @Value("${jwt.token.expTime}") long expirationTime,
-                        @Value("${jwt.token.issuer}") String issuer) {
+                        @Value("${jwt.token.refreshTime}") long refreshTime,
+                        @Value("${jwt.token.issuer}") String issuer,
+                        UserRepository userRepository) {
         this.key = Keys.hmacShaKeyFor(key.getBytes());
         this.expirationTime = expirationTime;
+        this.refreshTime = refreshTime;
         this.issuer = issuer;
+        this.userRepository=userRepository;
+    }
+
+
+    public String createRefreshToken(String username, Collection<GrantedAuthority> authorities) {
+        LocalDateTime issuedAt = LocalDateTime.now();
+        LocalDateTime expiredAt = issuedAt.plusDays(refreshTime);
+
+        return Jwts.builder()
+                .addClaims(createClaims(username, authorities))
+                .setIssuer(issuer)
+                .setIssuedAt(toDate(issuedAt))
+                .setExpiration(toDate(expiredAt))
+                .signWith(key)
+                .compact();
     }
 
     public String createToken(String username, Collection<GrantedAuthority> authorities) {
@@ -46,8 +73,24 @@ public class TokenService {
                 .signWith(key)
                 .compact();
     }
+    public String createToken(String username, List<Role> authorities) {
+        Collection<GrantedAuthority> grantedAuthorities = new ArrayList<>(authorities);
+        return createToken(username,grantedAuthorities);
+    }
 
-    public TokenParserResponse parserToken(String token) throws BadCredentialsException ,JwtExpiredTokenException{
+
+    public JwtRefreshTokenResponse accessTokenRefresh(String accessToken) {
+        TokenParserResponse response = this.parserToken(accessToken);
+        var token = createToken(response.username(),response.roles());
+        return new JwtRefreshTokenResponse(token);
+    }
+
+    public JwtAccessTokenResponse findAccessToken(String accessToken) {
+        TokenParserResponse response = this.parserToken(accessToken);
+        return new JwtAccessTokenResponse(response.username(),response.roles());
+    }
+
+    public TokenParserResponse parserToken(String token) throws BadCredentialsException, JwtExpiredTokenException {
         try {
             return tokenParserResponse(
                     Jwts.parserBuilder()
@@ -60,6 +103,18 @@ public class TokenService {
             throw new JwtExpiredTokenException("JWT Token expired", expiredEx);
         }
     }
+
+    public TokenParserResponse parserBearerToken(String token) throws BadCredentialsException, JwtExpiredTokenException {
+        return parserToken(extractToken(token));
+    }
+
+    private String extractToken(String tokenPayload) {
+        if (isNull(tokenPayload) || !tokenPayload.startsWith("Bearer ")) {
+            return "";
+        }
+        return tokenPayload.replace("Bearer ", "");
+    }
+
 
     @SuppressWarnings("unchecked")
     private TokenParserResponse tokenParserResponse(Jws<Claims> claimsJws) {
