@@ -27,12 +27,12 @@ public class JwtAuthenticationProvider implements AuthenticationProvider {
 
     @Override
     public boolean supports(Class<?> authentication) {
-        log.info("JwtAuthenticationProvider-supports");
+        log.info("JwtAuthenticationProvider  -  supports");
         return (JwtAuthenticationToken.class.isAssignableFrom(authentication));
     }
 
     private Authentication authenticate(JwtAuthenticationToken authentication) throws AuthenticationException {
-        log.info("jwt auth provider au");
+        log.info("jwt auth authenticate");
         String jwtToken = authentication.getCredentials();
         TokenParserResponse response = tokenService.parserToken(jwtToken);
         log.info(jwtToken);

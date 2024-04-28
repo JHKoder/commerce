@@ -33,7 +33,7 @@ public class JwtTokenIssueFilter extends AbstractAuthenticationProcessingFilter 
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response)
             throws AuthenticationException, IOException {
 
-        log.info("JwtTokenIssueFilter-attemptAuthentication");
+        log.info("JwtTokenIssueFilter-   attemptAuthentication");
         if (!isPostMethod(request)) {
             throw new AuthMethodNotSupportedException("Authentication method not supported");
         }

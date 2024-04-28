@@ -28,14 +28,12 @@ public class JwtTokenIssueProvider implements AuthenticationProvider {
         var username = (String) authentication.getPrincipal();
         var password = (String) authentication.getCredentials();
 
-
-        UsernamePasswordAuthenticationToken token= authenticate(username, password);
-
-        return token;
+        return authenticate(username, password);
     }
 
     @Override
     public boolean supports(Class<?> authentication) {
+        log.info("JwtTokenIssueProvider  -  supports");
         return (UsernamePasswordAuthenticationToken.class.isAssignableFrom(authentication));
     }
 
