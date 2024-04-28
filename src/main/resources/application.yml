@@ -9,7 +9,8 @@ jasypt:
 jwt:
   token:
     secret-key: ENC(T7GiReOACR6VvUPXnRNLuFtRyUeqm2VxwotQPqY95cKutNa/czsRwcnL+LeUyIPoHkQJNOAL07s=)
-    expTime: 1800000
+    expTime: 30      # 분
+    refreshTime: 365 # 일
     issuer: "jhkoder"
 
 spring:
@@ -32,8 +33,8 @@ spring:
       ddl-auto:
     properties:
       hibernate:
-        show_sql: false
-        format_sql: false
+        show_sql:
+        format_sql:
   mail:
     host: smtp.gmail.com
     port: 587
@@ -48,6 +49,7 @@ spring:
 logging:
   level:
     org.hibernate.type.descriptor.sql: trace
+    org.springframework.security.authentication.AuthenticationManager: DEBUG
 
 cloud:
   image-repository:
@@ -72,3 +74,5 @@ pay:
         javascript: ENC(2EwotiKkaC0ywudZZbLVuXh1kgdGr58KE2rE7IiLa+UkllgqUj9QfA==)
         rest-api: ENC(9ByMaBvsZ+Ip7Ibl+PMQGkpeC6j1415vvPNP7Zb942MLbNY0MM6iew==)
       #ip 보안 https://admin.bootpay.co.kr/payment/app_key 에서 수정
+qr:
+  host: https://api.qrserver.com/v1/create-qr-code
