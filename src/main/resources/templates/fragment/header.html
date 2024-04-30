@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
+>
+
+<th:block th:fragment="headerFragment">
+    <!-- 헤더 영역 -->
+    <meta charset="utf-8">
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=BM+EULJIRO+TTF&display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css?family=BM+JUA_TTF&display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css?family=Karantina&display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css?family=Pacifico&display=swap" rel="stylesheet"/>
+
+
+    <!--    bootstrap -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js" integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js" integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+
+    <!--    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">-->
+    <!--    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">-->
+    <!--    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">-->
+    <!--    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">-->
+
+
+    <!--custom css -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script src="/js/categorySampleData.js"></script>
+
+
+    <style>
+
+
+        @media (max-width: 767px) {
+            #accessLoginUser_true {
+                z-index: 1;cursor: pointer;position: relative;display: inline-block;
+                margin-top: 100px;
+                margin-right: 10px;
+            }
+            #accessLoginUser_false {
+            z-index: 1;cursor: pointer;position: relative;display: inline-block;
+                margin-top: 100px;
+                margin-right: 10px;
+            }
+        }
+        @media (max-width: 768px) {
+          .navbar-collapse.collapse.in {
+            height: 176px;
+          }
+          .navbar-collapse.in {
+            overflow-y: visible;
+          }
+        }
+
+        .dropdown-submenu {
+                            position: relative;
+                        }
+
+                        .dropdown-submenu>.dropdown-menu {
+                            top: 0;
+                            left: 100%;
+                            margin-top: -6px;
+                            margin-left: -1px;
+                            -webkit-border-radius: 0 6px 6px 6px;
+                            -moz-border-radius: 0 6px 6px;
+                            border-radius: 0 6px 6px 6px;
+                        }
+
+                        .dropdown:hover>.dropdown-menu {
+                            display: block;
+                        }
+
+                        .dropdown-submenu:hover>.dropdown-menu {
+                            display: block;
+                        }
+
+                        .dropdown-submenu>a:after {
+                            display: block;
+                            content: " ";
+                            float: right;
+                            width: 0;
+                            height: 0;
+                            border-color: transparent;
+                            border-style: solid;
+                            border-width: 5px 0 5px 5px;
+                            border-left-color: #ccc;
+                            margin-top: 5px;
+                            margin-right: -10px;
+                        }
+
+                        .dropdown-submenu:hover>a:after {
+                            border-left-color: #fff;
+                        }
+
+
+    </style>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <!-- Navigation -->
+
+    <nav class="navbar navbar-default navbar-fixed-top" role="navigation">
+        <div class="container-fluid">
+            <!-- Brand and toggle get grouped for better mobile display -->
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+
+                <a class="navbar-brand" href="/#" style="float:right;">
+                    E-commerce
+                </a>
+                <a>
+                    <img src="/img/brand.png" alt="로고 이미지" style="width: 43px; height: 49px;padding:0px;">
+                </a>
+
+            </div>
+
+            <!-- Collect the nav links, forms, and other content for toggling -->
+            <div class="collapse navbar-collapse " id="bs-example-navbar-collapse-1" style="">
+                <ul class="nav justify-content-center navbar-nav " style="height: 0px;padding-right: 0px;">
+
+                    <li style=" display: flex; "><a href="/#">Home</a></li>
+                    <li style=" display: flex;"><a href="/#site_about">사이트 소개</a></li>
+                    <li style=" display: flex;"><a href="/#project_about">프로젝트 소개</a></li>
+
+                    <li class="dropdown" style=" display: flex;">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" id="navbarDropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                            상품
+                            <b class="caret"></b>
+                        </a>
+                        <ul class="dropdown-menu multi-level" aria-labelledby="navbarDropdown" id="categoryDropdown"></ul>
+                    </li>
+
+                </ul>
+                <ul class="nav navbar-nav" style="float:right;">
+                    <div class="navbar-links" style="float:right;margin-top: 10px;float:right;">
+                        <div id="accessLoginUser_true" style="display:none;">
+                            <button onclick="javascript:logout();" type="button" class="btn" data-bs-toggle="button">로그아웃</button>
+                        </div>
+                        <div id="accessLoginUser_false" style="display:none;">
+                            <button onclick="location.href='/login'" type="button" class="btn" data-bs-toggle="button">로그인</button>
+                            <button onclick="location.href='/signup'" type="button" class="btn" data-bs-toggle="button">회원가입</button>
+                        </div>
+                    </div>
+                </ul>
+
+            </div>
+            <!-- /.navbar-collapse -->
+        </div>
+        <!-- /.container -->
+    </nav>
+    <br>
+    <script>
+        var categoryDropdown = document.getElementById("categoryDropdown");
+        var categoryJpaData = [{"name":"가구/인테리어","categoryId":167,"middleCategories":[{"name":"가구","categoryId":168,"smallCategories":[{"name":"소파","categoryId":169},{"name":"침대","categoryId":170},{"name":"의자","categoryId":171},{"name":"테이블","categoryId":172},{"name":"책상","categoryId":173},{"name":"수납가구","categoryId":174}]},{"name":"인테리어소품","categoryId":175,"smallCategories":[{"name":"조명","categoryId":176},{"name":"시계","categoryId":177},{"name":"액자","categoryId":178},{"name":"화분/화병","categoryId":179},{"name":"프레임","categoryId":180},{"name":"시트지/스티커","categoryId":181}]},{"name":"침구","categoryId":182,"smallCategories":[{"name":"이불/이불커버","categoryId":183},{"name":"베개/베개커버","categoryId":184},{"name":"매트리스/배개커버","categoryId":185},{"name":"침대커버/스커트","categoryId":186},{"name":"침구세트","categoryId":187}]},{"name":"커튼/블라인드","categoryId":188,"smallCategories":[{"name":"커튼","categoryId":189},{"name":"블라인드","categoryId":190},{"name":"롤스크린","categoryId":191},{"name":"발코니장","categoryId":192}]},{"name":"수납/정리","categoryId":193,"smallCategories":[{"name":"선반/진열대","categoryId":194},{"name":"서랍장","categoryId":195},{"name":"옷장","categoryId":196},{"name":"화장대","categoryId":197},{"name":"수납박스","categoryId":198}]}]},{"name":"식품","categoryId":199,"middleCategories":[{"name":"과일","categoryId":200,"smallCategories":[{"name":"사과","categoryId":201},{"name":"바나나","categoryId":202},{"name":"딸기","categoryId":203},{"name":"수박","categoryId":204},{"name":"포도","categoryId":205},{"name":"귤","categoryId":206}]},{"name":"채소","categoryId":207,"smallCategories":[{"name":"상추","categoryId":208},{"name":"배추","categoryId":209},{"name":"오이","categoryId":210},{"name":"당근","categoryId":211},{"name":"고구마","categoryId":212},{"name":"감자","categoryId":213}]},{"name":"정육/계란","categoryId":214,"smallCategories":[{"name":"소고기","categoryId":215},{"name":"돼지고기","categoryId":216},{"name":"닭고기","categoryId":217},{"name":"계란","categoryId":218},{"name":"오리고기","categoryId":219}]},{"name":"수산물","categoryId":220,"smallCategories":[{"name":"생선","categoryId":221},{"name":"오징어","categoryId":222},{"name":"새우","categoryId":223},{"name":"조개","categoryId":224},{"name":"전복","categoryId":225},{"name":"게","categoryId":226}]},{"name":"즉석식품","categoryId":227,"smallCategories":[{"name":"라면","categoryId":228},{"name":"햄버거","categoryId":229},{"name":"피자","categoryId":230},{"name":"김밥","categoryId":231},{"name":"샌드위치","categoryId":232},{"name":"튀김","categoryId":233}]},{"name":"음료","categoryId":234,"smallCategories":[{"name":"탄산음료","categoryId":235},{"name":"과일주스","categoryId":236},{"name":"커피","categoryId":237},{"name":"차","categoryId":238},{"name":"맥주","categoryId":239},{"name":"소주","categoryId":240}]}]},{"name":"출산/유아동","categoryId":241,"middleCategories":[{"name":"기저귀","categoryId":242,"smallCategories":[{"name":"기저귀","categoryId":243},{"name":"기저귀크림","categoryId":244},{"name":"기저귀통","categoryId":245}]},{"name":"이유식","categoryId":246,"smallCategories":[{"name":"이유식쌀","categoryId":247},{"name":"이유식채소","categoryId":248},{"name":"이유식과일","categoryId":249},{"name":"이유식육류","categoryId":250},{"name":"간편이유식","categoryId":251}]},{"name":"유아동의류","categoryId":252,"smallCategories":[{"name":"유아상의","categoryId":253},{"name":"유아하의","categoryId":254},{"name":"유아외투","categoryId":255},{"name":"유아잠옷","categoryId":256},{"name":"유아속옷","categoryId":257}]},{"name":"유아동신발","categoryId":258,"smallCategories":[{"name":"유아스니커즈","categoryId":259},{"name":"유아부츠","categoryId":260},{"name":"유아샌들","categoryId":261},{"name":"유아실내화","categoryId":262},{"name":"유아슬리퍼","categoryId":263}]},{"name":"유아동가방","categoryId":264,"smallCategories":[{"name":"유아백팩","categoryId":265},{"name":"유아보조가방","categoryId":266},{"name":"유아크로스백","categoryId":267},{"name":"유아미니백","categoryId":268},{"name":"유아주니어백","categoryId":269}]},{"name":"유아동잡화","categoryId":270,"smallCategories":[{"name":"유아모자","categoryId":271},{"name":"유아귀걸이","categoryId":272},{"name":"유아목걸이","categoryId":273},{"name":"유아반지","categoryId":274},{"name":"유아시계","categoryId":275}]}]},{"name":"반려동물용품","categoryId":276,"middleCategories":[{"name":"사료/간식","categoryId":277,"smallCategories":[{"name":"사료","categoryId":278},{"name":"간식","categoryId":279},{"name":"캔/파우치","categoryId":280},{"name":"시리얼/샴푸","categoryId":281}]},{"name":"건강/관리용품","categoryId":282,"smallCategories":[{"name":"영양제","categoryId":283},{"name":"청결/위생","categoryId":284},{"name":"건강관리","categoryId":285},{"name":"파티/이벤트","categoryId":286},{"name":"장난감","categoryId":287}]},{"name":"의류/악세서리","categoryId":288,"smallCategories":[{"name":"의류","categoryId":289},{"name":"목줄/가슴줄","categoryId":290},{"name":"바닥보호","categoryId":291},{"name":"신발/양말","categoryId":292},{"name":"안전용품","categoryId":293}]},{"name":"케어/미용용품","categoryId":294,"smallCategories":[{"name":"샴푸/린스","categoryId":295},{"name":"브러시/빗","categoryId":296},{"name":"미용용품","categoryId":297},{"name":"손톱/발톱","categoryId":298},{"name":"관리용품","categoryId":299}]},{"name":"장난감/훈련용품","categoryId":300,"smallCategories":[{"name":"치즈/토이","categoryId":301},{"name":"오락/리빙","categoryId":302},{"name":"훈련용품","categoryId":303},{"name":"자동/전동장난감","categoryId":304},{"name":"퍼즐/블록","categoryId":305}]}]},{"name":"생활/주방용품","categoryId":306,"middleCategories":[{"name":"주방용품","categoryId":307,"smallCategories":[{"name":"냄비/프라이팬","categoryId":308},{"name":"칼/도마","categoryId":309},{"name":"조리도구","categoryId":310},{"name":"식기/그릇","categoryId":311},{"name":"주방수납","categoryId":312},{"name":"주방잡화","categoryId":313}]},{"name":"욕실용품","categoryId":314,"smallCategories":[{"name":"수건/타월","categoryId":315},{"name":"샤워용품","categoryId":316},{"name":"세정용품","categoryId":317},{"name":"욕실수납","categoryId":318},{"name":"욕실잡화","categoryId":319}]},{"name":"세탁용품","categoryId":320,"smallCategories":[{"name":"세탁세제","categoryId":321},{"name":"섬유유연제","categoryId":322},{"name":"표백제","categoryId":323},{"name":"세탁소품","categoryId":324},{"name":"세탁용품세트","categoryId":325}]},{"name":"생활잡화","categoryId":326,"smallCategories":[{"name":"문짝정리용품","categoryId":327},{"name":"체중계","categoryId":328},{"name":"핸드폰악세서리","categoryId":329},{"name":"우산/양산","categoryId":330},{"name":"물티슈/건틀릿","categoryId":331}]},{"name":"수납/정리용품","categoryId":332,"smallCategories":[{"name":"방향제","categoryId":333},{"name":"수납함/박스","categoryId":334},{"name":"정리함/선반","categoryId":335},{"name":"옷걸이/행거","categoryId":336},{"name":"휴지통/분리수거함","categoryId":337}]}]},{"name":"자동차/공구","categoryId":498,"middleCategories":[{"name":"자동차용품","categoryId":499,"smallCategories":[{"name":"타이어","categoryId":500},{"name":"브레이크패드","categoryId":501},{"name":"와이퍼","categoryId":502},{"name":"배터리","categoryId":503},{"name":"오일","categoryId":504},{"name":"실내용품","categoryId":505}]},{"name":"정비/수리용품","categoryId":506,"smallCategories":[{"name":"공구","categoryId":507},{"name":"정비용품","categoryId":508},{"name":"부품","categoryId":509},{"name":"주유용품","categoryId":510},{"name":"수리용품","categoryId":511}]},{"name":"청소/세차용품","categoryId":512,"smallCategories":[{"name":"세차용품","categoryId":513},{"name":"차량청소용품","categoryId":514},{"name":"특수청소용품","categoryId":515},{"name":"캡슐세차용품","categoryId":516},{"name":"안티박테리아제","categoryId":517}]},{"name":"액세서리/튜닝용품","categoryId":518,"smallCategories":[{"name":"인테리어액세서리","categoryId":519},{"name":"외장액세서리","categoryId":520},{"name":"튜닝용품","categoryId":521},{"name":"주차용품","categoryId":522},{"name":"세차용품","categoryId":523}]},{"name":"보호용품","categoryId":524,"smallCategories":[{"name":"차량커버","categoryId":525},{"name":"휠커버","categoryId":526},{"name":"바디커버","categoryId":527},{"name":"냉각수","categoryId":528},{"name":"보온수","categoryId":529}]}]},{"name":"취미/문구/악기","categoryId":530,"middleCategories":[{"name":"취미용품","categoryId":531,"smallCategories":[{"name":"퍼즐","categoryId":532},{"name":"모형","categoryId":533},{"name":"캔버스화","categoryId":534},{"name":"색연필","categoryId":535},{"name":"물감","categoryId":536},{"name":"오르골","categoryId":537}]},{"name":"문구용품","categoryId":538,"smallCategories":[{"name":"볼펜","categoryId":539},{"name":"연필","categoryId":540},{"name":"노트","categoryId":541},{"name":"다이어리","categoryId":542},{"name":"파일","categoryId":543},{"name":"데스크소품","categoryId":544}]},{"name":"악기","categoryId":545,"smallCategories":[{"name":"기타","categoryId":546},{"name":"피아노","categoryId":547},{"name":"드럼","categoryId":548},{"name":"바이올린","categoryId":549},{"name":"플룻","categoryId":550},{"name":"트럼펫","categoryId":551}]},{"name":"미술용품","categoryId":552,"smallCategories":[{"name":"미술붓","categoryId":553},{"name":"캔버스","categoryId":554},{"name":"팔레트","categoryId":555},{"name":"유화물감","categoryId":556},{"name":"수채물감","categoryId":557},{"name":"물감","categoryId":558}]},{"name":"키덜트/프라모델","categoryId":559,"smallCategories":[{"name":"프라모델","categoryId":560},{"name":"피규어","categoryId":561},{"name":"프라모델용품","categoryId":562},{"name":"코스튬/소품","categoryId":563},{"name":"코스튬소품","categoryId":564},{"name":"코스프레","categoryId":565}]}]},{"name":"렌탈관","categoryId":566,"middleCategories":[{"name":"가전렌탈","categoryId":567,"smallCategories":[{"name":"TV","categoryId":568},{"name":"냉장고","categoryId":569},{"name":"세탁기","categoryId":570},{"name":"에어컨","categoryId":571},{"name":"노트북","categoryId":572}]},{"name":"의류렌탈","categoryId":573,"smallCategories":[{"name":"정장","categoryId":574},{"name":"드레스","categoryId":575},{"name":"캐주얼","categoryId":576},{"name":"한복","categoryId":577},{"name":"코스튬","categoryId":578}]},{"name":"가구렌탈","categoryId":579,"smallCategories":[{"name":"침대","categoryId":580},{"name":"소파","categoryId":581},{"name":"식탁","categoryId":582},{"name":"의자","categoryId":583},{"name":"책상","categoryId":584}]},{"name":"자동차렌탈","categoryId":585,"smallCategories":[{"name":"경형","categoryId":586},{"name":"소형","categoryId":587},{"name":"중형","categoryId":588},{"name":"대형","categoryId":589},{"name":"RV","categoryId":590}]},{"name":"생활용품렌탈","categoryId":591,"smallCategories":[{"name":"생필품","categoryId":592},{"name":"주방용품","categoryId":593},{"name":"욕실용품","categoryId":594},{"name":"청소용품","categoryId":595},{"name":"건강용품","categoryId":596}]}]},{"name":"리퍼비시관","categoryId":597,"middleCategories":[{"name":"가전제품","categoryId":598,"smallCategories":[{"name":"TV","categoryId":599},{"name":"냉장고","categoryId":600},{"name":"세탁기","categoryId":601},{"name":"에어컨","categoryId":602},{"name":"건조기","categoryId":603}]},{"name":"전자제품","categoryId":604,"smallCategories":[{"name":"노트북","categoryId":605},{"name":"태블릿","categoryId":606},{"name":"스마트폰","categoryId":607},{"name":"디지털카메라","categoryId":608},{"name":"게임기","categoryId":609}]},{"name":"가구","categoryId":610,"smallCategories":[{"name":"소파","categoryId":611},{"name":"침대","categoryId":612},{"name":"의자","categoryId":613},{"name":"테이블","categoryId":614},{"name":"옷장","categoryId":615}]},{"name":"의류","categoryId":616,"smallCategories":[{"name":"남성의류","categoryId":617},{"name":"여성의류","categoryId":618},{"name":"아동의류","categoryId":619},{"name":"유아의류","categoryId":620},{"name":"잡화","categoryId":621}]},{"name":"잡화","categoryId":622,"smallCategories":[{"name":"가방","categoryId":623},{"name":"신발","categoryId":624},{"name":"악세사리","categoryId":625},{"name":"패션잡화","categoryId":626},{"name":"패션소품","categoryId":627}]}]},{"name":"면세점","categoryId":628,"middleCategories":[{"name":"화장품","categoryId":629,"smallCategories":[{"name":"스킨케어","categoryId":630},{"name":"메이크업","categoryId":631},{"name":"향수/디퓨저","categoryId":632},{"name":"네일케어","categoryId":633},{"name":"선케어","categoryId":634}]},{"name":"의류/잡화","categoryId":635,"smallCategories":[{"name":"여성의류","categoryId":636},{"name":"남성의류","categoryId":637},{"name":"여성잡화","categoryId":638},{"name":"남성잡화","categoryId":639},{"name":"아동의류","categoryId":640}]},{"name":"주류/담배","categoryId":641,"smallCategories":[{"name":"소주","categoryId":642},{"name":"맥주","categoryId":643},{"name":"양주","categoryId":644},{"name":"와인","categoryId":645},{"name":"담배","categoryId":646}]},{"name":"식품","categoryId":647,"smallCategories":[{"name":"과자","categoryId":648},{"name":"초콜릿","categoryId":649},{"name":"커피","categoryId":650},{"name":"캔디","categoryId":651},{"name":"간편식","categoryId":652}]},{"name":"전자제품","categoryId":653,"smallCategories":[{"name":"스마트폰","categoryId":654},{"name":"태블릿","categoryId":655},{"name":"카메라","categoryId":656},{"name":"이어폰","categoryId":657},{"name":"노트북","categoryId":658}]}]},{"name":"여행","categoryId":659,"middleCategories":[{"name":"해외여행","categoryId":660,"smallCategories":[{"name":"아시아","categoryId":661},{"name":"유럽","categoryId":662},{"name":"아메리카","categoryId":663},{"name":"아프리카","categoryId":664},{"name":"오세아니아","categoryId":665}]},{"name":"국내여행","categoryId":666,"smallCategories":[{"name":"서울","categoryId":667},{"name":"경기","categoryId":668},{"name":"강원","categoryId":669},{"name":"충청","categoryId":670},{"name":"전라","categoryId":671},{"name":"경상","categoryId":672}]},{"name":"국외투어","categoryId":673,"smallCategories":[{"name":"주변국","categoryId":674},{"name":"아시아투어","categoryId":675},{"name":"유럽투어","categoryId":676},{"name":"미주투어","categoryId":677},{"name":"아프리카투어","categoryId":678}]},{"name":"테마여행","categoryId":679,"smallCategories":[{"name":"가족여행","categoryId":680},{"name":"커플여행","categoryId":681},{"name":"허니문","categoryId":682},{"name":"학생여행","categoryId":683},{"name":"단체여행","categoryId":684}]},{"name":"골프여행","categoryId":685,"smallCategories":[{"name":"국내골프","categoryId":686},{"name":"해외골프","categoryId":687},{"name":"클럽/연습장","categoryId":688},{"name":"캐디/렌탈","categoryId":689},{"name":"골프용품","categoryId":690}]}]},{"name":"친환경/인증","categoryId":691,"middleCategories":[{"name":"친환경제품","categoryId":692,"smallCategories":[{"name":"친환경화장품","categoryId":693},{"name":"친환경식품","categoryId":694},{"name":"친환경가구","categoryId":695},{"name":"친환경패션","categoryId":696},{"name":"친환경생활용품","categoryId":697}]},{"name":"환경인증제품","categoryId":698,"smallCategories":[{"name":"환경친화제품","categoryId":699},{"name":"친환경인증식품","categoryId":700},{"name":"환경인증생활용품","categoryId":701},{"name":"환경인증화장품","categoryId":702},{"name":"환경친화포장재","categoryId":703}]},{"name":"유기농제품","categoryId":704,"smallCategories":[{"name":"유기농화장품","categoryId":705},{"name":"유기농식품","categoryId":706},{"name":"유기농가구","categoryId":707},{"name":"유기농패션","categoryId":708},{"name":"유기농생활용품","categoryId":709}]},{"name":"자격증/인증","categoryId":710,"smallCategories":[{"name":"친환경자격증","categoryId":711},{"name":"친환경인증서","categoryId":712},{"name":"환경친화제품","categoryId":713},{"name":"환경인증제품","categoryId":714},{"name":"친환경포장재","categoryId":715}]}]},{"name":"정기구독","categoryId":716,"middleCategories":[{"name":"온라인쇼핑","categoryId":717,"smallCategories":[{"name":"커머스","categoryId":718},{"name":"멤버십","categoryId":719},{"name":"멤버십몰","categoryId":720},{"name":"셀렉트샵","categoryId":721},{"name":"인터넷쇼핑몰","categoryId":722}]},{"name":"정기구독서비스","categoryId":723,"smallCategories":[{"name":"배송서비스","categoryId":724},{"name":"전문몰","categoryId":725},{"name":"월간배송","categoryId":726},{"name":"정기배송","categoryId":727},{"name":"구독서비스","categoryId":728}]},{"name":"구독몰","categoryId":729,"smallCategories":[{"name":"테마몰","categoryId":730},{"name":"카테고리","categoryId":731},{"name":"분류","categoryId":732},{"name":"통합몰","categoryId":733},{"name":"무료배송","categoryId":734}]},{"name":"배달서비스","categoryId":735,"smallCategories":[{"name":"음식배달","categoryId":736},{"name":"음료배달","categoryId":737},{"name":"쇼핑배달","categoryId":738},{"name":"배송앱","categoryId":739},{"name":"마켓컬리","categoryId":740}]},{"name":"정기결제","categoryId":741,"smallCategories":[{"name":"월간정기결제","categoryId":742},{"name":"분기정기결제","categoryId":743},{"name":"반기정기결제","categoryId":744},{"name":"년간정기결제","categoryId":745},{"name":"자동결제","categoryId":746}]}]},{"name":"가전","categoryId":338,"middleCategories":[{"name":"주방가전","categoryId":339,"smallCategories":[{"name":"전기밥솥","categoryId":340},{"name":"전자레인지","categoryId":341},{"name":"전기포트","categoryId":342},{"name":"믹서기/블랜더","categoryId":343},{"name":"커피메이커","categoryId":344},{"name":"에어프라이어","categoryId":345}]},{"name":"생활가전","categoryId":346,"smallCategories":[{"name":"세탁기","categoryId":347},{"name":"냉장고","categoryId":348},{"name":"에어컨","categoryId":349},{"name":"청소기","categoryId":350},{"name":"가습기","categoryId":351},{"name":"공기청정기","categoryId":352}]},{"name":"건강가전","categoryId":353,"smallCategories":[{"name":"전동칫솔","categoryId":354},{"name":"마사지기","categoryId":355},{"name":"혈압계","categoryId":356},{"name":"체중계","categoryId":357},{"name":"산소계","categoryId":358}]},{"name":"미디어/가치평가","categoryId":359,"smallCategories":[{"name":"TV","categoryId":360},{"name":"오디오","categoryId":361},{"name":"스피커","categoryId":362},{"name":"프로젝터","categoryId":363},{"name":"책상형조명","categoryId":364},{"name":"빔프로젝터","categoryId":365}]},{"name":"이미용가전","categoryId":366,"smallCategories":[{"name":"헤어드라이기","categoryId":367},{"name":"고데기","categoryId":368},{"name":"이발기","categoryId":369},{"name":"면도기","categoryId":370},{"name":"전동칫솔","categoryId":371}]}]},{"name":"디지털","categoryId":372,"middleCategories":[{"name":"스마트폰","categoryId":373,"smallCategories":[{"name":"아이폰","categoryId":374},{"name":"갤럭시","categoryId":375},{"name":"LG","categoryId":376},{"name":"소니","categoryId":377},{"name":"샤오미","categoryId":378},{"name":"홍미","categoryId":379}]},{"name":"태블릿","categoryId":380,"smallCategories":[{"name":"아이패드","categoryId":381},{"name":"갤럭시탭","categoryId":382},{"name":"LG","categoryId":383},{"name":"레노버","categoryId":384},{"name":"삼성","categoryId":385},{"name":"아수스","categoryId":386}]},{"name":"노트북/PC","categoryId":387,"smallCategories":[{"name":"노트북","categoryId":388},{"name":"데스크탑","categoryId":389},{"name":"올인원PC","categoryId":390},{"name":"모니터","categoryId":391},{"name":"노트북액세서리","categoryId":392}]},{"name":"카메라","categoryId":393,"smallCategories":[{"name":"DSLR","categoryId":394},{"name":"미러리스","categoryId":395},{"name":"컴팩트","categoryId":396},{"name":"액션캠","categoryId":397},{"name":"카메라렌즈","categoryId":398},{"name":"플로깅카메라","categoryId":399}]},{"name":"음향기기","categoryId":400,"smallCategories":[{"name":"이어폰","categoryId":401},{"name":"헤드폰","categoryId":402},{"name":"블루투스스피커","categoryId":403},{"name":"오디오앰프","categoryId":404},{"name":"이퀄라이저","categoryId":405}]}]},{"name":"컴퓨터","categoryId":406,"middleCategories":[{"name":"노트북","categoryId":407,"smallCategories":[{"name":"가볍고 얇은 노트북","categoryId":408},{"name":"고성능 노트북","categoryId":409},{"name":"저가형 노트북","categoryId":410},{"name":"터치스크린 노트북","categoryId":411},{"name":"2in1 노트북","categoryId":412}]},{"name":"데스크탑","categoryId":413,"smallCategories":[{"name":"게이밍 데스크탑","categoryId":414},{"name":"프로페셔널 데스크탑","categoryId":415},{"name":"저가형 데스크탑","categoryId":416},{"name":"모니터","categoryId":417},{"name":"키보드/마우스","categoryId":418}]},{"name":"모니터","categoryId":419,"smallCategories":[{"name":"게이밍 모니터","categoryId":420},{"name":"워크/프로페셔널 모니터","categoryId":421},{"name":"저가형 모니터","categoryId":422},{"name":"울트라와이드 모니터","categoryId":423},{"name":"커브드 모니터","categoryId":424}]},{"name":"주변기기","categoryId":425,"smallCategories":[{"name":"키보드","categoryId":426},{"name":"마우스","categoryId":427},{"name":"헤드셋/이어폰","categoryId":428},{"name":"스피커","categoryId":429},{"name":"웹캠","categoryId":430}]},{"name":"컴퓨터부품","categoryId":431,"smallCategories":[{"name":"CPU","categoryId":432},{"name":"그래픽카드","categoryId":433},{"name":"메모리","categoryId":434},{"name":"SSD/HDD","categoryId":435},{"name":"파워서플라이","categoryId":436}]}]},{"name":"스포츠/레저","categoryId":437,"middleCategories":[{"name":"운동화","categoryId":438,"smallCategories":[{"name":"러닝화","categoryId":439},{"name":"배구화","categoryId":440},{"name":"축구화","categoryId":441},{"name":"농구화","categoryId":442},{"name":"등산화","categoryId":443},{"name":"테니스화","categoryId":444}]},{"name":"운동의류","categoryId":445,"smallCategories":[{"name":"티셔츠","categoryId":446},{"name":"반바지","categoryId":447},{"name":"레깅스","categoryId":448},{"name":"스포츠 브라","categoryId":449},{"name":"패딩/다운","categoryId":450}]},{"name":"레저용품","categoryId":451,"smallCategories":[{"name":"캠핑용품","categoryId":452},{"name":"등산용품","categoryId":453},{"name":"낚시용품","categoryId":454},{"name":"스케이트/보드","categoryId":455},{"name":"자전거","categoryId":456}]},{"name":"스포츠용품","categoryId":457,"smallCategories":[{"name":"운동기구","categoryId":458},{"name":"요가매트","categoryId":459},{"name":"스포츠 가방","categoryId":460},{"name":"헬스보충제","categoryId":461},{"name":"스포츠 안전용품","categoryId":462}]},{"name":"아웃도어의류","categoryId":463,"smallCategories":[{"name":"등산복","categoryId":464},{"name":"아웃도어 재킷","categoryId":465},{"name":"아웃도어 팬츠","categoryId":466},{"name":"플리스/점퍼","categoryId":467},{"name":"등산 속옷","categoryId":468}]}]},{"name":"건강/의료용품","categoryId":469,"middleCategories":[{"name":"건강관리용품","categoryId":488,"smallCategories":[{"name":"건강기능식품","categoryId":489},{"name":"건강기기","categoryId":490},{"name":"건강모듈","categoryId":491},{"name":"건강소품","categoryId":492}]},{"name":"건강보조용품","categoryId":493,"smallCategories":[{"name":"의료용품","categoryId":494},{"name":"안전보호용품","categoryId":495},{"name":"건강보조용품세트","categoryId":496},{"name":"건강의료용품","categoryId":497}]},{"name":"건강보조식품","categoryId":470,"smallCategories":[{"name":"다이어트 보조식품","categoryId":471},{"name":"면역력 보조식품","categoryId":472},{"name":"건강기능식품","categoryId":473},{"name":"노인 건강식품","categoryId":474},{"name":"장건강 보조식품","categoryId":475}]},{"name":"의료용품","categoryId":476,"smallCategories":[{"name":"마스크","categoryId":477},{"name":"필터","categoryId":478},{"name":"의료용품세트","categoryId":479},{"name":"혈압계","categoryId":480},{"name":"체온계","categoryId":481}]},{"name":"건강측정용품","categoryId":482,"smallCategories":[{"name":"체중계","categoryId":486},{"name":"피톤치드기","categoryId":487},{"name":"혈당측정기","categoryId":483},{"name":"혈압계","categoryId":484},{"name":"체온계","categoryId":485}]}]},{"name":"나들이/여행","categoryId":1,"middleCategories":[{"name":"차량용품","categoryId":2,"smallCategories":[{"name":"차량용공기청정기","categoryId":3},{"name":"차량용방향제","categoryId":4},{"name":"차량용냉/온장고","categoryId":5},{"name":"차량용휴대폰거치대","categoryId":6},{"name":"차량용쿠션","categoryId":7},{"name":"차량용방석","categoryId":8},{"name":"차량용햇빛가리개","categoryId":9},{"name":"트렁크정리함","categoryId":10},{"name":"루프박스","categoryId":11},{"name":"케리어","categoryId":12}]},{"name":"봄산행","categoryId":13,"smallCategories":[{"name":"대킷/바람막이","categoryId":14},{"name":"조끼","categoryId":15},{"name":"등산바지","categoryId":16},{"name":"등산화","categoryId":17},{"name":"등산가방","categoryId":18},{"name":"반팔티셔츠","categoryId":19},{"name":"긴팔티셔츠","categoryId":20},{"name":"모자","categoryId":21},{"name":"장갑","categoryId":22},{"name":"양말","categoryId":23},{"name":"등산스틱","categoryId":24},{"name":"기능성언더웨어","categoryId":25}]},{"name":"나들이가전","categoryId":26,"smallCategories":[{"name":"블루투스스피커","categoryId":27},{"name":"무선마이크","categoryId":28},{"name":"즉석카메라","categoryId":29},{"name":"필름카메라","categoryId":30}]},{"name":"차박용품","categoryId":31,"smallCategories":[{"name":"차박텐트","categoryId":32},{"name":"차박타프","categoryId":33},{"name":"차박커튼","categoryId":34},{"name":"차박매트","categoryId":35}]},{"name":"캠핑푸드","categoryId":36,"smallCategories":[{"name":"축산","categoryId":37},{"name":"수산","categoryId":38},{"name":"밀키트","categoryId":39},{"name":"냉동/간편식품","categoryId":40}]},{"name":"벚꽃여행","categoryId":41,"smallCategories":[{"name":"국내","categoryId":42},{"name":"일본","categoryId":43}]},{"name":"입장권","categoryId":44,"smallCategories":[{"name":"놀이동산","categoryId":45},{"name":"동물원/아쿠아리움","categoryId":46},{"name":"이색테마파크","categoryId":47},{"name":"관광지","categoryId":48},{"name":"박물관/미술관","categoryId":49}]}]},{"name":"봄시즌","categoryId":50,"middleCategories":[{"name":"꽃구경","categoryId":51,"smallCategories":[{"name":"벚꽃","categoryId":52},{"name":"유채꽃","categoryId":53},{"name":"진달래","categoryId":54}]},{"name":"피크닉","categoryId":55,"smallCategories":[{"name":"공원","categoryId":56},{"name":"강가","categoryId":57},{"name":"산골짜기","categoryId":58}]},{"name":"등산","categoryId":59,"smallCategories":[{"name":"산책로","categoryId":60},{"name":"산정상","categoryId":61},{"name":"산도림","categoryId":62}]}]},{"name":"여성패션","categoryId":63,"middleCategories":[{"name":"상의","categoryId":64,"smallCategories":[{"name":"티셔츠","categoryId":65},{"name":"블라우스","categoryId":66},{"name":"니트/스웨터","categoryId":67},{"name":"셔츠/블라우스","categoryId":68},{"name":"후드/맨투맨","categoryId":69}]},{"name":"하의","categoryId":70,"smallCategories":[{"name":"스커트","categoryId":71},{"name":"팬츠","categoryId":72},{"name":"청바지","categoryId":73},{"name":"레깅스/타이츠","categoryId":74},{"name":"바지","categoryId":75}]},{"name":"외투/자켓","categoryId":76,"smallCategories":[{"name":"자켓","categoryId":77},{"name":"코트","categoryId":78},{"name":"점퍼","categoryId":79},{"name":"패딩","categoryId":80},{"name":"야상","categoryId":81}]},{"name":"원피스","categoryId":82,"smallCategories":[{"name":"미니원피스","categoryId":83},{"name":"미디/롱원피스","categoryId":84},{"name":"플레어원피스","categoryId":85},{"name":"셔츠/블라우스원피스","categoryId":86},{"name":"투피스","categoryId":87}]},{"name":"아우터","categoryId":88,"smallCategories":[{"name":"코트","categoryId":89},{"name":"패딩","categoryId":90},{"name":"자켓","categoryId":91},{"name":"점퍼","categoryId":92},{"name":"야상","categoryId":93}]},{"name":"신발","categoryId":94,"smallCategories":[{"name":"플랫","categoryId":95},{"name":"로퍼/단화","categoryId":96},{"name":"하이힐","categoryId":97},{"name":"부츠","categoryId":98},{"name":"운동화","categoryId":99}]},{"name":"가방","categoryId":100,"smallCategories":[{"name":"숄더백","categoryId":101},{"name":"토트백","categoryId":102},{"name":"크로스백","categoryId":103},{"name":"백팩","categoryId":104},{"name":"클러치","categoryId":105}]}]},{"name":"남성패션","categoryId":106,"middleCategories":[{"name":"상의","categoryId":107,"smallCategories":[{"name":"티셔츠","categoryId":108},{"name":"셔츠","categoryId":109},{"name":"니트/스웨터","categoryId":110},{"name":"후드/맨투맨","categoryId":111}]},{"name":"하의","categoryId":112,"smallCategories":[{"name":"청바지","categoryId":113},{"name":"슬랙스","categoryId":114},{"name":"조거팬츠","categoryId":115},{"name":"면바지","categoryId":116}]},{"name":"아우터","categoryId":117,"smallCategories":[{"name":"자켓","categoryId":118},{"name":"코트","categoryId":119},{"name":"점퍼","categoryId":120},{"name":"야상","categoryId":121}]},{"name":"신발","categoryId":122,"smallCategories":[{"name":"로퍼/단화","categoryId":123},{"name":"운동화","categoryId":124},{"name":"부츠","categoryId":125},{"name":"스니커즈","categoryId":126}]},{"name":"가방","categoryId":127,"smallCategories":[{"name":"숄더백","categoryId":128},{"name":"백팩","categoryId":129},{"name":"크로스백","categoryId":130},{"name":"메신저백","categoryId":131}]}]},{"name":"화장품/미용","categoryId":132,"middleCategories":[{"name":"스킨케어","categoryId":133,"smallCategories":[{"name":"클렌징","categoryId":134},{"name":"토너","categoryId":135},{"name":"에센스/세럼","categoryId":136},{"name":"로션/크림","categoryId":137},{"name":"마스크/팩","categoryId":138},{"name":"선케어","categoryId":139}]},{"name":"메이크업","categoryId":140,"smallCategories":[{"name":"베이스메이크업","categoryId":141},{"name":"아이메이크업","categoryId":142},{"name":"립메이크업","categoryId":143},{"name":"체크메이크업","categoryId":144},{"name":"네일","categoryId":145}]},{"name":"헤어케어","categoryId":146,"smallCategories":[{"name":"샴푸","categoryId":147},{"name":"컨디셔너","categoryId":148},{"name":"트리트먼트","categoryId":149},{"name":"헤어에센스","categoryId":150},{"name":"헤어스타일링","categoryId":151}]},{"name":"바디케어","categoryId":152,"smallCategories":[{"name":"바디워시","categoryId":153},{"name":"바디로션/크림","categoryId":154},{"name":"바디오일","categoryId":155},{"name":"핸드/풋케어","categoryId":156},{"name":"데오드란트","categoryId":157}]},{"name":"향수/디퓨저","categoryId":158,"smallCategories":[{"name":"여성향수","categoryId":159},{"name":"남성향수","categoryId":160},{"name":"디퓨저","categoryId":161},{"name":"향초","categoryId":162}]},{"name":"네일케어","categoryId":163,"smallCategories":[{"name":"네일컬러","categoryId":164},{"name":"네일케어도구","categoryId":165},{"name":"네일아트/스티커","categoryId":166}]}]}]
+
+function init() {
+    accessToken().then(() => {
+        console.log(isAuthentication);
+        document.getElementById("accessLoginUser_true").style.display = "block";
+    }).catch(error => {
+        document.getElementById("accessLoginUser_false").style.display = "block";
+    });
+}
+
+        init();
+        console.log(categoryJpaData);
+        var categoryProductApi ="/categorys/";
+
+categoryJpaData.forEach(category => {
+    var mainCategoryItem = document.createElement("li");
+    var mainCategoryLink = document.createElement("a");
+
+    mainCategoryLink.textContent = category.name;
+    mainCategoryLink.href = categoryProductApi + category.categoryId;
+    mainCategoryLink.classList.add("dropdown-item");
+
+    mainCategoryItem.appendChild(mainCategoryLink);
+
+    var subCategories = category.middleCategories;
+
+    if (subCategories && subCategories.length > 0) {
+        var subMenu = document.createElement("ul");
+        subMenu.classList.add("dropdown-menu");
+
+        subCategories.forEach(subCategory => {
+            var subCategoryItem = document.createElement("li");
+            var subCategoryLink = document.createElement("a");
+            subCategoryLink.textContent = subCategory.name;
+            subCategoryLink.href = categoryProductApi + subCategory.categoryId;;
+            subCategoryLink.classList.add("dropdown-item");
+            subCategoryItem.appendChild(subCategoryLink);
+
+            var subSubCategories = subCategory.smallCategories;
+            if (subSubCategories && subSubCategories.length > 0) {
+                var subSubMenu = document.createElement("ul");
+                subSubMenu.classList.add("dropdown-menu");
+
+                subSubCategories.forEach(subSubCategory => {
+                    var subSubCategoryItem = document.createElement("li");
+                    var subSubCategoryLink = document.createElement("a");
+                    subSubCategoryLink.href = categoryProductApi + subSubCategory.categoryId;;
+                    subSubCategoryLink.textContent = subSubCategory.name;
+                    subSubCategoryLink.classList.add("dropdown-item");
+                    subSubCategoryItem.appendChild(subSubCategoryLink);
+
+                    subSubMenu.appendChild(subSubCategoryItem);
+                });
+
+                subCategoryItem.appendChild(subSubMenu);
+                subCategoryItem.classList.add("dropdown-submenu");
+            }
+
+            subMenu.appendChild(subCategoryItem);
+        });
+
+        mainCategoryItem.appendChild(subMenu);
+        mainCategoryItem.classList.add("dropdown-submenu");
+    }
+
+    categoryDropdown.appendChild(mainCategoryItem);
+});
+    </script>
+</th:block>
+</html>
