@@ -5,43 +5,61 @@
     <script src="/js/cookie.js" ></script>
 </head>
 <body>
-<h1>Please Log In</h1>
-<div th:if="${param.error}">
-    Invalid username and password.</div>
-<div th:if="${param.logout}">
-    You have been logged out.</div>
-<form action="javascript:login()" >
-    <div>
-        <input type="text" name="username" id ="username" placeholder="Username"/>
-    </div>
-    <div>
-        <input type="password" name="password" id="password" placeholder="Password"/>
-    </div>
-    <input type="submit" value="Log in" />
-</form>
+<div id="loginDiv" style="display:none;">
+    <h1>Please Log In </h1>
+    <form action="javascript:login()" >
+        <div>
+            <input type="text" name="username" id ="username" placeholder="Username"/>
+        </div>
+        <div>
+            <input type="password" name="password" id="password" placeholder="Password"/>
+        </div>
+        <input type="submit" value="Log in" />
+    </form>
+</div>
 <script>
 
-function login(){
-    var username = document.getElementById('username').value;
-    var password = document.getElementById('password').value;
-    var data = {
-        username: username,
-        password: password
-    };
-    var jsonData = JSON.stringify(data);
 
-    fetch("/api/auth/login", {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json'},
-        body: jsonData
-        }).then ((response) => {
-            return response.json()
-        }).then(response => {
-            setCookie("accessToken", response.token, 1);
-        }).catch(error => {
-            console.log("error" + error);
-        });
-}
+    async function validateLoggedInUser() {
+        try {
+            await accessToken();
+            if (isAuthentication) {
+                window.location.href = "/";
+            }
+        } catch (error) {
+            var loginDiv = document.getElementById("loginDiv");
+            loginDiv.style.display = "block";
+            console.info("not login");
+        }
+    }
+
+    validateLoggedInUser();
+
+
+        function login(){
+            var username = document.getElementById('username').value;
+            var password = document.getElementById('password').value;
+            var data = {
+                username: username,
+                password: password
+            };
+            var jsonData = JSON.stringify(data);
+
+            fetch("/api/auth/login", {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json'},
+                body: jsonData
+                }).then ((response) => {
+                    return response.json()
+                }).then(response => {
+                    setCookieMin("accessToken", "Bearer " + response.token, 30);
+                    setCookie("refreshToken","Bearer " + response.refreshToken, 365);
+                    history.back();
+                }).catch(error => {
+                    console.log("error" + error);
+                });
+        }
+
 </script>
 </body>
 </html>
