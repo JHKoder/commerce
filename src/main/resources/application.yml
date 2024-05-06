@@ -30,9 +30,15 @@ spring:
   jpa:
     open-in-view: false
     hibernate:
-      ddl-auto:
+      ddl-auto: update
     properties:
       hibernate:
+        order_inserts: true
+        order_updates: true
+        connection:
+          pool_size: 70
+        jdbc:
+          batch_size: 1000
         show_sql:
         format_sql:
   mail:
@@ -50,6 +56,7 @@ logging:
   level:
     org.hibernate.type.descriptor.sql: trace
     org.springframework.security.authentication.AuthenticationManager: DEBUG
+    org.springframework.transaction.interceptor: trace
 
 cloud:
   image-repository:
