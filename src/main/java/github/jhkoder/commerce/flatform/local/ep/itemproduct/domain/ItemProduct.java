@@ -18,12 +18,13 @@ import static lombok.AccessLevel.PROTECTED;
 
 @Entity
 @Getter
-@Table(name = "local_item_product")
+@Table
 @AllArgsConstructor
 @NoArgsConstructor(access = PROTECTED)
 public class ItemProduct extends BaseEntity {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "item_product_seqGen")
+    @SequenceGenerator(name = "item_product_seqGen", sequenceName = "item_product_id_seq", initialValue = 1)
     @Column(name = "id")
     private Long id;
 
@@ -53,6 +54,11 @@ public class ItemProduct extends BaseEntity {
     private String isbn; // 도서 상품 코드
     private int stock;
 
+
+    @Transient
+    private ProductMetadata metadata;
+
+
     public ItemProduct(User user, Category category, Item item, List<Images> links, int price,
                        boolean orderMode, String rentalInfo, int clickCount, int reviewCount,
                        int minimumPurchaseQuantity, String optionDetail, Gender gender,
@@ -77,6 +83,43 @@ public class ItemProduct extends BaseEntity {
         this.dawnDelivery = OracleBoolean.of(dawnDelivery);
         this.isbn = isbn;
         this.stock = stock;
+    }
+
+    public ItemProduct(ProductMetadata metadata, int price, boolean orderMode, String rentalInfo, int clickCount, int reviewCount, int minimumPurchaseQuantity, String optionDetail, Gender gender, int deliveryPrice, String shippingSetting, boolean fastDelivery, boolean regularDelivery, boolean dawnDelivery, String isbn, int stock) {
+        this.metadata = metadata;
+        this.price = price;
+        this.orderMode = OracleBoolean.of(orderMode);
+        this.rentalInfo = rentalInfo;
+        this.clickCount = clickCount;
+        this.reviewCount = reviewCount;
+        this.minimumPurchaseQuantity = minimumPurchaseQuantity;
+        this.optionDetail = optionDetail;
+        this.gender = gender;
+        this.deliveryPrice = deliveryPrice;
+        this.shippingSetting = shippingSetting;
+        this.fastDelivery = OracleBoolean.of(fastDelivery);
+        this.regularDelivery = OracleBoolean.of(regularDelivery);
+        this.dawnDelivery = OracleBoolean.of(dawnDelivery);
+        this.isbn = isbn;
+        this.stock = stock;
+    }
+
+    public ItemProduct metadataUp() {
+        this.item = Item.ofMeta(this.metadata.getItem());
+        this.user = User.ofMeta(this.metadata.getUser());
+        this.category = Category.ofMeta(this.metadata.getCategory());
+        this.links = Images.ofMeta(this.metadata.getLinks());
+        return this;
+    }
+
+
+    @Data
+    @AllArgsConstructor
+    public static class ProductMetadata{
+        private Long user;
+        private Long category;
+        private Long item;
+        private List<Long> links = new ArrayList<>();
     }
 
     public void updateImages(List<Images> links){
