@@ -13,7 +13,7 @@ import static lombok.AccessLevel.PROTECTED;
 
 @Entity
 @Getter
-@Table(name = "category")
+@Table(name = "category", indexes = {@Index(name = "idx_category_path", columnList = "path")})
 @NoArgsConstructor(access = PROTECTED)
 public class Category extends BaseEntity {
     @Id
@@ -23,50 +23,56 @@ public class Category extends BaseEntity {
 
     private String name;
 
+    private String path;
+
     @Column(name = "category_level")
     @Enumerated(value = EnumType.STRING)
     private CategoryLevel level;
-
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "category_parent_id")
     private Category parent;
 
-    @OneToMany(mappedBy = "parent", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "parent", fetch = FetchType.LAZY)
     private List<Category> child = new ArrayList<>();
 
     public Category(String name, CategoryLevel level) {
         this.name = name;
-        this.level=level;
-    }
-    public Category(String name, CategoryLevel level,Category parent) {
-        this.name = name;
-        this.level=level;
-        this.parent=parent;
+        this.level = level;
     }
 
-    private Category(Long id){
-        this.id=id;
+    public Category(String name, CategoryLevel level, Category parent) {
+        this.name = name;
+        this.level = level;
+        this.parent = parent;
     }
+
+
+    private Category(Long id) {
+        this.id = id;
+    }
+
+
     public static Category ofMeta(Long category) {
         return new Category(category);
     }
 
+    public void updatePath(String path) {
+        this.path = path;
+    }
 
-    public Long getParentId(){
-        if(parent != null){
+    public Long getParentId() {
+        if (parent != null) {
             return parent.getId();
         }
         return -1L;
     }
 
-    public boolean isParentId(Long id){
+    public boolean isParentId(Long id) {
         return getParentId().equals(id);
     }
-    public void addParent(Category parent){
-        this.parent = parent;
-    }
-    public void addChild(Category category){
+
+    public void addChild(Category category) {
         this.child.add(category);
     }
 
@@ -74,16 +80,15 @@ public class Category extends BaseEntity {
         this.name = name;
     }
 
-    public void childChangeIndex(int index, int toIndex){
-        Collections.swap(child, index,toIndex);
+    public void childChangeIndex(int index, int toIndex) {
+        Collections.swap(child, index, toIndex);
     }
 
-    public boolean equalId(Long id) {
-        return this.id.equals(id);
-    }
-
-    public void updateId(Long id){
+    public void updateId(Long id) {
         this.id = id;
     }
 
+    public boolean isTop() {
+        return this.level == CategoryLevel.TOP;
+    }
 }
