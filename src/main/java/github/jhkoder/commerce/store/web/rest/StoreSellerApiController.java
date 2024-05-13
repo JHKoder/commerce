@@ -30,7 +30,9 @@ public class StoreSellerApiController {
         ItemProduct itemProduct = storeService.add(userDetails.getUsername(), request);
 
         List<Images> imagePaths = imageService.upload(itemProduct, request.images());
+        Images mainImage = imageService.upload(itemProduct,request.mainImage());
         storeService.updateProductImages(itemProduct, imagePaths);
+        storeService.updateProductMainImage(itemProduct,mainImage);
     }
 
     @GetMapping("/products/page/{page}")
