@@ -17,7 +17,7 @@ import java.util.List;
 
 
 
-public record StoreAddProductRequest(StoreItemRequest item, StoreProductRequest product, CustomMultiPartFile images,CustomMultiPartFile mainImage) {
+public record StoreAddProductRequest(StoreItemRequest item, StoreProductRequest product, CustomMultiPartFile images,MultipartFile mainImage) {
 
     public record StoreItemRequest( String maker, String origin, String brand,
                                    boolean brandCertification, String barcode) {
