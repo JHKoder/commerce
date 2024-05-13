@@ -18,8 +18,8 @@ public record StoreSellerProductResponse(StoreSellerItem item, StoreSellerProduc
     public static StoreSellerProductResponse of(ItemProduct product) {
         return new StoreSellerProductResponse(
                 new StoreSellerItem(
-                        product.getItem().getName(),
-                        product.getItem().getNormalPrice(),
+                        product.getName(),
+                        product.getNormalPrice(),
                         product.getItem().getMaker(),
                         product.getItem().getOrigin(),
                         product.getItem().getBrand(),

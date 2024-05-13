@@ -17,19 +17,17 @@ import java.util.List;
 
 
 
-public record StoreAddProductRequest(StoreItemRequest item, StoreProductRequest product, CustomMultiPartFile images) {
+public record StoreAddProductRequest(StoreItemRequest item, StoreProductRequest product, CustomMultiPartFile images,CustomMultiPartFile mainImage) {
 
-    public record StoreItemRequest(String name, int normalPrice, String maker, String origin, String brand,
+    public record StoreItemRequest( String maker, String origin, String brand,
                                    boolean brandCertification, String barcode) {
 
         public Item toItem() {
-            return new Item(name, normalPrice, maker, origin, brand, brandCertification, barcode);
+            return new Item(maker, origin, brand, brandCertification, barcode);
         }
     }
 
-    public record StoreProductRequest(Long categoryId, int price,
-                                      boolean orderMode, String rentalInfo, int clickCount, int reviewCount,
-                                      int minimumPurchaseQuantity,
+    public record StoreProductRequest(Long categoryId,String name, int price, int normalPrice, boolean orderMode, String rentalInfo, int clickCount, int reviewCount, int minimumPurchaseQuantity,
                                       String optionDetail, Gender gender, int deliveryPrice, String shippingSetting,
                                       boolean fastDelivery, boolean regularDelivery, boolean dawnDelivery,
                                       String isbn, int stock
@@ -37,7 +35,7 @@ public record StoreAddProductRequest(StoreItemRequest item, StoreProductRequest 
 
 
         public ItemProduct toProduct(User user, Category category, Item item) {
-            return new ItemProduct(user, category, item, new ArrayList<>(), price, orderMode, rentalInfo, clickCount, reviewCount, minimumPurchaseQuantity, optionDetail, gender, deliveryPrice, shippingSetting, fastDelivery, regularDelivery, dawnDelivery, isbn, stock);
+            return new ItemProduct(user, category, item, new ArrayList<>(),null, name, price,normalPrice, orderMode, rentalInfo, clickCount, reviewCount, minimumPurchaseQuantity, optionDetail, gender, deliveryPrice, shippingSetting, fastDelivery, regularDelivery, dawnDelivery, isbn, stock);
         }
     }
 

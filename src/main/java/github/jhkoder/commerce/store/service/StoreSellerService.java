@@ -78,7 +78,9 @@ public class StoreSellerService {
         ItemProduct itemProduct = validItemProduct(username,productId);
         var product= request.product();
         var reqItem =request.item();
-        itemProduct.updateAll(product.price(),
+        itemProduct.updateAll(product.name(),
+                product.price(),
+                product.normalPrice(),
                 product.orderMode(),
                 product.rentalInfo(),
                 product.clickCount(),
@@ -93,8 +95,7 @@ public class StoreSellerService {
                 product.dawnDelivery(),
                 product.isbn(),
                 product.stock());
-        itemProduct.getItem().updateAll(reqItem.name(),
-                reqItem.normalPrice(),
+        itemProduct.getItem().updateAll(
                 reqItem.maker(),
                 reqItem.origin(),
                 reqItem.brand(),
@@ -109,6 +110,12 @@ public class StoreSellerService {
         productRepository.delete(product);
         itemRepository.delete(item);
         return product.getLinks();
+    }
+
+
+    @Transactional
+    public void updateProductMainImage(ItemProduct itemProduct, Images mainImage) {
+        itemProduct.updateMainImage(mainImage);
     }
 
     private User findByUser(String username) {
@@ -126,4 +133,5 @@ public class StoreSellerService {
         }
         return product;
     }
+
 }
