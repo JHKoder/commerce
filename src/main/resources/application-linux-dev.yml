@@ -23,7 +23,7 @@ spring:
   output:
     ansi.enabled: always
   datasource:
-    url: ENC(hDN6pZ+1KfaC9m91mpMBEmJXJp2QL5olPv9pZ8CVrCqWGV13YIfeAG7ih3uOJ8ObwzYJG0O4CzKkFF+czDl++yRIuhkpksNY/b1QgqR3wm4=)
+    url: ENC(7+cbrZ1Bws44nyTt+A7sc1GLq6TpQDO/epclPd1uqv2zAanamlEnTs0ORHeDr0oYAZU8qlo+cvuH8k/m0RuWUBJbCb3EEYgARqvF7mbGTXU=)
     username: ENC(tDIsfFk29dW2FPV1YRU7jQ==)
     password: ENC(337YBU7IcDGvqzAIVHiTdG3DYmU1vKCz)
     driver-class-name: oracle.jdbc.OracleDriver
@@ -53,17 +53,11 @@ spring:
       starttls:
         enable: true
 
-logging:
-  level:
-    org.hibernate.type.descriptor.sql: trace
-    org.springframework.security.authentication.AuthenticationManager: DEBUG
-    org.springframework.transaction.interceptor: trace
-
 cloud:
   image-repository:
     host: ENC(0NPhRpQb31rBd4E7T8AeE1SywEmUUjMd)
     username: ENC(krC61j79sImwc1t11M1Rjg==)
-    ppk-path: ENC(3lOCzODtJ0qGt14S1CxfAzC0qwE2Iwr2asnO+4RbMSikjZ7echSdZg==)
+    ppk-path: ENC(x6MbYW1CPfxRKcfRLec4txaoIkUc8clIUJDFCD45jbtLF8uoXYadpM8ItHJ/tIDG)
     folder-path: ENC(Az3HmKiT8LbB/mj08Ec4xEGadbkGnbOO)
 
 sms:
