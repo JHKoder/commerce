@@ -7,6 +7,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.integration.sftp.session.SftpRemoteFileTemplate;
 import org.springframework.integration.sftp.session.SftpSession;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
@@ -35,8 +36,12 @@ public class ImageSftpRepository implements ImageRepository {
     }
 
     @Override
-    public boolean delete(String fileName) {
+    public boolean upload(ByteArrayInputStream is, ImagePathRequest pathRequest) {
+        return false;
+    }
 
+    @Override
+    public boolean delete(String fileName) {
         return false;
     }
 
