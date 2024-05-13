@@ -20,16 +20,9 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js" integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy" crossorigin="anonymous"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
 
-    <!--    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">-->
-    <!--    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">-->
-    <!--    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">-->
-    <!--    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">-->
-
-
     <!--custom css -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
     <script src="/js/categorySampleData.js"></script>
-
 
     <style>
 
@@ -171,7 +164,7 @@ function init() {
 
         init();
         console.log(categoryJpaData);
-        var categoryProductApi ="/categorys/";
+        var categoryProductApi ="/shop/categorys/";
 
 categoryJpaData.forEach(category => {
     var mainCategoryItem = document.createElement("li");
@@ -180,6 +173,10 @@ categoryJpaData.forEach(category => {
     mainCategoryLink.textContent = category.name;
     mainCategoryLink.href = categoryProductApi + category.categoryId;
     mainCategoryLink.classList.add("dropdown-item");
+
+    mainCategoryLink.addEventListener('click', function() {
+        setCookieMin("categoryId", category.categoryId,1);
+    });
 
     mainCategoryItem.appendChild(mainCategoryLink);
 
@@ -193,8 +190,13 @@ categoryJpaData.forEach(category => {
             var subCategoryItem = document.createElement("li");
             var subCategoryLink = document.createElement("a");
             subCategoryLink.textContent = subCategory.name;
-            subCategoryLink.href = categoryProductApi + subCategory.categoryId;;
+            subCategoryLink.href = categoryProductApi + subCategory.categoryId;
             subCategoryLink.classList.add("dropdown-item");
+
+            subCategoryLink.addEventListener('click', function() {
+                setCookieMin("categoryId", subCategory.categoryId,1);
+            });
+
             subCategoryItem.appendChild(subCategoryLink);
 
             var subSubCategories = subCategory.smallCategories;
@@ -205,9 +207,14 @@ categoryJpaData.forEach(category => {
                 subSubCategories.forEach(subSubCategory => {
                     var subSubCategoryItem = document.createElement("li");
                     var subSubCategoryLink = document.createElement("a");
-                    subSubCategoryLink.href = categoryProductApi + subSubCategory.categoryId;;
+                    subSubCategoryLink.href =  categoryProductApi + subSubCategory.categoryId;
                     subSubCategoryLink.textContent = subSubCategory.name;
                     subSubCategoryLink.classList.add("dropdown-item");
+
+                    subSubCategoryLink.addEventListener('click', function() {
+                        setCookieMin("categoryId", subSubCategory.categoryId,1);
+                    });
+
                     subSubCategoryItem.appendChild(subSubCategoryLink);
 
                     subSubMenu.appendChild(subSubCategoryItem);
