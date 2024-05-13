@@ -22,6 +22,7 @@ import static lombok.AccessLevel.PROTECTED;
 @AllArgsConstructor
 @NoArgsConstructor(access = PROTECTED)
 public class ItemProduct extends BaseEntity {
+
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "item_product_seqGen")
     @SequenceGenerator(name = "item_product_seqGen", sequenceName = "item_product_id_seq", initialValue = 1)
@@ -37,8 +38,13 @@ public class ItemProduct extends BaseEntity {
     @OneToMany(fetch = FetchType.LAZY)
     private List<Images> links = new ArrayList<>();
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn( name = "main_image_id")
+    private Images mainImage;
 
-    private int price;
+    private String name;
+    private int price; // 판매 가격
+    private int normalPrice; // 원가
     private OracleBoolean orderMode;
     private String rentalInfo;
     private int clickCount;
@@ -59,16 +65,19 @@ public class ItemProduct extends BaseEntity {
     private ProductMetadata metadata;
 
 
-    public ItemProduct(User user, Category category, Item item, List<Images> links, int price,
-                       boolean orderMode, String rentalInfo, int clickCount, int reviewCount,
+    public ItemProduct(User user, Category category, Item item, List<Images> links,Images images,String name,
+                       int price, int normalPrice, boolean orderMode, String rentalInfo, int clickCount, int reviewCount,
                        int minimumPurchaseQuantity, String optionDetail, Gender gender,
                        int deliveryPrice, String shippingSetting,
                        boolean fastDelivery, boolean regularDelivery, boolean dawnDelivery, String isbn, int stock) {
+        this.mainImage = images;
+        this.name =name;
         this.user = user;
         this.category = category;
         this.item = item;
         this.links.addAll(links);
         this.price = price;
+        this.normalPrice=price;
         this.orderMode = OracleBoolean.of(orderMode);
         this.rentalInfo = rentalInfo;
         this.clickCount = clickCount;
@@ -85,9 +94,11 @@ public class ItemProduct extends BaseEntity {
         this.stock = stock;
     }
 
-    public ItemProduct(ProductMetadata metadata, int price, boolean orderMode, String rentalInfo, int clickCount, int reviewCount, int minimumPurchaseQuantity, String optionDetail, Gender gender, int deliveryPrice, String shippingSetting, boolean fastDelivery, boolean regularDelivery, boolean dawnDelivery, String isbn, int stock) {
+    public ItemProduct(ProductMetadata metadata, String name,int price, int normalPrice,boolean orderMode, String rentalInfo, int clickCount, int reviewCount, int minimumPurchaseQuantity, String optionDetail, Gender gender, int deliveryPrice, String shippingSetting, boolean fastDelivery, boolean regularDelivery, boolean dawnDelivery, String isbn, int stock) {
         this.metadata = metadata;
+        this.name =name;
         this.price = price;
+        this.normalPrice=normalPrice;
         this.orderMode = OracleBoolean.of(orderMode);
         this.rentalInfo = rentalInfo;
         this.clickCount = clickCount;
@@ -109,6 +120,7 @@ public class ItemProduct extends BaseEntity {
         this.user = User.ofMeta(this.metadata.getUser());
         this.category = Category.ofMeta(this.metadata.getCategory());
         this.links = Images.ofMeta(this.metadata.getLinks());
+        this.mainImage = Images.ofMeta(this.metadata.getMainImage());
         return this;
     }
 
@@ -118,7 +130,10 @@ public class ItemProduct extends BaseEntity {
     public static class ProductMetadata{
         private Long user;
         private Long category;
+        private String categoryPath;
+        private String categoryName;
         private Long item;
+        private Long mainImage;
         private List<Long> links = new ArrayList<>();
     }
 
@@ -126,12 +141,14 @@ public class ItemProduct extends BaseEntity {
         this.links.addAll(links);
     }
 
-    public void updateAll( int price,
+    public void updateAll( String name ,int price,int normalPrice,
                            boolean orderMode, String rentalInfo, int clickCount, int reviewCount,
                            int minimumPurchaseQuantity, String optionDetail, Gender gender,
                            int deliveryPrice, String shippingSetting,
                            boolean fastDelivery, boolean regularDelivery, boolean dawnDelivery, String isbn, int stock){
+        this.name = name;
         this.price = price;
+        this.normalPrice = normalPrice;
         this.orderMode = OracleBoolean.of(orderMode);
         this.rentalInfo = rentalInfo;
         this.clickCount = clickCount;
@@ -150,6 +167,7 @@ public class ItemProduct extends BaseEntity {
     }
 
     public void updateMainImage(Images mainImage) {
-        this.item.updateMainImage(mainImage);
+        this.mainImage=mainImage;
     }
+
 }

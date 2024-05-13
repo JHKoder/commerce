@@ -16,7 +16,7 @@ import static lombok.AccessLevel.PROTECTED;
 
 @Entity
 @Getter
-@Table(name = "images")
+@Table(name = "images", indexes = {@Index(name = "idx_image_path", columnList = "path")})
 @NoArgsConstructor(access = PROTECTED)
 public class Images extends BaseEntity {
 
@@ -37,8 +37,13 @@ public class Images extends BaseEntity {
         this.path = path;
     }
 
+
     private Images(Long id) {
         this.id = id;
+    }
+
+    public static Images of(Long id){
+        return new Images(id);
     }
 
     public static List<Images> ofMeta(List<Long> links) {
@@ -47,11 +52,19 @@ public class Images extends BaseEntity {
                 .toList();
     }
 
+    public static Images ofMeta(Long mainImage) {
+        return new Images(mainImage);
+    }
+
     public void updatePath(String path) {
         this.path=path;
     }
 
     public Images(String path) {
         this.path = path;
+    }
+
+    public void updateId(Long id) {
+        this.id=id;
     }
 }
