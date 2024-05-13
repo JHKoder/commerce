@@ -1,0 +1,80 @@
+server:
+  port: 8082
+
+jasypt:
+  encryptor:
+    password: ${JASYPT_PASSWORD}
+    bean: jasyptStringEncryptor
+
+jwt:
+  token:
+    secret-key: ENC(T7GiReOACR6VvUPXnRNLuFtRyUeqm2VxwotQPqY95cKutNa/czsRwcnL+LeUyIPoHkQJNOAL07s=)
+    expTime: 30      # 분
+    refreshTime: 365 # 일
+    issuer: "jhkoder"
+
+spring:
+  devtools:
+    livereload:
+      enabled: true
+  thymeleaf:
+    prefix: classpath:/templates/
+    cache: false
+  output:
+    ansi.enabled: always
+  datasource:
+    url: ENC(7+cbrZ1Bws44nyTt+A7sc1GLq6TpQDO/epclPd1uqv2zAanamlEnTs0ORHeDr0oYAZU8qlo+cvuH8k/m0RuWUBJbCb3EEYgARqvF7mbGTXU=)
+    username: ENC(tDIsfFk29dW2FPV1YRU7jQ==)
+    password: ENC(337YBU7IcDGvqzAIVHiTdG3DYmU1vKCz)
+    driver-class-name: oracle.jdbc.OracleDriver
+  jpa:
+    open-in-view: false
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        order_inserts: true
+        order_updates: true
+        connection:
+          pool_size: 70
+        jdbc:
+          batch_size: 1000
+        show_sql:
+        format_sql:
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: ENC(j7z7KrhuiBMRFQZBtmcSjp/Vmr2A48pVc3U2VWJ8Jr4=)
+    password: ENC(tfrWr6m2T+j1gpJryewo5ymJ/Sve+p2kIew0NZS5AH0=)
+    transport:
+      protocol: smtp
+    smtp:
+      auth: true
+      starttls:
+        enable: true
+
+cloud:
+  image-repository:
+    host: ENC(0NPhRpQb31rBd4E7T8AeE1SywEmUUjMd)
+    username: ENC(krC61j79sImwc1t11M1Rjg==)
+    ppk-path: ENC(x6MbYW1CPfxRKcfRLec4txaoIkUc8clIUJDFCD45jbtLF8uoXYadpM8ItHJ/tIDG)
+    folder-path: ENC(Az3HmKiT8LbB/mj08Ec4xEGadbkGnbOO)
+
+sms:
+  from: ENC(gl24yeMqbC5ADgctyV5bVPp+psfSFlhs)
+  platform:
+    apick:
+      uri: https://apick.app/rest/send_sms
+      api-key: ENC(1MyGqdH8q5Pg6whdwGxEP0C/4tr5R9dlitvx43OIJAcabmmGN6Ip9INy/t+sH/xd)
+      # 추가 ip 허용할떄 https://apick.app/my_page 여기서 추가
+
+pay:
+  platform:
+    boot-pay:
+      private-key: ENC(VenDKrKe5RyBIhvra8vXuRmBCa67QvMqF+3WrMiiedn7IENhXmjDu4j5HE4tM3keZlTU0dpP8ww=)
+      application-id:
+        javascript: ENC(2EwotiKkaC0ywudZZbLVuXh1kgdGr58KE2rE7IiLa+UkllgqUj9QfA==)
+        rest-api: ENC(9ByMaBvsZ+Ip7Ibl+PMQGkpeC6j1415vvPNP7Zb942MLbNY0MM6iew==)
+      #ip 보안 https://admin.bootpay.co.kr/payment/app_key 에서 수정
+qr:
+  host: https://api.qrserver.com/v1/create-qr-code
