@@ -4,7 +4,9 @@ import github.jhkoder.commerce.exception.ApiException;
 import github.jhkoder.commerce.exception.ErrorCode;
 import github.jhkoder.commerce.flatform.local.ep.category.domain.Category;
 import github.jhkoder.commerce.flatform.local.ep.category.domain.CategoryLevel;
+import github.jhkoder.commerce.flatform.local.ep.category.repository.CategoryDslRepository;
 import github.jhkoder.commerce.flatform.local.ep.category.repository.CategoryRepository;
+import github.jhkoder.commerce.flatform.local.ep.category.repository.dto.CategoryDto;
 import github.jhkoder.commerce.flatform.local.ep.category.service.request.CategoryAddRequest;
 import github.jhkoder.commerce.flatform.local.ep.category.service.request.CategoryChangeRequest;
 import github.jhkoder.commerce.flatform.local.ep.category.service.request.CategoryUpdateRequest;
@@ -23,17 +25,45 @@ import java.util.stream.IntStream;
 @Service
 @RequiredArgsConstructor
 public class CategoryService {
+    private final CategoryDslRepository dslRepository;
     private final CategoryRepository categoryRepository;
 
     @Transactional(readOnly = true)
+    public List<CategoryDto> findDslAll() {
+        return dslRepository.getCategories();
+    }
+
+    @Transactional(readOnly = true)
     public List<CategoryResponse> findAll() {
-        List<Category> categoryList = categoryRepository.findAll();
-        List<Category> top = categoryList.stream().filter(category -> category.getLevel() == CategoryLevel.TOP).toList();
+        List<Category> all = categoryRepository.findAll();
+        List<Category> top = all.stream().filter(category -> category.getLevel() == CategoryLevel.TOP).toList();
         List<CategoryResponse> response = new ArrayList<>();
+
         for (Category category : top) {
-            response.add(new CategoryResponse(category.getName(), category.getId(), mapToResponse(categoryList)));
+            response.add(new CategoryResponse(category.getName(), category.getId(), mapToResponse(category.getId(), all)));
         }
         return response;
+    }
+
+    private List<CategoryResponse.MiddleCategory> mapToResponse(Long parentId, List<Category> allList) {
+        return allList.stream()
+                .filter(category -> category.isParentId(parentId))
+                .map(category -> new CategoryResponse.MiddleCategory(
+                        category.getName(),
+                        category.getId(),
+                        mapToSmallCategory(category.getId(), allList)
+                ))
+                .collect(Collectors.toList());
+    }
+
+    private List<CategoryResponse.SmallCategory> mapToSmallCategory(Long parentId, List<Category> categoryList) {
+        return categoryList.stream()
+                .filter(category -> category.isParentId(parentId))
+                .map(category -> new CategoryResponse.SmallCategory(
+                        category.getName(),
+                        category.getId()
+                ))
+                .collect(Collectors.toList());
     }
 
 
@@ -42,39 +72,20 @@ public class CategoryService {
         return categoryRepository.findByLevel(CategoryLevel.TOP)
                 .orElse(List.of())
                 .stream()
-                .map(top ->  new CategoryTopResponse(top.getName(),top.getId()))
+                .map(top -> new CategoryTopResponse(top.getName(), top.getId()))
                 .toList();
     }
 
-
-    private List<CategoryResponse.MiddleCategory> mapToResponse(List<Category> categoryList) {
-        return categoryList.stream()
-                .map(category -> new CategoryResponse.MiddleCategory(
-                        category.getName(),
-                        category.getId(),
-                        mapToSmallCategory(category.getChild())
-                ))
-                .collect(Collectors.toList());
-    }
-
-    private List<CategoryResponse.SmallCategory> mapToSmallCategory(List<Category> categoryList) {
-        return categoryList.stream()
-                .map(category -> new CategoryResponse.SmallCategory(
-                        category.getName(),
-                        category.getId()
-                ))
-                .collect(Collectors.toList());
-    }
 
     @Transactional
     public void add(CategoryAddRequest request) {
         if (request.isTop()) {
             Category top = categoryRepository.findById(request.topId())
                     .orElseThrow(() -> new ApiException(ErrorCode.CATEGORY_NOT_TOP_ID));
-            top.updateCategoryChild(new Category(request.name(), request.level()));
+            top.addChild(new Category(request.name(), request.level()));
             return;
         }
-        categoryRepository.save( new Category(request.name(), CategoryLevel.TOP));
+        categoryRepository.save(new Category(request.name(), CategoryLevel.TOP));
     }
 
     @Transactional
@@ -112,14 +123,14 @@ public class CategoryService {
 
         Optional<Category> top = categoryRepository.findById(request.topId());
 
-        if(top.isPresent()){
-            moveChildCategory(request,top.get(),category);
-        }else{
-            moveTopCategory(request,category);
+        if (top.isPresent()) {
+            moveChildCategory(request, top.get(), category);
+        } else {
+            moveTopCategory(request, category);
         }
     }
 
-    private void moveChildCategory(CategoryChangeRequest request, Category top , Category category ){
+    private void moveChildCategory(CategoryChangeRequest request, Category top, Category category) {
         int index = categoryListGetIndex(request.categoryId(), top.getChild());
         if (request.up() >= 1) {
             if (index + request.up() > top.getChild().size()) {
@@ -136,14 +147,14 @@ public class CategoryService {
         }
     }
 
-    private void moveTopCategory(CategoryChangeRequest request, Category category){
+    private void moveTopCategory(CategoryChangeRequest request, Category category) {
         Optional<List<Category>> optionalCategories = categoryRepository.findByLevel(CategoryLevel.TOP);
 
-        if(optionalCategories.isPresent()){
+        if (optionalCategories.isPresent()) {
             List<Category> categoryList = optionalCategories.get();
-            int index = categoryListFindIndex(categoryList,category);
-            int toIndex = toIndexGet(index,request.up(),request.down());
-            if(index != -1 && toIndex >= 0 && toIndex < categoryList.size()){
+            int index = categoryListFindIndex(categoryList, category);
+            int toIndex = toIndexGet(index, request.up(), request.down());
+            if (index != -1 && toIndex >= 0 && toIndex < categoryList.size()) {
                 Category toCategory = categoryList.get(toIndex);
                 Long temp = toCategory.getId();
                 toCategory.updateId(category.getId());
@@ -152,7 +163,7 @@ public class CategoryService {
         }
     }
 
-    private int categoryListFindIndex(List<Category> categoryList ,Category category ){
+    private int categoryListFindIndex(List<Category> categoryList, Category category) {
         for (int i = 0; i < categoryList.size(); i++) {
             if (categoryList.get(i).getId().equals(category.getId())) {
                 return i;
@@ -161,11 +172,11 @@ public class CategoryService {
         return -1;
     }
 
-    private int toIndexGet(int index,int up, int down) {
-        if(up >= 1){
-            return index+up;
+    private int toIndexGet(int index, int up, int down) {
+        if (up >= 1) {
+            return index + up;
         }
-        return index-down;
+        return index - down;
     }
 
     private int categoryListGetIndex(Long id, List<Category> list) {
@@ -180,4 +191,18 @@ public class CategoryService {
                 .map(Category::getId)
                 .toList();
     }
+
+    public String findByIdAndChild(Long categoryId) {
+        return categoryRepository.findById(categoryId)
+                .orElseThrow(() -> new ApiException(ErrorCode.CATEGORY_NOT_FOUND)).getPath();
+    }
+    /*
+        1/
+        1/2
+        1/2/3
+        1/2/4
+
+        path *
+     */
+
 }
