@@ -80,13 +80,16 @@ public class TokenService {
 
 
     public JwtRefreshTokenResponse accessTokenRefresh(String accessToken) {
-        TokenParserResponse response = this.parserToken(accessToken);
+        TokenParserResponse response = this.parserBearerToken(accessToken);
         var token = createToken(response.username(),response.roles());
         return new JwtRefreshTokenResponse(token);
     }
 
     public JwtAccessTokenResponse findAccessToken(String accessToken) {
-        TokenParserResponse response = this.parserToken(accessToken);
+        System.out.println(accessToken);
+        TokenParserResponse response = this.parserBearerToken(accessToken);
+        System.out.println(response.username());
+        System.out.println(response.roles());
         return new JwtAccessTokenResponse(response.username(),response.roles());
     }
 

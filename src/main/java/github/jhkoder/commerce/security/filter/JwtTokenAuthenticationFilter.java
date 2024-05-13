@@ -33,13 +33,13 @@ public class JwtTokenAuthenticationFilter extends AbstractAuthenticationProcessi
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response)
             throws AuthenticationException {
-        Optional<Cookie> token = Arrays.stream(request.getCookies()).filter(cookie -> cookie.getName().
-                equalsIgnoreCase("accessToken")).findFirst();
-
-        if(token.isPresent()){
-            String tokens = extractToken(token.get().getValue());
-            return getAuthenticationManager().authenticate(new JwtAuthenticationToken(tokens));
-        }
+//        Optional<Cookie> token = Arrays.stream(request.getCookies()).filter(cookie -> cookie.getName().
+//                equalsIgnoreCase("accessToken")).findFirst();
+//
+//        if(token.isPresent()){
+//            String tokens = extractToken(token.get().getValue());
+//            return getAuthenticationManager().authenticate(new JwtAuthenticationToken(tokens));
+//        }
 
         String tokenPayload = extractToken(request.getHeader(HttpHeaders.AUTHORIZATION));
         return getAuthenticationManager().authenticate(new JwtAuthenticationToken(tokenPayload));
@@ -50,7 +50,7 @@ public class JwtTokenAuthenticationFilter extends AbstractAuthenticationProcessi
                                             Authentication authentication) throws IOException, ServletException {
 
 
-        log.info("JwtTokenAuthenticationFilter-         successfulAuthentication");
+        log.info("JwtTokenAuthenticationFilterJwtTokenAuthenticationFilter-         successfulAuthentication");
         SecurityContext context = SecurityContextHolder.createEmptyContext();
         context.setAuthentication(authentication);
 
