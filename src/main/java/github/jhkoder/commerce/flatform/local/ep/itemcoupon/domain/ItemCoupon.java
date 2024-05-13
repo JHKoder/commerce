@@ -16,7 +16,7 @@ import static lombok.AccessLevel.PROTECTED;
 
 @Entity
 @Getter
-@Table(name = "local_item_Coupon")
+@Table
 @NoArgsConstructor(access = PROTECTED)
 public class ItemCoupon extends BaseEntity {
     @Id

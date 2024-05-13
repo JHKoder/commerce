@@ -2,7 +2,6 @@ package github.jhkoder.commerce.flatform.local.ep.itemcoupon.service;
 
 import github.jhkoder.commerce.exception.ApiException;
 import github.jhkoder.commerce.exception.ErrorCode;
-import github.jhkoder.commerce.flatform.local.ep.itemcoupon.domain.CouponState;
 import github.jhkoder.commerce.flatform.local.ep.itemcoupon.domain.ItemCoupon;
 import github.jhkoder.commerce.flatform.local.ep.itemcoupon.repository.ItemCouponDslRepository;
 import github.jhkoder.commerce.flatform.local.ep.itemcoupon.repository.ItemCouponRepository;
@@ -25,9 +24,8 @@ import java.util.UUID;
 public class ItemCouponService {
 
     @Value("${qr.host}")
-    private final String qrHost;
-    @Value("${server.domain}")
-    private final String domain;
+    private  String qrHost;
+    private  String domain;
     private final WebClient webClient;
     private final ItemProductRepository productRepository;
     private final ItemCouponRepository couponRepository;

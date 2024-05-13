@@ -1,6 +1,5 @@
 package github.jhkoder.commerce.flatform.local.ep.itemcoupon.web.rest;
 
-import github.jhkoder.commerce.flatform.local.ep.itemcoupon.domain.CouponState;
 import github.jhkoder.commerce.flatform.local.ep.itemcoupon.domain.ItemCoupon;
 import github.jhkoder.commerce.flatform.local.ep.itemcoupon.service.ItemCouponService;
 import github.jhkoder.commerce.flatform.local.ep.itemcoupon.service.request.ItemCouponAddRequest;
