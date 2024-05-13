@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/default}">
+<head>
+    <meta charset="UTF-8">
+    <title>shop</title>
+    <link rel="icon" href="/img/brand.png"/>
+    <link rel="apple-touch-icon" href="/img/brand.png"/><!-- Bootstrap icons-->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css" rel="stylesheet" />
+
+    <!-- Core theme CSS (includes Bootstrap)-->
+    <script  src="http://code.jquery.com/jquery-latest.min.js"></script>
+    <link href="/css/shop_temple.css" rel="stylesheet" />
+</head>
+<th:block layout:fragment="content">
+
+<!-- Header-->
+<header class="bg-dark py-5">
+    <div class="container px-4 px-lg-5 my-5">
+        <div class="text-center text-white">
+            <h1 class="display-4 fw-bolder">Shop in style</h1>
+            <p class="lead fw-normal text-white-50 mb-0">With this shop hompeage template</p>
+        </div>
+    </div>
+</header>
+
+<!-- Section-->
+<section class="py-5">
+    <div class="container px-4 px-lg-5 mt-5">
+        <div class="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-4 justify-content-center">
+            <div class="col mb-5">
+                <div class="card h-100">
+                    <div class="badge bg-dark text-white position-absolute"  id="product_index_sale_1" style="top: 0.5rem; right: 0.5rem">Sale</div>
+                    <img class="card-img-top" id="product_index_img_1" src="https://dummyimage.com/450x300/dee2e6/6c757d.jpg" alt="..." />
+                    <div class="card-body p-4">
+                        <div class="text-center">
+                            <h5 class="fw-bolder"  id="product_index_name_1" >Sale Item</h5>
+                            <span class="text-muted text-decoration-line-through"  id="product_index_price_origin_1" >50.00 원</span>
+                            <span id="product_index_price_1">25.00 원</span>
+
+                        </div>
+                    </div>
+                    <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
+                        <div class="text-center"><a class="btn btn-outline-dark mt-auto" href="#">상세보기</a></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- Footer-->
+
+<!-- Bootstrap core JS-->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+
+    var product_link_api="/shop/products";
+
+    function product_view_text(i,productId,name,title,price,origin_price,sale,imgLink){
+        return `
+        <div class="col mb-5">
+            <div class="card h-100">
+                <div class="badge bg-dark text-white position-absolute"  id="product_index_sale_${i}" style="top: 0.5rem; right: 0.5rem">${sale}</div>
+                <img class="card-img-top" id="product_index_img_${i}" src="${imgLink}" alt="..." />
+                <div class="card-body p-4">
+                    <div class="text-center">
+                        <h5 class="fw-bolder"  id="product_index_name_${i}" >${name}</h5>
+                        <span class="text-muted text-decoration-line-through"  id="product_index_price_origin_${i}" >${origin_price} 원</span>
+                        <span id="product_index_price_${i}">${price} 원</span>
+                    </div>
+                </div>
+                <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
+                    <div class="text-center"><a class="btn btn-outline-dark mt-auto" href="${product_link_api}/${productId}">상세보기</a></div>
+                </div>
+            </div>
+        </div>
+    `;
+    }
+    var itemCount=1;
+    var lastProductId = 0;
+
+    function products_view() {
+        var pageSize = 30;
+
+        var currentUrl = window.location.href;
+        var urlParts = currentUrl.split('/');
+        var categoryId = urlParts[urlParts.length - 1];
+
+        var data = {
+            categoryId: categoryId,
+            pageSize:  pageSize,
+            lastProductId: lastProductId
+        };
+        var jsonData = JSON.stringify(data);
+
+        console.log("post");
+        fetch(`/all/products/category`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: jsonData
+        })
+        .then(response => {
+            console.log(response);
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
+        })
+        .then(data => {
+            console.log(data);
+            data.content.forEach((json) => {
+                lastProductId = json.productId;
+                var name = json.name;
+                var imgLink ="http://144.24.93.76/images/"+json.mainImage;
+                var price = json.price;
+                var originPrice = json.normalPrice;
+
+                var sale = (price === originPrice) ? '' : '할인';
+
+                var productHtml = product_view_text(itemCount++, lastProductId, name, '', price, originPrice, sale, imgLink);
+                document.querySelector('.row-cols-2').innerHTML += productHtml;
+            });
+        })
+        .catch(error => {
+            console.error('Error fetching data:', error);
+        });
+    }
+
+
+    $(window).scroll(function(){
+        var scrT = Math.ceil($(window).scrollTop());
+        var docHeight = $(document).height();
+        var windowHeight = $(window).height()+50;
+        if(scrT >= docHeight - windowHeight){
+            products_view();
+        }
+    });
+
+    function inits() {
+        products_view();
+    }
+
+    inits();
+
+</script>
+</th:block>
+</html>
