@@ -23,13 +23,6 @@ public class Item extends BaseEntity {
     @SequenceGenerator(name = "items_seqGen", sequenceName = "items_id_seq", initialValue = 1)
     @Column(name = "id")
     private Long id;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn( name = "main_image_id")
-    private Images mainImage;
-
-    private String name;
-    private int normalPrice;
     private String maker;
     private String origin;
     private String brand;
@@ -40,20 +33,8 @@ public class Item extends BaseEntity {
         this.id = id;
     }
 
-    public Item(Images mainImage, String name, int normalPrice, String maker, String origin, String brand, boolean brandCertification, String barcode) {
-        this.mainImage = mainImage;
-        this.name = name;
-        this.normalPrice = normalPrice;
-        this.maker = maker;
-        this.origin = origin;
-        this.brand = brand;
-        this.brandCertification =OracleBoolean.of(brandCertification);
-        this.barcode = barcode;
-    }
 
-    public Item(String name, int normalPrice, String maker, String origin, String brand, boolean brandCertification, String barcode) {
-        this.name = name;
-        this.normalPrice = normalPrice;
+    public Item( String maker, String origin, String brand, boolean brandCertification, String barcode) {
         this.maker = maker;
         this.origin = origin;
         this.brand = brand;
@@ -65,9 +46,7 @@ public class Item extends BaseEntity {
         return new Item(item);
     }
 
-    public void updateAll(String name, int normalPrice, String maker, String origin, String brand, boolean brandCertification, String barcode){
-        this.name = name;
-        this.normalPrice = normalPrice;
+    public void updateAll( String maker, String origin, String brand, boolean brandCertification, String barcode){
         this.maker = maker;
         this.origin = origin;
         this.brand = brand;
@@ -75,8 +54,5 @@ public class Item extends BaseEntity {
         this.barcode = barcode;
     }
 
-    public void updateMainImage(Images mainImage) {
-        this.mainImage=mainImage;
-    }
 }
 
