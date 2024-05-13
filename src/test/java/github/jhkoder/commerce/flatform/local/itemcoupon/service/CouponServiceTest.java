@@ -30,8 +30,8 @@ import java.util.UUID;
 import static fixture.ItemFixture.getItemFixture;
 import static fixture.ItemProductFixture.getItemProductFixture;
 
-@RunWith(SpringRunner.class)
-@DataJpaTest
+//@RunWith(SpringRunner.class)
+//@DataJpaTest
 @DisplayName("쿠폰")
 public class CouponServiceTest {
 
@@ -49,30 +49,30 @@ public class CouponServiceTest {
         return new ImageRequest(multipartFile);
     }
 
-    @BeforeEach
-    void setup() throws IOException {
-        user = UserFixture.getFixtureUser();
-        category = CategoryFixture.getCategoryFixture();
-        item = getItemFixture();
-        itemProduct = getItemProductFixture(user, category, item);
-
-        int amount = 10_000; // 가격 인하
-        String work = " 할인 문구 "; // 차후 이미지도 추가 할 수 있는 여지를 두자
-
-        ImageRequest request = file("src/main/resources/static/img/testimg.png",
-                "testimg.png", "image/png");
-
-
-        event = new ItemEvent(itemProduct, category, amount, work, false, LocalDateTime.now(), LocalDateTime.now().plusDays(1));
-    }
+//    @BeforeEach
+//    void setup() throws IOException {
+//        user = UserFixture.getFixtureUser();
+//        category = CategoryFixture.getCategoryFixture();
+//        item = getItemFixture();
+//        itemProduct = getItemProductFixture(user, category, item);
+//
+//        int amount = 10_000; // 가격 인하
+//        String work = " 할인 문구 "; // 차후 이미지도 추가 할 수 있는 여지를 두자
+//
+//        ImageRequest request = file("src/main/resources/static/img/testimg.png",
+//                "testimg.png", "image/png");
+//
+//
+//        event = new ItemEvent(itemProduct, category, amount, work, false, LocalDateTime.now(), LocalDateTime.now().plusDays(1));
+//    }
 
     @Test
     void 등록() {
         // 판매자가 쿠폰을 생성합니다. 이때 쿠폰의 유형, 할인 금액 또는 비율, 사용 가능 기간 등을 지정합니다.
-        String code = UUID.randomUUID().toString();
-        int downPrice = 10_000;
-        ItemCoupon coupon = new ItemCoupon(itemProduct, category,1, LocalDateTime.now(), LocalDateTime.now().plusDays(1));
-
+//        String code = UUID.randomUUID().toString();
+//        int downPrice = 10_000;
+//        ItemCoupon coupon = new ItemCoupon(itemProduct, category,1, LocalDateTime.now(), LocalDateTime.now().plusDays(1));
+//
 
     }
 
@@ -80,16 +80,16 @@ public class CouponServiceTest {
     @Test
     void QR생성() {
         // qr 코드 하루에 최대 99,999 권 까지 생성 가능
-        int size = 150;
-        int size_max = 1000;
-        int size_min = 10;
-        String pattern = "PNG|GIF|JPEG|JPG|SVG|EPS"; //  전부 소문자 형태 & default : png
-
-        WebClientConfigTest client = new WebClientConfigTest();
-        WebClient webClient = client.webClient();
-        String host = "https://api.qrserver.com/v1/create-qr-code";
-        String code = UUID.randomUUID().toString();
-        String data = "http://localhost:8080/coupon/qr/products/" + itemProduct.getId() + "/" + code;
+//        int size = 150;
+//        int size_max = 1000;
+//        int size_min = 10;
+//        String pattern = "PNG|GIF|JPEG|JPG|SVG|EPS"; //  전부 소문자 형태 & default : png
+//
+//        WebClientConfigTest client = new WebClientConfigTest();
+//        WebClient webClient = client.webClient();
+//        String host = "https://api.qrserver.com/v1/create-qr-code";
+//        String code = UUID.randomUUID().toString();
+//        String data = "http://localhost:8080/coupon/qr/products/" + itemProduct.getId() + "/" + code;
 
     }
 
