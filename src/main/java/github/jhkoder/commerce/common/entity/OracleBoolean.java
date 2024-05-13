@@ -16,4 +16,8 @@ public enum OracleBoolean {
         if(bool) return T;
         return F;
     }
+
+    public int jdbcInsert(){
+        return this == T ? 1 : 0;
+    }
 }

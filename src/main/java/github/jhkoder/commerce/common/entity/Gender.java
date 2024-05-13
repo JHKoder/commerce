@@ -11,4 +11,7 @@ public enum Gender {
     Gender(String gender) {
         this.gender = gender;
     }
+    public int jdbcInsert(){
+        return MAN== this ? 0 : 1;
+    }
 }
