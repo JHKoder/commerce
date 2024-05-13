@@ -7,7 +7,6 @@ import github.jhkoder.commerce.flatform.local.ep.category.service.CategoryServic
 import github.jhkoder.commerce.flatform.local.ep.category.service.response.CategoryResponse;
 import github.jhkoder.commerce.flatform.local.ep.category.service.response.CategoryTopResponse;
 import github.jhkoder.commerce.flatform.local.ep.category.web.rest.CategoryAllApiController;
-import github.jhkoder.commerce.flatform.local.ep.category.web.rest.CategoryApiController;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;

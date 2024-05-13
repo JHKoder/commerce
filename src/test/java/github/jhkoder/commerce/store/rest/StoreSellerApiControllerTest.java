@@ -106,6 +106,7 @@ public class StoreSellerApiControllerTest extends RestDocControllerTests {
                                 fieldWithPath("product.isbn").type(JsonFieldType.STRING).description("ISBN"),
                                 fieldWithPath("product.stock").type(JsonFieldType.NUMBER).description("재고 수량"),
 
+                                fieldWithPath("mainImage").description("대표 이미지"),
                                 fieldWithPath("images.image").type(JsonFieldType.ARRAY).description("이미지 배열")
                         )
                 ));
@@ -244,9 +245,9 @@ public class StoreSellerApiControllerTest extends RestDocControllerTests {
         imageUpdateRequests.add(new ImageUpdateRequest(1L, true));
 
         StoreUpdateProductRequest productRequest = new StoreUpdateProductRequest(
-                new StoreUpdateProductRequest.StoreSellerItem("Product A", 1000, "Maker", "Origin", "Brand", true, "1234567890"),
+                new StoreUpdateProductRequest.StoreSellerItem( "Maker", "Origin", "Brand", true, "1234567890"),
                 new StoreUpdateProductRequest.StoreSellerProduct(
-                        2000, true, "Rental Info", 50, 20, 5, "Option Detail",
+                        "Product A",2000, 2000,true, "Rental Info", 50, 20, 5, "Option Detail",
                         Gender.MAN, 5000, "Shipping Setting", true, false, true, "ISBN123", 100
                 ),
                 imageUpdateRequests
@@ -346,8 +347,6 @@ public class StoreSellerApiControllerTest extends RestDocControllerTests {
     private StoreAddProductRequest createProductProvider() {
         // StoreItemRequest 생성
         StoreAddProductRequest.StoreItemRequest storeItemRequest = new StoreAddProductRequest.StoreItemRequest(
-                "Sample Product",
-                10000,
                 "Sample Maker",
                 "Sample Origin",
                 "Sample Brand",
@@ -358,7 +357,9 @@ public class StoreSellerApiControllerTest extends RestDocControllerTests {
         // StoreProductRequest 생성
         StoreAddProductRequest.StoreProductRequest storeProductRequest = new StoreAddProductRequest.StoreProductRequest(
                 1L, // categoryId
+                "name", // name
                 15000, // price
+                15000, // origin price
                 false, // orderMode
                 "Sample Rental Info",
                 10, // clickCount
@@ -378,13 +379,13 @@ public class StoreSellerApiControllerTest extends RestDocControllerTests {
         StoreAddProductRequest.CustomMultiPartFile customMultiPartFile = getFixtureMockMultipartFile();
 
         // StoreAddProductRequest 생성
-        return new StoreAddProductRequest(storeItemRequest, storeProductRequest, customMultiPartFile);
+        return new StoreAddProductRequest(storeItemRequest, storeProductRequest, customMultiPartFile,null);
     }
 
     private ItemProduct getProduct() {
         User user = new User("testUser", "testname", "password12", "test@gmail.com", "01012341234", Gender.MAN, Role.USER);
         Category category = new Category("TestCategory",null);
-        Item item = new Item("TestItem", 100, "TestMaker", "TestOrigin", "TestBrand",
+        Item item = new Item("TestMaker", "TestOrigin", "TestBrand",
                 true, "TestBarcode");
         List<Images> links = new ArrayList<>();
         int price = 200;
@@ -403,7 +404,7 @@ public class StoreSellerApiControllerTest extends RestDocControllerTests {
         String isbn = "TestISBN";
         int stock = 20;
 
-        return new ItemProduct(user, category, item, links, price, orderMode, rentalInfo,
+        return new ItemProduct(user, category, item, links,null,"TestItem",  price,price, orderMode, rentalInfo,
                 clickCount, reviewCount, minimumPurchaseQuantity, optionDetail, gender, deliveryPrice,
                 shippingSetting, fastDelivery, regularDelivery, dawnDelivery, isbn, stock);
     }

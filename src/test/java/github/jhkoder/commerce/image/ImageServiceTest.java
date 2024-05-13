@@ -24,7 +24,7 @@ public class ImageServiceTest {
 
 
     @Test
-    void 삭제_시간() throws IOException {
+    void 삭제() throws IOException {
         ImageRequest request = file("src/main/resources/static/img/testimg.png",
                 "testimg.png", "image/png");
 
@@ -39,7 +39,7 @@ public class ImageServiceTest {
 
 
     @Test
-    void 쓰기_시간() throws IOException {
+    void 쓰기() throws IOException {
         ImageRequest request = file("src/main/resources/static/img/testimg.png",
                 "testimg.png", "image/png");
 
@@ -52,12 +52,12 @@ public class ImageServiceTest {
     }
 
     @Test
-    void 읽기_시간() {
+    void 읽기() {
         long startTime = System.currentTimeMillis();
-        imageService.read("aa/4893cd-76e2-4086-84b5-7a77a0abe4b6_testimg.png");
+        imageService.read("brand.png");
         long endTime = System.currentTimeMillis();
         long elapsedTime = endTime - startTime;
-        System.out.println("쓰기 time: " + elapsedTime + " milliseconds");
+        System.out.println("읽기 time: " + elapsedTime + " milliseconds");
     }
 
     private ImageRequest file(String imagePath, String imageName, String type) throws IOException {
