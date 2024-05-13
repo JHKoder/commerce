@@ -8,6 +8,9 @@ import java.util.List;
 import java.util.Optional;
 
 public interface CategoryRepository extends JpaRepository<Category, Long> {
+    List<Category> findByPathStartsWith(String path);
 
     Optional<List<Category>> findByLevel(CategoryLevel level);
+
+    List<Category> findByParent(Category parent);
 }
