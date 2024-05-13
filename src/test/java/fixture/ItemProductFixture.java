@@ -16,7 +16,7 @@ public class ItemProductFixture {
     public ItemProduct getItemProductFixture(){
         User user = new User("testUser", "testname","password12","test@gmail.com","01012341234",Gender.MAN,Role.USER);
         Category category = new Category("TestCategory",null);
-        Item item = new Item("TestItem", 100, "TestMaker", "TestOrigin", "TestBrand",
+        Item item = new Item("TestMaker", "TestOrigin", "TestBrand",
                 true, "TestBarcode");
         List<Images> links = new ArrayList<>();
         int price = 200;
@@ -35,14 +35,14 @@ public class ItemProductFixture {
         String isbn = "TestISBN";
         int stock = 20;
 
-        return new ItemProduct(user, category, item, links, price, orderMode, rentalInfo,
+        return new ItemProduct(user, category, item, links, null,"TestItem", price, price,orderMode, rentalInfo,
                 clickCount, reviewCount, minimumPurchaseQuantity, optionDetail, gender, deliveryPrice,
                 shippingSetting, fastDelivery, regularDelivery, dawnDelivery, isbn, stock);
     }
 
     public static ItemProduct getItemProductFixture(User user){
         Category category = new Category("TestCategory",null);
-        Item item = new Item("TestItem", 100, "TestMaker", "TestOrigin", "TestBrand",
+        Item item = new Item( "TestMaker", "TestOrigin", "TestBrand",
                 true, "TestBarcode");
         List<Images> links = new ArrayList<>();
         int price = 200;
@@ -61,7 +61,7 @@ public class ItemProductFixture {
         String isbn = "TestISBN";
         int stock = 20;
 
-        return new ItemProduct(user, category, item, links, price, orderMode, rentalInfo,
+        return new ItemProduct(user, category, item, links, null,"TestItem",price,price, orderMode, rentalInfo,
                 clickCount, reviewCount, minimumPurchaseQuantity, optionDetail, gender, deliveryPrice,
                 shippingSetting, fastDelivery, regularDelivery, dawnDelivery, isbn, stock);
     }
@@ -84,7 +84,7 @@ public class ItemProductFixture {
         String isbn = "TestISBN";
         int stock = 20;
 
-        return new ItemProduct(user, category, item, links, price, orderMode, rentalInfo,
+        return new ItemProduct(user, category, item, links, null,"TestItem",price,price, orderMode, rentalInfo,
                 clickCount, reviewCount, minimumPurchaseQuantity, optionDetail, gender, deliveryPrice,
                 shippingSetting, fastDelivery, regularDelivery, dawnDelivery, isbn, stock);
     }
