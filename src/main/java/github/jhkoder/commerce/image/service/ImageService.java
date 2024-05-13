@@ -16,6 +16,7 @@ import github.jhkoder.commerce.user.domain.User;
 import github.jhkoder.commerce.user.repository.UserRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -47,10 +48,22 @@ public class ImageService {
         return imageJpaRepository.saveAll(images);
     }
 
+    @Transactional
+    public Images upload(User user,ImageRequest request) {
+        Images images = new Images(user, upload(request));
+        return imageJpaRepository.save(images);
+    }
 
     public List<Images> upload(ItemProduct itemProduct, StoreAddProductRequest.CustomMultiPartFile paths) {
-        return upload(itemProduct.getUser(),
-                paths.getImage().stream().map(ImageRequest::new).toList());
+        return upload(itemProduct.getUser(), paths
+                .getImage()
+                .stream()
+                .map(ImageRequest::new)
+                .toList());
+    }
+
+    public Images upload(ItemProduct itemProduct, MultipartFile paths) {
+        return upload(itemProduct.getUser(), new ImageRequest(paths));
     }
 
     public String upload(ImageRequest request) {
