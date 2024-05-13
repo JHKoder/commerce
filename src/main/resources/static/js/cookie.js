@@ -67,7 +67,6 @@ function accessRefreshToken() {
 function fetchWithToken(url, tokenName, method, body) {
     var accessToken = getCookie(tokenName);
     if (!accessToken) {
-        console.error("Access token not found.");
         return Promise.reject("Access token not found.");
     }
 
