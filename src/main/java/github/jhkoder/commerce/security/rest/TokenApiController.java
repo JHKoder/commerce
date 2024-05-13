@@ -3,15 +3,16 @@ package github.jhkoder.commerce.security.rest;
 import github.jhkoder.commerce.security.rest.dto.JwtAccessTokenResponse;
 import github.jhkoder.commerce.security.rest.dto.JwtRefreshTokenResponse;
 import github.jhkoder.commerce.security.service.TokenService;
-import github.jhkoder.commerce.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestHeader;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-@RestController("/api/token")
+@RestController
+@RequestMapping("/api/token")
 @RequiredArgsConstructor
-public class SecurityController {
+public class TokenApiController {
     private final TokenService tokenService;
 
     @PostMapping("/access")
