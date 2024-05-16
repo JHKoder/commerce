@@ -74,21 +74,20 @@ public class SecurityConfig {
                 .requestMatchers("/", "/home", "/signup", "/signup/api/**","/api/auth/login","/login","/products/**").permitAll()
                 .requestMatchers("/docs/**", "/img/**", "/css/**", "/js/**","/*.png","favicon.ico", "/layout/**", "/fragment/**").permitAll()
 
-                .requestMatchers("/api/all/**","/all/products/category").permitAll()
+                .requestMatchers("/api/all/**","/all/products/**").permitAll()
                 .requestMatchers("/api/user/**").hasAnyRole(Role.USER.name(), Role.SELLER.name(), Role.ADMIN.name())
                 .requestMatchers("/api/seller/**").hasAnyRole(Role.SELLER.name(),Role.ADMIN.name())
                 .requestMatchers("/api/admin/**").hasAnyRole(Role.ADMIN.name())
 
-                .requestMatchers("/api/token","/api/token/**").permitAll()
+                .requestMatchers("/all/api/token/**").permitAll()
 
                 // 상점 & 카테고리
                 .requestMatchers("/shop","/shop/**").permitAll()
-//                .requestMatchers("/shop/products/**/pay").hasAnyRole(Role.USER.name(), Role.SELLER.name(), Role.ADMIN.name())
 
                 // 마이페이지
-                .requestMatchers("/mypage/users/**/user").hasAnyRole(Role.USER.name())
-                .requestMatchers("/mypage/users/**/seller").hasAnyRole(Role.SELLER.name())
-                .requestMatchers("/mypage/users/**/admin").hasAnyRole( Role.ADMIN.name())
+                .requestMatchers("/mypage/users/**").hasAnyRole(Role.USER.name())
+                .requestMatchers("/mypage/users/**").hasAnyRole(Role.SELLER.name())
+                .requestMatchers("/mypage/users/**").hasAnyRole( Role.ADMIN.name())
 
                 // 판매자용 스토어 등록 페이지
                 .requestMatchers("/store","/store/**").hasAnyRole(Role.SELLER.name())

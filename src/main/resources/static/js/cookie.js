@@ -1,84 +1,92 @@
-var isAuthentication=false; // 로그인 유무
-var authentications;    // 권한
-var authenticationName;    // 권한 ID
-
+var isAuthentication = false; // 로그인 유무
+var authentications = [];    // 권한
+var authenticationName = "";    // 권한 ID
 
 
 function accessToken() {
-    return fetchWithToken("/api/token/access","accessToken", 'POST')
-    .then(response => {
-        if(response.ok){
-            return response.json();
-        }else{
-            return null;
-        }
-    }).then(json => {
-        console.log(json);
-        if(json != null){
-            isAuthentication = true;
-            authentications = json.authentications;
-            authenticationName = json.username;
-        }else{
-            accessTokenRe();
-            isAuthentication = false;
-            authentications = [];
-            authenticationName = "";
-        }
-        console.log("accessToken result : "+isAuthentication +","+authentications +","+authenticationName );
-    });
+    var accessToken = getCookie("accessToken");
+    if (accessToken === null || accessToken === "" || accessToken === " ") {
+        return accessRefreshToken();
+    } else {
+        console.log("accessToken() token " + accessToken);
+        return fetchWithToken("/all/api/token/access", accessToken)
+            .then(response => {
+                if (response.ok) {
+                    return response.json();
+                }
+                return accessRefreshToken();
+            }).then(json => {
+                if (json != null) {
+                    isAuthentication = true;
+                    authentications = json.authentications;
+                    authenticationName = json.username;
+                }
+                console.log("accessToken result : " + isAuthentication + "," + authentications + "," + authenticationName);
+            });
+    }
+}
+
+function sout(message) {
+    console.log(message);
 }
 
 function accessTokenRe() {
-    return fetchWithToken("/api/token/access","accessToken", 'POST')
-    .then(response => {
-        if(response.ok){
-            return response.json();
-        }else{
-            return null;
-        }
-    }).then(json => {
-        console.log(json);
-        if(json != null){
-            isAuthentication = true;
-            authentications = json.authentications;
-            authenticationName = json.username;
-        }else{
-            isAuthentication = false;
-            authentications = [];
-            authenticationName = "";
-        }
-        console.log("accessToken result : "+isAuthentication +","+authentications +","+authenticationName );
-    });
+    var accessToken = getCookie("accessToken");
+    console.log("accessTokenRe() token: " + accessToken);
+    if (accessToken === null || accessToken === "" || accessToken === " " || accessToken === undefined) {
+        return reject("response");
+    } else {
+        return fetchWithToken("/all/api/token/access", accessToken)
+            .then(response => {
+                if (response.ok) {
+                    return response.json();
+                } else {
+                    deleteCookie("accessToken");
+                    return reject("response");
+                }
+            }).then(json => {
+                if (json != null) {
+                    isAuthentication = true;
+                    authentications = json.authentications;
+                    authenticationName = json.username;
+                }
+                console.log("accessToken result : " + isAuthentication + "," + authentications + "," + authenticationName);
+        });
+    }
+
 }
 
 function accessRefreshToken() {
-    return fetchWithToken("/api/token/refresh", "refreshToken",'POST')
-    .then(response => {
-        if(response.ok){
-            var data = response.json();
-            setCookie("accessToken", "Bearer " + data.token, 1);
-        }else{
-            logout();
-            window.location.href = "/login";
-        }
-    });
+    var accessToken = getCookie("refreshToken");
+    if (accessToken === null || accessToken === "" || accessToken === " ") {
+        sout("re out")
+        logout();
+        return reject("response");
+    }
+    return fetchWithToken("/all/api/token/refresh", accessToken)
+        .then(response => {
+            if (response.ok) {
+                return response.json();
+            } else {
+                logout();
+            }
+        }).then(json => {
+            console.log(json);
+            setCookie("accessToken", "Bearer " + json.token, 1);
+            sout("Bearer return ")
+            return accessTokenRe();
+        });
+
 }
 
-function fetchWithToken(url, tokenName, method, body) {
-    var accessToken = getCookie(tokenName);
-    if (!accessToken) {
-        return Promise.reject("Access token not found.");
-    }
-
+function fetchWithToken(url, accessToken) {
     return fetch(url, {
-        method: method,
+        method: 'POST',
         headers: {
             'Content-Type': 'application/json',
             'Authorization': accessToken
-        },
-        body: JSON.stringify(body)
-    })
-    .then(response => {
+        }
+    }).then(response => {
         return response;
     });
 }
@@ -108,11 +116,12 @@ function getCookie(name) {
     return "";
 }
 
-function logout(){
+function logout() {
     deleteCookie("accessToken");
     deleteCookie("refreshToken");
     location.reload();
 }
+
 function deleteCookie(cookieName, path = '/') {
     document.cookie = cookieName + '=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=' + path + ';';
 }

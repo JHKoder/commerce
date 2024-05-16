@@ -21,7 +21,7 @@ public enum Role implements GrantedAuthority {
 
     public static Role of(String value) {
         return Arrays.stream(values())
-                .filter(role -> role.value.equals(value))
+                .filter(role -> role.value.equals(value) ||role.value.equals("ROLE_"+value)  )
                 .findFirst()
                 .orElseThrow(() -> new IllegalArgumentException("잘못된 권한입니다."));
     }
