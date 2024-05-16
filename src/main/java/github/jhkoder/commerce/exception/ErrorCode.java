@@ -59,7 +59,16 @@ public enum ErrorCode {
     CATEGORY_NOT_TOP_EXIST(407,"카테고리가 상위에 존재하지 않습니다." ),
     COUPON_QR_REGISTRATION_LIMIT(401,"스토어 쿠폰 등록 제한" ),
     COUPON_CODE_NOT_FOUND(402,"쿠폰 코드 없음" ),
-    COUPON_CODE_MISMATCH(403,"쿠폰 코드 비일치");
+    COUPON_CODE_MISMATCH(403,"쿠폰 코드 비일치"),
+    PAY_ACCESS_TOKEN_CONNECT_FAIL(401,"결제 엑세스 토큰 연결 실패" ),
+    PAY_RECEIPT_FAIL(402,"단건 조회 실패"),
+    PAY_CANCEL_FAIL(403,"결제 취소 실패" ),
+    ORDER_NOT_PRODUCT(402, "주문정보에 상품번호가 없음"),
+    ORDER_NOT_FOUND(403, "주문 정보가 없습니다."),
+    NOT_USER_ISSUED_ORDER(405, "사용자가 발행한 주문서가 아닙니다."),
+    TOKEN_ACCESS_FAIL(401,"로그인 토큰 복호화 실패"),
+    TOKEN_ACCESS_EXPIRED_FAIL(401,"로그인 토큰값 만료");
+
 
     private final int status;
     private final String message;
