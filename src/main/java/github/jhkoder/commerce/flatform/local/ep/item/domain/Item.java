@@ -15,7 +15,7 @@ import static lombok.AccessLevel.PROTECTED;
 @Entity
 @Getter
 @Table(name = "items")
-@NoArgsConstructor(access = PROTECTED)
+@NoArgsConstructor
 public class Item extends BaseEntity {
 
     @Id
@@ -29,18 +29,19 @@ public class Item extends BaseEntity {
     private OracleBoolean brandCertification;
     private String barcode;
 
-    private Item(Long id) {
+    public Item(Long id) {
         this.id = id;
     }
 
 
-    public Item( String maker, String origin, String brand, boolean brandCertification, String barcode) {
+    public Item(String maker, String origin, String brand, boolean brandCertification, String barcode) {
         this.maker = maker;
         this.origin = origin;
         this.brand = brand;
         this.brandCertification = OracleBoolean.of(brandCertification);
         this.barcode = barcode;
     }
+
 
     public static Item ofMeta(Long item) {
         return new Item(item);

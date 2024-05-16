@@ -17,7 +17,7 @@ import static lombok.AccessLevel.PROTECTED;
 
 @Entity
 @Getter
-@Table(name = "local_item_event")
+@Table(name = "item_event")
 @NoArgsConstructor(access = PROTECTED)
 public class ItemEvent extends BaseEntity {
     @Id
@@ -29,9 +29,6 @@ public class ItemEvent extends BaseEntity {
     private ItemProduct product;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    private Item item;
-
-    @ManyToOne(fetch = FetchType.LAZY)
     private Category category;
 
 
@@ -41,14 +38,17 @@ public class ItemEvent extends BaseEntity {
     private LocalDateTime startTime;
     private LocalDateTime endTime;
 
-    public ItemEvent(ItemProduct product, Item item, Category category, int discountAmount, String eventWords, boolean coupon, LocalDateTime startTime, LocalDateTime endTime) {
+    public ItemEvent(ItemProduct product, Category category, int discountAmount, String eventWords, boolean coupon, LocalDateTime startTime, LocalDateTime endTime) {
         this.product = product;
-        this.item = item;
         this.category = category;
         this.discountAmount = discountAmount;
         this.eventWords = eventWords;
         this.coupon = OracleBoolean.of(coupon);
         this.startTime = startTime;
         this.endTime = endTime;
+    }
+
+    public void updateCoupon(boolean coupon){
+        this.coupon = OracleBoolean.of(coupon);
     }
 }
