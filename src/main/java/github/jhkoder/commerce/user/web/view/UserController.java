@@ -29,13 +29,7 @@ public class UserController {
     }
 
     @GetMapping("/")
-    public String getPage(@AuthenticationPrincipal UserDetails userDetails) {
-        Authentication a=SecurityContextHolder.getContext().getAuthentication();
-        System.out.println("========= SecurityContextHolder .getContext() ");
-        System.out.println(a.getName());
-        System.out.println(a.getPrincipal());
-        System.out.println("========= @AuthenticationPrincipal");
-        System.out.println(userDetails);
+    public String getPage() {
         return "home";
     }
 

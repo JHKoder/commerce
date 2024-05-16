@@ -52,6 +52,14 @@ public class User extends BaseEntity {
         this.role = role;
     }
 
+    public static User ofMeta(Long user) {
+        return new User(user);
+    }
+
+    private User(Long id) {
+        this.id = id;
+    }
+
     public void roleUpdate(Role role){
         this.role=role;
     }
