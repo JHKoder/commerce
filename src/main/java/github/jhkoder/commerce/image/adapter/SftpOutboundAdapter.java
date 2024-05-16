@@ -24,7 +24,6 @@ public class SftpOutboundAdapter implements OutboundAdapter {
 
     @Bean
     public SessionFactory<SftpClient.DirEntry> sftpSessionFactory() {
-        System.out.println(host + "," + username + "," + path);
         DefaultSftpSessionFactory factory = new DefaultSftpSessionFactory();
         factory.setUser(username);
         factory.setHost(host);
@@ -34,17 +33,12 @@ public class SftpOutboundAdapter implements OutboundAdapter {
         return factory;
     }
 
-
     @Bean
     public SftpRemoteFileTemplate sftpRemoteFileTemplate() {
         return new SftpRemoteFileTemplate(sftpSessionFactory());
     }
 
     private Resource getPrivateKey() {
-        Resource resource = new FileSystemResource(path);
-        System.out.println(resource.exists());
-        return resource;
+        return  new FileSystemResource(path);
     }
-
-
 }
