@@ -1,85 +1,392 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/default}">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
-    <script src="https://js.bootpay.co.kr/bootpay-4.3.4.min.js" type="application/javascript"></script>
-</head>
-<body>
+    <title>shop</title>
+    <link rel="icon" href="/img/brand.png"/>
+    <link rel="apple-touch-icon" href="/img/brand.png"/>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css" rel="stylesheet"/>
+    <script src="http://code.jquery.com/jquery-latest.min.js"></script>
 
-<div class="bootpay-window">
-    <div class="progress-message-window" id="bootpay-progress-message">
-        <div class="progress-message">
-            <div class="bootpay-loading">
-                <div class="bootpay-loading-spinner">
-                    <svg viewBox="25 25 50 50" class="bootpay-circle" xmlns="http://www.w3.org/2000/svg">
-                        <circle cx="50" cy="50" r="20" fill="none" class="bootpay-path"></circle>
-                    </svg>
+    <script src="https://js.bootpay.co.kr/bootpay-4.3.4.min.js" type="application/javascript"></script>
+
+    <link href="/css/shop_temple.css" rel="stylesheet"/>
+    <style>
+        .item_content_div{
+            background-color: #f8f9fa; display: flex;    margin: 30px 20% 0px 20%;
+        }
+        .item_content_div_div {
+            display: flex;
+            flex: 1;
+            margin: 20px;
+        }
+        @media (max-width: 1042px) {
+            .item_content_div_div{
+                display: inline-block;
+            }
+        }
+        @media (max-width: 988px) {
+            .item_content_div{
+                margin:  30px 10% 0 10%;
+            }
+        }
+        @media (max-width: 553px) {
+            .item_content_div{
+                margin: 30px 1% 0 10%;
+            }
+        }
+    </style>
+</head>
+<th:block layout:fragment="content">
+
+
+    <header style="border-top: 1px solid #ccc;">
+        <div style="padding: 20px;">
+            <div style="text-align: center;">
+                <h1 style="font-size: 2.5rem; font-weight: bold;">주문/결제</h1>
+            </div>
+        </div>
+    </header>
+    <div class ="item_content_div">
+        <div  class ="item_content_div_div" >
+            <div style="flex:1">
+
+                <h2>주문 정보 입력</h2>
+                <div style="margin-bottom: 20px; padding: 20px; margin: 10px; border-radius: 10px; background-color: #fff;">
+                    <button style="padding: 3px; float: right;border:1px solid; border-radius: 8px; height: 30px;">최근 배송지
+                        불러오기
+                    </button>
+                    <br>
+                    <input type="text" id="sample6_postcode" placeholder="우편번호">
+                    <input type="button" onclick="sample6_execDaumPostcode()" value="우편번호 찾기"
+                           style="margin-bottom:10px;"><br>
+                    <input type="text" id="sample6_address" placeholder="주소" style="width:350px;margin-bottom:10px;"><br>
+                    <input type="text" id="sample6_detailAddress" placeholder="상세주소">
+                    <input type="text" id="sample6_extraAddress" placeholder="참고항목">
+                </div>
+                <h3>주문 상품</h3>
+                <div style="padding: 20px; border-radius: 10px; background-color: #fff; margin: 10px;">
+                    <div style="display: flex; align-items: center;">
+                        <div name="imgDiv" style="margin-right: 20px;">
+                            <img src="/img/notfound.png" style="width:70px;height: 70px;">
+                        </div>
+                        <div>
+                            <span name="item_name" style="margin-bottom: 5px;margin-top:-15px;"></span>
+                            <span name="quantity" syle="font-size: 12px;">(${item_quantity} 개)</span>
+                            <p name="item_option" style="margin-bottom: -3px;">옵션 ${option} </p>
+                            <p style="margin-bottom: -10px;">
+                                <span name="price" style="font-weight: bold;">원</span>
+                                <span name="normalPrice" style="text-decoration: line-through; font-size: 13px;">원</span>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <div>
+                    <div style="background-color: #f3fff6; padding: 10px; border-radius: 10px;margin: 20px;">
+                        <p style="margin: 0; float: left;">총 주문금액:</p>
+                        <p name ="sumPrice" style="margin: 0; float: right;">00,000 원</p>
+                        <div style="clear: both;"></div>
+                    </div>
                 </div>
             </div>
-            <div class="bootpay-text">
-                <span class="bootpay-inner-text" id="progress-message-text">결제창을 불러오는 중입니다.</span>
-            </div>
-            <div class="bootpay-popup-close" id="__bootpay-popup-close-button__">
-                <button onclick="window.close()">×</button>
+            <div style="flex: 0.4; position: sticky; top: 0; height: 100vh; overflow-y: auto; padding: 20px;">
+                <h2>결제 요약</h2>
+                <div style="border: 1px solid #ccc; padding: 10px; margin-bottom: 20px;">
+                    결제 금액 : <span name="totalPrice">10,000</span>
+                </div>
+                <label style="margin-right: 5px;margin-bottom: 20px;">주문 내용을 확인하였으며, 정보 제공 등에 동의합니다.</label>
+                <button onclick="pay()"
+                        style="display: block; width: 100%; padding: 10px; background-color: #007bff; color: #fff; border: none; border-radius: 5px; cursor: pointer;">
+                    결제하기
+                </button>
             </div>
         </div>
     </div>
-</div>
-</body>
-<script>
 
-    //결제 방식
-    //토스 결제method [토스,카트,
+    <div class="bootpay-window" style="float:left;">
+        <div class="progress-message-window" id="bootpay-progress-message">
+            <div class="progress-message">
+                <div class="bootpay-loading">
+                    <div class="bootpay-loading-spinner">
+                        <svg viewBox="25 25 50 50" class="bootpay-circle" xmlns="http://www.w3.org/2000/svg">
+                            <circle cx="50" cy="50" r="20" fill="none" class="bootpay-path"></circle>
+                        </svg>
+                    </div>
+                </div>
+                <div class="bootpay-text">
+                    <span class="bootpay-inner-text" id="progress-message-text"></span>
+                </div>
+                <div class="bootpay-popup-close" id="__bootpay-popup-close-button__">
+                    <button onclick="window.close()">×</button>
+                </div>
+            </div>
+        </div>
+    </div>
 
-    function init(){
-    const response = Bootpay.requestPayment(
-    {
-      "application_id": "66133191d7005fd6c24ec13f",
-  "price": 1000,
-  "order_name": "테스트결제",
-  "order_id": "TEST_ORDER_ID",
-  "tax_free": 0,
-  "user": {
-    "id": "회원아이디",
-    "username": "회원이름",
-    "phone": "01000000000",
-    "email": "test@test.com"
-  },
-  "items": [
-    {
-      "id": "item_id",
-      "name": "테스트아이템",
-      "qty": 1,
-      "price": 1000
-    }
-  ],
-  "extra": {
-    "open_type": "iframe",
-    "card_quota": "0,2,3",
-    "escrow": false
-  }
-})
+    <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+    <script>
 
-    }
+        var currentUrl = window.location.href;
+        var urlParts = currentUrl.split('/');
 
+        var productId = urlParts[5];
+        var orderId = urlParts[7];
+        var product_name;
+        var product_id;
+        var user_id = authenticationName;
+
+        var user_name;
+        var phone;
+        var email;
+
+        var price;
+        var mainImage;
+        var quantity;
+        var option;
+        var normalPrice ;
+        var deliveryPrice;
+        var deliveryPriceSum=0;
+
+
+        function init() {
+
+            fetch(`/api/user/order/info/`+orderId , {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': getCookie("accessToken")
+                }
+            }).then(response => {
+                console.log(response);
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            }).then(data => {
+
+                console.log(data);
+                user_name = data.name;
+                phone = data.phone;
+                email = data.email;
+
+                mainImage = data.mainImage;
+                product_name = data.itemName;
+                quantity = data.quantity;
+                option = data.option;
+                price = data.price;
+                normalPrice = data.normalPrice;
+                deliveryPrice = data.deliveryPrice;
+                deliveryPriceSum+= deliveryPrice;
+                view();
+            }).catch(error => {
+            });
+        }
+
+        function view(){
+
+            console.log(mainImage+","+product_name+","+quantity+","+option+","+price+","+normalPrice+","+deliveryPrice);
+
+            document.querySelector('span[name="item_name"]').innerText = product_name
+            document.querySelector('span[name="quantity"]').innerText = quantity+" 개";
+            document.querySelector('p[name="item_option"]').innerText = option;
+            document.querySelector('span[name="price"]').innerText = price.toLocaleString();
+            document.querySelector('span[name="normalPrice"]').innerText = normalPrice.toLocaleString();
+            var putPrice =  (price * quantity )+ deliveryPrice;;
+            var formattedPrice = putPrice.toLocaleString(); // "2,170,628"
+            document.querySelector('p[name="sumPrice"]').innerText =formattedPrice.toLocaleString() +" 원";
+            document.querySelector('span[name="totalPrice"]').innerText =formattedPrice.toLocaleString();
+            var mainImg = "http://144.24.93.76/images/" +mainImage;
+            document.getElementsByName("imgDiv")[0].innerHTML =
+                `<img src="${mainImg}" style="width:70px;height: 70px;">`;
+
+
+        }
+
+        function validAddress(){
+            let postCode =  document.getElementById("sample6_postcode").value
+            let address = document.getElementById("sample6_address").value
+            let sample6_detailAddress = document.getElementById("sample6_detailAddress").value
+            return (isNull(postCode) && isNull(address) && isNull(sample6_detailAddress));
+        }
+        function isNull(value){
+            return !(value === null || value === "" || value === " " || value === undefined);
+
+        }
+
+        function pay() {
+
+            // 주문 요청
+            // 결제 요청
+
+            // 주문 페이지 -> 이동
+            // 결제 진행중
+            // 결과 통보 (email)
+
+            if(validAddress()){
+                alert("주문 정보를 입력해주세요.")
+                return ;
+            }
+            let json = {
+                "application_id": "66133191d7005fd6c24ec13f",
+                "price":  (price * quantity ) + deliveryPriceSum,
+                "order_name": product_name,
+                "order_id": orderId,
+                "tax_free": 0,
+                "user": {
+                    "id": authenticationName,
+                    "username": user_name,
+                    "phone": phone,
+                    "email": email
+                },
+                "items": [
+                    {
+                        "id": productId,
+                        "name": product_name,
+                        "qty": quantity,
+                        "price":price
+                    },
+                    {
+                        "id": '-1',
+                        "name": "배송비",
+                        "qty": 1,
+                        "price":deliveryPrice
+                    },
+                ]
+            };
+
+            sout(json);
+
+            const response = Bootpay.requestPayment(json).then((data) =>{
+                sout("boot ->> ")
+                sout(data);
+
+
+                let postCode =  document.getElementById("sample6_postcode").value
+                let address = document.getElementById("sample6_address").value
+                let detailAddress = document.getElementById("sample6_detailAddress").value
+                let extraAddress = document.getElementById("sample6_extraAddress").value
+
+                //discountAmount event coupon 추가 할경우 도있음
+
+                var card = data.card_data;
+                var json = {
+                    productId: productId,
+                    totalPrice:  (price * quantity ) + deliveryPriceSum,
+                    orderId: orderId,
+
+                    //
+                    discountAmount: (normalPrice  *quantity),
+                    vat: 0,
+                    installmentPeriod: 0,
+                    supplyAmount: 0,
+                    exemptAmount: 0,
+                    actualPaymentAmount: (price * quantity ) + deliveryPriceSum,
+                    discounted: isDiscount(),
+                    receiptId: data.receipt_id,
+                    pg: data.pg,
+                    paymentMethod: data.method,
+
+                    //card
+                    pgTid:card.tid,
+                    cardCompany: card.card_company,
+                    cardNumber:card.card_no,
+                    approvalNumber: card.card_approve_no,
+                    cardType: card.card_type,
+                    corporateOrIndividual: card.card_owner_type,
+
+                    //address
+                    zipCode: postCode,
+                    address: address,
+                    detailedAddress: detailAddress,
+                    referenceItems: extraAddress
+
+                };
+
+                // api 서버에 요청
+                fetch("/api/user/order/pay", {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': getCookie("accessToken")
+                    },body:  JSON.stringify(json)
+                }).then(response => {
+                    return response;
+                });
+
+            });
+
+
+            window.location.href ="/order/"
+            console.log(response);
+            /*
+                card_data.
+                    card_approve_no,
+                    card_company,
+                    card_no,
+                    tid : "ttoss20240516080430ZtcF1"
+
+             */
+        }
+        function isDiscount(){
+            return price === normalPrice;
+        }
+
+
+        function sample6_execDaumPostcode() {
+            new daum.Postcode({
+                oncomplete: function (data) {
+                    var addr = '';
+                    var extraAddr = '';
+
+                    if (data.userSelectedType === 'R') {
+                        addr = data.roadAddress;
+                    } else {
+                        addr = data.jibunAddress;
+                    }
+
+                    if (data.userSelectedType === 'R') {
+                        if (data.bname !== '' && /[동|로|가]$/g.test(data.bname)) {
+                            extraAddr += data.bname;
+                        }
+                        if (data.buildingName !== '' && data.apartment === 'Y') {
+                            extraAddr += (extraAddr !== '' ? ', ' + data.buildingName : data.buildingName);
+                        }
+                        if (extraAddr !== '') {
+                            extraAddr = ' (' + extraAddr + ')';
+                        }
+                        document.getElementById("sample6_extraAddress").value = extraAddr;
+
+                    } else {
+                        document.getElementById("sample6_extraAddress").value = '';
+                    }
+
+                    document.getElementById('sample6_postcode').value = data.zonecode;
+                    document.getElementById("sample6_address").value = addr;
+                    document.getElementById("sample6_detailAddress").focus();
+                }
+            }).open();
+        }
 
         init();
-    // 로그인 한 이후 호출되는 함수
-    // 로그인 정보를 부트페이로 전송
-    function LoginAfterCallFunction() {
-        // 로그인 정보를 보내고 부트페이에서 로그인 세션을 받아 데이터를 추적한다.
-        BootPay.startLoginSession({
-            id: '(회원 아이디)',
-            username: '(회원 이름)',
-            birth: '(회원 생년월일)',
-            phone: '(회원 전화번호)',
-            email: '(회원 이메일)',
-            gender: '(회원 성별 1 - 남자, 0 - 여자)',
-            area: '(회원 거주 지역)'
-        });
-    }
 
 
-</script>
+        /*
+        e-commerce 회원 계정으로 부트페이를 이용하여 e-commerce 가맹점에서 제공하는 상품 및 서비스를 구매하고자 할 경우, 부트페이㈜는
+        거래 당사자간 원활한 의사소통 및 배송, 상담 등 거래이행을 위하여 필요한 최소한의 개인정보를 아래와 같이 제공하고 있습니다.
+
+    1. 개인정보를 제공받는 자
+    상품 및 서비스 판매자
+    2. 제공하는 개인정보 항목
+    이름, 아이디, (휴대)전화번호, 상품 구매정보,결제수단, 상품 수령인 정보(배송상품:수령인명, 주소, 쿠폰:이름)
+    3. 개인정보를 제공받는 자의 이용목적
+    판매자와 구매자의 원활한 거래 진행, 본인의사의 확인, 고객상담 및 불만처리/부정이용 방지 등의 고객관리, 물품배송, 새로운 상품/서비스 정보와 고지사항의 안내, 상품/서비스 구매에 따른 혜택 제공
+    4. 개인정보를 제공받는 자의 개인정보 보유 및 이용기간
+    개인정보 이용목적 달성 시까지 보존합니다. 단, 관계 법령의 규정에 의하여 일정 기간 보존이 필요한 경우에는 해당 기간만큼 보관 후 삭제합니다.
+    위 개인정보 제공 동의를 거부할 권리가 있으나, 거부 시 네이버페이를 이용한 상품 및 디지털 콘텐츠 구매가 불가능합니다.
+         */
+    </script>
+</th:block>
 </html>

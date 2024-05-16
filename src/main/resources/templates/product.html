@@ -1,10 +1,316 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/default}">
 <head>
     <meta charset="UTF-8">
-<title>Title</title>
-</head>
-<body>
+    <title>shop</title>
+    <link rel="icon" href="/img/brand.png"/>
+    <link rel="apple-touch-icon" href="/img/brand.png"/><!-- Bootstrap icons-->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css" rel="stylesheet"/>
 
-</body>
+    <!-- Core theme CSS (includes Bootstrap)-->
+    <script src="http://code.jquery.com/jquery-latest.min.js"></script>
+    <link href="/css/shop_temple.css" rel="stylesheet"/>
+</head>
+<th:block layout:fragment="content">
+    <!-- Header-->
+
+    <!-- Section-->
+    <section class="py-5" style="margin: auto; width: 1350px;">
+        <!-- 목표: 상품 상세설명 & 구매 -->
+        <!-- 내부 값들은 API를 통해 받은 정보를 기반으로 표시됩니다 -->
+        <!-- 적당히 가운데 정렬되고, 가로 사이즈는 전체 가로 크기의 70%로 조절됩니다 -->
+        <!-- 세로는 내부 정보에 따라 늘어날 수 있습니다 -->
+
+        <div name="item_category" style="width: 70%; margin: 0 auto; ">
+            <p name="category" style="margin: 21px;"></p>
+        </div>
+
+        <hr style="width: auto; margin: 20px auto;  border-top: 2px solid #828282">
+
+
+        <div name="item_product" style="display: flex; justify-content: center; align-items: flex-start;">
+            <div name="imgDiv" style="flex: 1; display: flex; justify-content: center; width:388px;height:388px;">
+            </div>
+            <div name="item_" style="flex: 1; padding-left: 20px;">
+                <div>
+                    <h2 name="itemName" style="font-size: 1.2rem;">x</h2>
+                    <p>가격:
+                        <del name="normalPrice" style="color: #828282;"></del>
+                        <span name="price"></span>
+                        <span name="sale"></span>
+                    </p>
+
+                    <hr style="width: 90%; margin: 20px auto;    border-top: 2px solid #828282">
+
+                    <p name="deliveryPrice">x</p>
+                    <div>
+                        <button onclick="decreaseQuantity()">-</button>
+                        <input type="text" id="quantity" value="1" style="width: 50px; text-align: center;" readonly>
+                        <button onclick="increaseQuantity()">+</button>
+                    </div>
+                </div>
+                <hr style="width: 90%; margin: 20px auto;    border-top: 2px solid #828282">
+                <div>
+                    <div>
+                        <p>총 상품 금액: <span id="totalPriceDisplay"></span></p>
+                    </div>
+                    <button onclick="item_pay()"
+                            style="width: 430px; background-color: #00de5a;  font-size: 20px; height: 59px;">
+                        구매하기
+                    </button>
+                    <p name="stock">x</p>
+                </div>
+            </div>
+        </div>
+        <br>
+        <!-- 위와 같은 가로 크기를 유지하고, 세로는 계속 늘어날 수 있습니다 -->
+        <hr style="width: 70%; margin: 20px auto;    border-top: 2px solid #828282">
+
+        <div name="item_product_context" style="width: 70%; margin: 0 auto;">
+            <div name="item_product_info" style="margin-bottom: 20px;">
+                <!-- 상품 상세 설명 -->
+                <!-- 표 형태로 표시됩니다 -->
+                <table style="width: 100%;">
+                    <tr>
+                        <td><strong>상품번호</strong></td>
+                        <td name="productId">123456789</td>
+                    </tr>
+                    <tr>
+                        <td><strong>제조사</strong></td>
+                        <td name="maker">Manufacturer B</td>
+                    </tr>
+                    <tr>
+                        <td><strong>원산지</strong></td>
+                        <td name="origin">South Korea</td>
+                    </tr>
+                    <tr>
+                        <td><strong>브랜드</strong></td>
+                        <td name="brand">Brand X</td>
+                    </tr>
+                    <tr>
+                        <td><strong>브랜드 인증 여부</strong></td>
+                        <td name="brandCertification">인증됨</td>
+                    </tr>
+                    <tr>
+                        <td><strong>최소 구매 수량</strong></td>
+                        <td name="minimumPurchaseQuantity">1개</td>
+                    </tr>
+                    <tr>
+                        <td><strong>옵션 상세정보</strong></td>
+                        <td name="optionDetail">Option A, Option B</td>
+                    </tr>
+                </table>
+            </div>
+            <div name="item_product_images" style="margin-bottom: 20px;display: flex;justify-content: center;">
+            </div>
+            <div name="item_seller_info">
+                <!-- 판매자 정보 -->
+                <!-- 표 형태로 표시됩니다 -->
+                <table style="width: 100%;">
+                    <tr>
+                        <td><strong>상호명</strong></td>
+                        <td name="sellerName">Seller A</td>
+                    </tr>
+                    <tr>
+                        <td><strong>대표자</strong></td>
+                        <td name="userId">CEO A</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </section>
+    <!-- Footer-->
+
+    <!-- Bootstrap core JS-->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+
+        var currentUrl = window.location.href;
+        var urlParts = currentUrl.split('/');
+        var productId = urlParts[urlParts.length - 1];
+        var stock = 0;
+        var price = 0;
+        var delivery = 0;
+
+        function item_pay() {
+
+            var quantity = parseInt(document.getElementById("quantity").value);
+            var data ={
+                quantity: quantity,
+                productId: productId
+            };
+
+            var jsonData = JSON.stringify(data);
+            fetch(`/api/user/order` , {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': getCookie("accessToken")
+                },
+                body: jsonData
+            }).then(response => {
+                console.log(response);
+                if(response.status ===  401){
+                    accessRefreshToken();
+
+                    fetch(`/api/user/order`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': getCookie("accessToken")
+                        },
+                        body: jsonData
+                    }).then(response => {
+                        console.log(response);
+                        if (response.status ===  401) {
+                            alert("로그인 후 구매해 주세요. ")
+                            return "/login";
+                        }
+                        return response.json();
+                    }).then(data => {
+                        console.log(data);
+                        window.location.href = "/shop/products/" + productId + "/orders/" + data;
+                    }).catch(error => {
+                        console.error('Error fetching data:', error);
+                    });
+                }
+                return response.json();
+            }).then(data => {
+                console.log(data);
+                window.location.href = "/shop/products/" + productId + "/orders/" +data;
+            }).catch(error => {
+                console.error('Error fetching data:', error);
+            });
+
+        }
+
+        function product_view() {
+            console.log("post");
+            fetch(`/all/products/` + productId, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            })
+                .then(response => {
+                    console.log(response);
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    console.log(data);
+                    displayProductInfo(data);
+                })
+                .catch(error => {
+                    console.error('Error fetching data:', error);
+                });
+        }
+
+        function product_init() {
+            product_view();
+        }
+
+        product_init();
+
+        function titleNameChange(product_name) {
+            document.title = product_name;
+        }
+
+        var category;
+
+        function displayProductInfo(data) {
+            document.querySelector('h2[name="itemName"]').innerText =  data.itemName;
+            document.querySelector('span[name="price"]').innerText = data.price.toLocaleString() + "원"; // 수정: price 값 설정
+
+            document.querySelector('p[name="deliveryPrice"]').innerText = "배송비: " + data.deliveryPrice.toLocaleString() + "원"; // 수정: deliveryPrice 값 설정
+            document.querySelector('p[name="stock"]').innerText = "재고: " + data.stock.toLocaleString() + "개"; // 수정: stock 값 설정
+            document.querySelector('td[name="productId"]').innerText = data.productId;
+
+            document.querySelector('td[name="maker"]').innerText = data.maker;
+            document.querySelector('td[name="origin"]').innerText = data.origin;
+            document.querySelector('td[name="brand"]').innerText = data.brand;
+            document.querySelector('td[name="brandCertification"]').innerText = data.brandCertification ? "인증됨" : "인증되지 않음";
+            document.querySelector('td[name="minimumPurchaseQuantity"]').innerText = data.minimumPurchaseQuantity + "개";
+            document.querySelector('td[name="optionDetail"]').innerText = data.optionDetail;
+            document.querySelector('td[name="sellerName"]').innerText = data.sellerName;
+            document.querySelector('td[name="userId"]').innerText = data.userId;
+
+            stock = data.stock;
+            price = data.price;
+            productId= data.productId;
+            delivery = data.deliveryPrice;
+
+            titleNameChange(data.itemName);
+
+            if (data.normalPrice - data.price !== 0) {
+                var salePercentage = ((data.normalPrice - data.price) / data.normalPrice) * 100;
+                document.querySelector('del[name="normalPrice"]').innerText += data.normalPrice.toLocaleString() + "원";
+                document.querySelector('span[name="sale"]').innerText = " (" + salePercentage.toFixed(0) + "% 할인)";
+            }
+            category = data.categorys;
+            var categoryElements = document.querySelector('p[name="category"]');
+            for (var j = 0; j < category.length; j++) {
+                categoryElements.innerText += data.categorys[j] + " ";
+                if (j !== category.length - 1) {
+                    categoryElements.innerText += "   >  ";
+                }
+            }
+
+            // 구매 수량과 총 상품 금액 업데이트
+            updateTotalPrice();
+
+            // 이미지 업데이트
+            var mainImg = "http://144.24.93.76/images/" + data.mainImageUrl;
+            document.getElementsByName("imgDiv")[0].innerHTML =
+                `<img src="${mainImg}" alt="상품 대표 이미지" style="max-width: 100%; height: auto;">`;
+
+
+            // 추가 이미지 업데이트
+            var itemProductImages = document.getElementsByName("item_product_images")[0];
+            itemProductImages.innerHTML = "";
+            for (var i = 0; i < data.imageContexts.length; i++) {
+                var imgSrc = "http://144.24.93.76/images/" + data.imageContexts[i];
+                itemProductImages.innerHTML +=
+                    `<div style="margin-bottom: 10px;">
+                        <img src="${imgSrc}" alt="상품 내용 이미지${i}" style="max-width: 100%; height: auto;">
+                    </div>`;
+            }
+        }
+
+
+        function decreaseQuantity() {
+            console.log("down");
+            var quantityInput = document.getElementById("quantity");
+            var currentQuantity = parseInt(quantityInput.value);
+            console.log(currentQuantity + " <");
+            if (currentQuantity > 1) {
+                quantityInput.value = currentQuantity - 1;
+                updateTotalPrice();
+            }
+        }
+
+        function increaseQuantity() {
+            console.log("up");
+            var quantityInput = document.getElementById("quantity");
+            var currentQuantity = parseInt(quantityInput.value);
+            console.log(currentQuantity + " < " + stock);
+            if (currentQuantity < stock) {
+                quantityInput.value = currentQuantity + 1;
+                updateTotalPrice();
+            }
+        }
+
+        function updateTotalPrice() {
+            var quantity = parseInt(document.getElementById("quantity").value);
+            var totalPrice = (quantity * price) + delivery;
+            document.getElementById("totalPriceDisplay").textContent = totalPrice.toLocaleString() + "원";
+        }
+
+    </script>
+</th:block>
 </html>

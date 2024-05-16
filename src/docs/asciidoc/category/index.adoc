@@ -1,4 +1,4 @@
-=== 관리자용 카테고리
+=== 카테고리
 :basedir: {docdir}/../../../
 :snippets: {basedir}/build/generated-snippets
 :icons: font
@@ -7,6 +7,7 @@
 :toclevels: 2
 
 
+=== 관리자용 카테고리
 
 ==== 보기
 
@@ -29,3 +30,12 @@ include::admin/delete.adoc[]
 
 include::admin/move.adoc[]
 
+=== 전체 사용자용 카테고리
+
+==== 전체 보기
+
+include::all/find.adoc[]
+
+==== top 카테고리 보기
+
+include::all/findTop.adoc[]
