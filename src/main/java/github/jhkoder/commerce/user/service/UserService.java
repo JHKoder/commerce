@@ -76,6 +76,8 @@ public class UserService {
                 .roleUpdate(role);
     }
 
+
+    @Transactional(readOnly = true)
     public User validEmailAndPhone(String userId) {
         User user = userRepository.findByUserId(userId)
                 .orElseThrow(() -> new ApiException(ErrorCode.USER_NOT_FOUND));
@@ -104,6 +106,7 @@ public class UserService {
         user.updatePassword(encodePassword);
     }
 
+    @Transactional
     public void updatePhone(String userId, String send) {
         userRepository.findByUserId(userId)
                 .orElseThrow(() -> new ApiException(ErrorCode.USER_NOT_FOUND))
@@ -111,15 +114,19 @@ public class UserService {
 
     }
 
+
+    @Transactional
     public void updateEmail(String userId, String send) {
         userRepository.findByUserId(userId)
                 .orElseThrow(() -> new ApiException(ErrorCode.USER_NOT_FOUND))
                 .updateEmail(send);
     }
 
+    @Transactional(readOnly = true)
     public MyPageUserResponse findByMyPageUser(String username) {
         return userRepository.findByUserId(username)
                 .map(MyPageUserResponse::of)
                 .orElseThrow(() -> new ApiException(ErrorCode.USER_NOT_FOUND));
     }
+
 }
