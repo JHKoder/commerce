@@ -2,6 +2,7 @@ package github.jhkoder.commerce.flatform.local.ep.itemproduct.repository;
 
 
 import github.jhkoder.commerce.flatform.local.ep.itemproduct.domain.ItemProduct;
+import github.jhkoder.commerce.image.domain.Images;
 import lombok.RequiredArgsConstructor;
 import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -9,7 +10,10 @@ import org.springframework.stereotype.Repository;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Repository
 @RequiredArgsConstructor
@@ -21,7 +25,18 @@ public class ItemProductJdbcRepository {
             " fast_delivery, regular_delivery, dawn_delivery, isbn, stock) " +
             "VALUES (item_product_id_seq.NEXTVAL, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
+    private static final String selectIdMax = "SELECT MAX(id) FROM item_product";
+    public static final String INSERT_LINKS_SQL =
+            "INSERT INTO item_product_links (item_product_id, links_id) " +
+                    "VALUES (?, ?)";
+
     public void fetchInsert(List<ItemProduct> itemProductList) {
+        Long lastId;
+        try {
+            lastId= jdbcTemplate.queryForObject(selectIdMax, Long.class);
+        }catch (Exception e){
+            lastId =0L;
+        }
 
         jdbcTemplate.batchUpdate(INSERT_SQL, new BatchPreparedStatementSetter() {
             @Override
@@ -56,5 +71,30 @@ public class ItemProductJdbcRepository {
             }
         });
 
+        List<Long> ids = getLongs(lastId, jdbcTemplate, selectIdMax);
+        jdbcTemplate.batchUpdate(INSERT_LINKS_SQL, new BatchPreparedStatementSetter() {
+            @Override
+            public void setValues(PreparedStatement ps, int i) throws SQLException {
+                Long itemProductId = ids.get(i);
+                ps.setLong(1,  ids.get(i));
+                ps.setLong(2, itemProductList.get(i).getLinks().get(0).getId());
+            }
+
+            @Override
+            public int getBatchSize() {
+                return ids.size();
+            }
+        });
+
+    }
+
+
+    public List<Long> getLongs(Long lastId, JdbcTemplate jdbcTemplate, String selectIdMax) {
+        Long lastInsertedId = jdbcTemplate.queryForObject(selectIdMax, Long.class);
+        List<Long> ids = new ArrayList<>();
+        for (Long i = lastId; i < lastInsertedId; i += 50) {
+            ids.add(i);
+        }
+        return ids;
     }
 }

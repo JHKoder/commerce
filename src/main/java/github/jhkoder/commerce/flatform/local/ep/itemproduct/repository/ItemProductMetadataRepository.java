@@ -41,7 +41,7 @@ public class ItemProductMetadataRepository {
     private static final int itemMax = 20_001;
     private static int count = 0;
 
-//    @PostConstruct // 메타 데이터 생성시 주석 제거
+//    @PostConstruct // 메타 데이터 생성시 주석 제거//
     void createMetadata() {
         Random random = new Random();
         List<User> sellers = findBySeller();
@@ -51,6 +51,7 @@ public class ItemProductMetadataRepository {
                 .toList();
 
         long startTimeAll = System.currentTimeMillis();
+
         for (User users : sellers) {
             List<Category> randomCategory = randomTopCategory(categoryBottom);
             addMetadata(users, randomCategory, random);
@@ -183,14 +184,16 @@ public class ItemProductMetadataRepository {
         List<List<Long>> contextImg = new ArrayList<>();
         for (int i = 0; i < links.size(); i += 3) {
             List<Long> linkGroup = new ArrayList<>();
-            for (int j = i; j < Math.min(i + 3, links.size()); j++) {
+            for (int j = 0; j <3 ; j++) {
                 linkGroup.add(links.get(i));
             }
             contextImg.add(linkGroup);
         }
+
         return contextImg;
     }
     /*
+    void repository.batchInsert(List<Data>);
     819ms, 309ms, 447ms
     1595ms
     1.6초
@@ -229,14 +232,14 @@ public class ItemProductMetadataRepository {
         String isbn = "TestISBN";
         int stock = random.nextInt(15000 - 10) + 10;
 
-        return new ItemProduct(mate, randomName(random, mate.getCategoryName()), price, discount(price), orderMode, rentalInfo,
+        return new ItemProduct(mate, randomName(random, mate.getCategoryName()), discount(price,random),price, orderMode, rentalInfo,
                 clickCount, reviewCount, minimumPurchaseQuantity, optionDetail, gender, deliveryPrice,
                 shippingSetting, fastDelivery, regularDelivery, dawnDelivery, isbn, stock);
     }
 
-    public static int discount(int price) {
-
-        double discountAmount = price * (10 / 100.0); // 할인액 계산
+    public static int discount(int price,Random random) {
+        List<Integer> sale =List.of(0,0,0,0,0,0,0,0,0,0,0,5,10,15,20,25);
+        double discountAmount = price * ( sale.get(random.nextInt(sale.size()))/ 100.0); // 할인액 계산
         double discountedPrice = price - discountAmount; // 할인된 가격 계산
         return (int) Math.round(discountedPrice); // 반올림하여 정수로 변환하여 반환
     }

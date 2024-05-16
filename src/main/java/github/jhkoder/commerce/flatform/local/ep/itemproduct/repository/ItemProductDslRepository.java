@@ -81,7 +81,7 @@ public class ItemProductDslRepository {
         List<ProductsCategoryPageResponse> responses = new ArrayList<>();
         for(int i = 0; i < itemProducts.size(); i++){
             ItemProductPageDto product = itemProducts.get(i);
-            responses.add(new ProductsCategoryPageResponse(product.getId(), product.getName(), imgs.get(i), product.getPrice(), product.getPrice(), product.getDeliveryPrice()));
+            responses.add(new ProductsCategoryPageResponse(product.getId(), product.getName(), imgs.get(i), product.getPrice(), product.getNormalPrice(), product.getDeliveryPrice()));
         }
         return new PageImpl<>(responses, page, responses.size());
     }

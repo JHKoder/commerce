@@ -171,6 +171,7 @@ public class ProductApiControllerTest extends RestDocControllerTests {
                 456L,
                 789L,
                 "https://example.com/image",
+                List.of("","",""),
                 "TestItem",
                 10000,
                 "TestMaker",
@@ -192,7 +193,8 @@ public class ProductApiControllerTest extends RestDocControllerTests {
                 false,
                 true,
                 "TestISBN",
-                100
+                100,
+                List.of("2/")
         );
     }
 }
