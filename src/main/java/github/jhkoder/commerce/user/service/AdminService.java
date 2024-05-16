@@ -32,7 +32,7 @@ public class AdminService {
         int total = users.getTotalPages();
 
         List<AdminUsersDashBoardResponse.Users> user = dslRepository
-                .findByPageUsers(pageRequest,Role.SELLER)
+                .findByPageUsers(pageRequest,Role.USER)
                 .getContent()
                 .stream()
                 .map(AdminUsersDashBoardResponse.Users::of)
@@ -70,6 +70,7 @@ public class AdminService {
                 .orElseThrow(() -> new ApiException(ErrorCode.USER_NOT_FOUND));
         UserAuthorizationApplication uaa =  uaaRepository.findByUser(user)
                         .orElseThrow(() -> new ApiException(ErrorCode.ADMIN_TARGET_USER_NO_PERMISSION_REQUEST));
+        //승인 거절 로직 필요
         user.updateRole(uaa.getRole());
     }
 }

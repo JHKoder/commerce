@@ -5,6 +5,7 @@ import github.jhkoder.commerce.cert.domain.CertAuthentication;
 import github.jhkoder.commerce.cert.service.MyPageCertService;
 import github.jhkoder.commerce.mail.service.EmailService;
 import github.jhkoder.commerce.cert.service.request.SignUpCertRequest;
+import github.jhkoder.commerce.security.dto.CurrentUser;
 import github.jhkoder.commerce.sms.service.SmsService;
 import github.jhkoder.commerce.user.domain.Role;
 import github.jhkoder.commerce.user.domain.User;
@@ -34,31 +35,31 @@ public class MyPageUserApiController {
     private final SmsService smsService;
 
     @PostMapping
-    public MyPageUserResponse view(@AuthenticationPrincipal UserDetails userDetails){
-        return userService.findByMyPageUser(userDetails.getUsername());
+    public MyPageUserResponse view(@AuthenticationPrincipal String username){
+        return userService.findByMyPageUser(username);
     }
 
     @PostMapping("/role/seller")
-    public void roleToSellerRequest(@AuthenticationPrincipal UserDetails userDetails) {
-        userService.validEmailAndPhone(userDetails.getUsername());
-        userService.roleUpdate(userDetails.getUsername(), Role.SELLER);
+    public void roleToSellerRequest(@AuthenticationPrincipal String username) {
+        userService.validEmailAndPhone(username);
+        userService.roleUpdate(username, Role.SELLER);
     }
 
     @PostMapping("/role/admin")
-    public void roleToAdminRequest(@AuthenticationPrincipal UserDetails userDetails) {
-        User user = userService.validEmailAndPhone(userDetails.getUsername());
+    public void roleToAdminRequest(@AuthenticationPrincipal String username) {
+        User user = userService.validEmailAndPhone(username);
         uaaService.roleRequest(user, Role.ADMIN);
     }
 
     @PostMapping("/password")
-    public void passwordChange(@AuthenticationPrincipal UserDetails userDetails ,
+    public void passwordChange(@AuthenticationPrincipal String username ,
                         @Valid @RequestBody UserPasswordChangeRequest request){
-        userService.passwordChange(userDetails.getUsername(),request);
+        userService.passwordChange(username,request);
     }
 
     @GetMapping("/auth/check")
-    public ValidEmailAndPhoneResponse isEmailAndPhoneCheck(@AuthenticationPrincipal UserDetails userDetails){
-        return userService.validEmailAndPhoneCheck(userDetails.getUsername());
+    public ValidEmailAndPhoneResponse isEmailAndPhoneCheck(@AuthenticationPrincipal String username){
+        return userService.validEmailAndPhoneCheck(username);
     }
 
     @PostMapping("/sms")
@@ -80,20 +81,20 @@ public class MyPageUserApiController {
     }
 
     @PatchMapping("/sms")
-    public MyPageUpCertVerifyResponse smsCertVerify(@AuthenticationPrincipal UserDetails userDetails ,
+    public MyPageUpCertVerifyResponse smsCertVerify(@AuthenticationPrincipal String username  ,
                                                     @Valid @RequestBody MyPageUserSendValidRequest request){
         MyPageUpCertVerifyResponse response =certService.smsVerifyCodeCheck(request);
         certService.deleteAuthenticationComplete(request,CertAuthentication.PHONE);
-        userService.updatePhone(userDetails.getUsername(),request.send());
+        userService.updatePhone(username,request.send());
         return response;
     }
 
     @PatchMapping("/email")
-    public MyPageUpCertVerifyResponse emailCertVerify(@AuthenticationPrincipal UserDetails userDetails,
+    public MyPageUpCertVerifyResponse emailCertVerify(@AuthenticationPrincipal String username ,
                                                     @Valid @RequestBody MyPageUserSendValidRequest request){
         MyPageUpCertVerifyResponse response = certService.emailVerifyCodeCheck(request);
         certService.deleteAuthenticationComplete(request,CertAuthentication.EMAIL);
-        userService.updateEmail(userDetails.getUsername(),request.send());
+        userService.updateEmail(username,request.send());
         return response;
     }
 
