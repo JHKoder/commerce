@@ -3,6 +3,7 @@ package github.jhkoder.commerce.flatform.local.ep.itemproduct.service;
 import github.jhkoder.commerce.exception.ApiException;
 import github.jhkoder.commerce.exception.ErrorCode;
 import github.jhkoder.commerce.flatform.local.ep.category.domain.Category;
+import github.jhkoder.commerce.flatform.local.ep.category.repository.CategoryRepository;
 import github.jhkoder.commerce.flatform.local.ep.item.domain.Item;
 import github.jhkoder.commerce.flatform.local.ep.itemproduct.domain.ItemProduct;
 import github.jhkoder.commerce.flatform.local.ep.itemproduct.repository.ItemProductDslRepository;
@@ -28,7 +29,7 @@ import java.util.Optional;
 public class ProductService {
     private final ItemProductDslRepository productDslRepository;
     private final ItemProductRepository productRepository;
-    private final ImageJpaRepository imageRepository;
+    private final CategoryRepository categoryRepository;
 
     public Page<ProductsCategoryPageResponse> findCategoryPage(String categoryPath , ProductCategoryPageRequest request) {
 
@@ -41,13 +42,21 @@ public class ProductService {
     public ProductResponse findProduct(Long productId) {
         ItemProduct product = productRepository.findById(productId)
                 .orElseThrow(() -> new ApiException(ErrorCode.PRODUCT_NOT_FOUND));
-        Item item = product.getItem();
 
-        Images images = product.getMainImage();
-        String mainImageLink = images != null ? images.getPath(): "img/notImg.png";
+        String mainImageLink = product.getMainImage() != null ? product.getMainImage().getPath() : "img/notImg.png";
 
-        return ProductResponse.of(product,
-                item,
-                mainImageLink);
+        List<String> imagesContexts = product.getLinks().stream()
+                .map(Images::getPath)
+                .toList();
+
+        List<String> categoryPath = Arrays.stream(product.getCategory().getPath().split("/"))
+                .map(Long::parseLong)
+                .map(categoryRepository::findById)
+                .filter(Optional::isPresent)
+                .map(Optional::get)
+                .map(Category::getName)
+                .toList();
+
+        return ProductResponse.of(product, product.getItem(), mainImageLink, imagesContexts, categoryPath);
     }
 }
