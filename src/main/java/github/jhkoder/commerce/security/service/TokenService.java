@@ -1,5 +1,7 @@
 package github.jhkoder.commerce.security.service;
 
+import github.jhkoder.commerce.exception.ApiException;
+import github.jhkoder.commerce.exception.ErrorCode;
 import github.jhkoder.commerce.security.exception.JwtExpiredTokenException;
 import github.jhkoder.commerce.security.rest.dto.JwtAccessTokenResponse;
 import github.jhkoder.commerce.security.rest.dto.JwtRefreshTokenResponse;
@@ -21,7 +23,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import static java.util.Objects.isNull;
 
@@ -78,34 +79,30 @@ public class TokenService {
         return createToken(username,grantedAuthorities);
     }
 
-
     public JwtRefreshTokenResponse accessTokenRefresh(String accessToken) {
         TokenParserResponse response = this.parserBearerToken(accessToken);
-        var token = createToken(response.username(),response.roles());
-        return new JwtRefreshTokenResponse(token);
+        return new JwtRefreshTokenResponse( createToken(response.username(),response.roles()));
     }
 
     public JwtAccessTokenResponse findAccessToken(String accessToken) {
-        System.out.println(accessToken);
         TokenParserResponse response = this.parserBearerToken(accessToken);
-        System.out.println(response.username());
-        System.out.println(response.roles());
         return new JwtAccessTokenResponse(response.username(),response.roles());
     }
 
     public TokenParserResponse parserToken(String token) throws BadCredentialsException, JwtExpiredTokenException {
+
         try {
-            return tokenParserResponse(
-                    Jwts.parserBuilder()
-                            .setSigningKey(key)
-                            .build()
-                            .parseClaimsJws(token));
-        } catch (SignatureException | UnsupportedJwtException | MalformedJwtException | IllegalArgumentException ex) {
-            throw new BadCredentialsException("Invalid JWT token", ex);
+            return tokenParserResponse(Jwts.parserBuilder()
+                    .setSigningKey(key)
+                    .build()
+                    .parseClaimsJws(token));
+        } catch (SignatureException | IllegalArgumentException | MalformedJwtException | UnsupportedJwtException e){
+            throw new ApiException(ErrorCode.TOKEN_ACCESS_FAIL);
         } catch (ExpiredJwtException expiredEx) {
-            throw new JwtExpiredTokenException("JWT Token expired", expiredEx);
+            throw new ApiException(ErrorCode.TOKEN_ACCESS_EXPIRED_FAIL);
         }
     }
+
 
     public TokenParserResponse parserBearerToken(String token) throws BadCredentialsException, JwtExpiredTokenException {
         return parserToken(extractToken(token));
@@ -123,7 +120,6 @@ public class TokenService {
     private TokenParserResponse tokenParserResponse(Jws<Claims> claimsJws) {
         String username = claimsJws.getBody().getSubject();
         List<String> roles = claimsJws.getBody().get(AUTHORITIES_KEY, List.class);
-
         return new TokenParserResponse(username, roles.stream().map(Role::of).toList());
     }
 
