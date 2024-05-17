@@ -82,7 +82,7 @@ public class SecurityConfig {
                 .requestMatchers("/all/api/token/**").permitAll()
 
                 // 상점 & 카테고리
-                .requestMatchers("/shop","/shop/**").permitAll()
+                .requestMatchers("/shop","/shop/**","/orders","/orders/**").permitAll()
 
                 // 마이페이지
                 .requestMatchers("/mypage/users/**").hasAnyRole(Role.USER.name())
