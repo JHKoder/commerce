@@ -12,23 +12,5 @@ import java.util.List;
 
 import static github.jhkoder.commerce.order.domain.QOrder.order;
 
-@Repository
-@RequiredArgsConstructor
 public class OrderDslRepository {
-    private final JPAQueryFactory factory;
-
-    public List<OrderUserAddressDto> findByUserLimit(User user, Long limit) {
-        return factory
-                .select(Projections.constructor(OrderUserAddressDto.class,
-                        order.zipCode,
-                        order.address,
-                        order.detailedAddress,
-                        order.referenceItems
-                ))
-                .from(order)
-                .where(order.user.eq(user))
-                .orderBy(order.id.desc())
-                .limit(limit)
-                .fetch();
-    }
 }

@@ -7,12 +7,12 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
-@RequestMapping("order")
+@RequestMapping("orders")
 @RequiredArgsConstructor
 public class OrderController {
 
     @GetMapping("/{orderId}")
-    public String get(@PathVariable Long orderId){
+    public String orderPage(@PathVariable Long orderId){
         return "order";
     }
 }

@@ -185,14 +185,15 @@
         init();
 
         function init() {
-            accessToken().then(() => {
-
+            accessToken().then(()  => {
                 console.log(">>> init header login? " + isAuthentication);
                 if (isAuthentication) {
                     showLoggedIn();
                 } else {
                     showLogOut();
                 }
+            }).catch((e) => {
+                showLogOut();
             });
         }
 

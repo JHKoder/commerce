@@ -1,10 +1,168 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layout/default}">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>주문 상세정보</title>
+    <link rel="icon" href="/img/brand.png"/>
+    <link rel="apple-touch-icon" href="/img/brand.png"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
-<body>
+<th:block layout:fragment="content">
+    <h1 style="text-align: center;  margin:50px;">주문 상세정보</h1>
+    <h2 style="text-align: center;  margin:50px;"> ${주문 상태} </h2>
+    <div style="background-color: rgb(242 242 242);">
+        <div class="container" style="padding: 20px;">
+            <div class="box" style="width: 100%; background-color: #f2f2f2; border-radius: 10px; padding: 20px; margin-bottom: 20px;">
+                <h2 style="margin-top: 0; margin-bottom: 15px; font-size: 18px; color: #333;">주문 정보</h2>
+                <div class="inner order-info" style="background-color: #fff; padding: 10px; border-radius: 8px;">
+                    <p style="margin: 5px 0; font-size: 13.5px;color: gray;">날짜: <span id="orderDate" style="color: gray;font-size: 13.5px;"></span></p>
+                    <p style="margin: 5px 0; font-size: 16px;">주문번호: <span id="orderNumber"></span></p>
+                </div>
+            </div>
+            <div class="box" style="width: 100%; background-color: #f2f2f2; border-radius: 10px; padding: 20px; margin-bottom: 20px;">
+                <h2 style="margin-top: 0; margin-bottom: 15px; font-size: 18px; color: #333;">주문상품</h2>
+                <div class="inner" style="background-color: #fff; padding: 10px; border-radius: 8px;" id="productInfoContainer"></div>
+            </div>
+            <div class="box" style="width: 100%; background-color: #f2f2f2; border-radius: 10px; padding: 20px; margin-bottom: 20px;">
+                <h2 style="margin-top: 0; margin-bottom: 15px; font-size: 18px; color: #333;">배송지</h2>
+                <div class="inner" style="background-color: #fff; padding: 10px; border-radius: 8px;">
+                    <p style="margin: 5px 0; font-size: 16px;">이름: <span id="recipientName"></span></p>
+                    <p style="margin: 5px 0; font-size: 16px;">전화번호: <span id="recipientPhone"></span></p>
+                    <p style="margin: 5px 0; font-size: 16px;">주소: <span id="deliveryAddress"></span>, <span id="detailedAddress"></span></p>
+                    <p style="margin: 5px 0; font-size: 16px;">우편번호: <span id="zipcode"></span></p>
+                </div>
+            </div>
+            <div class="box" style="width: 100%; background-color: #f2f2f2; border-radius: 10px; padding: 20px; margin-bottom: 20px;">
+                <h2 style="margin-top: 0; margin-bottom: 15px; font-size: 18px; color: #333;">결제정보</h2>
+                <div class="inner" style="background-color: #fff; padding: 10px; border-radius: 8px;">
+                    <p style="margin: 5px 0; font-size: 16px;">주문금액: <span id="totalAmount" style="float:right"></span></p>
+                    <p style="margin: 5px 0; font-size: 16px;">상품 금액: <span id="totalProductAmount"style="float:right"></span></p>
+                    <p style="margin: 5px 0; font-size: 16px;">배송비: <span id="deliveryFee" style="float:right"></span></p>
+                    <p style="margin: 5px 0; font-size: 16px;">결제 방식: <span id="paymentMethod" style="float:right"></span></p>
+                </div>
+            </div>
+        </div>
+    </div>
 
-</body>
+    <script>
+        var currentUrl = window.location.href;
+        var urlParts = currentUrl.split('/');
+        var orderId = urlParts[4];
+        var receiptId = urlParts[6];
+
+        function init(){
+            orderState();
+            orderInfo();
+        }
+
+        function viewInfo(json){
+            //
+
+            document.getElementById("orderNumber").innerText = json.orderNumber;
+            document.getElementById("orderDate").innerText = formatDate(json.date);
+            document.getElementById("recipientName").innerText = json.recipientName;
+            document.getElementById("recipientPhone").innerText = json.recipientPhoneNumber;
+            document.getElementById("deliveryAddress").innerText = json.address;
+            document.getElementById("detailedAddress").innerText = json.detailedAddress;
+            document.getElementById("zipcode").innerText = json.zipcode;
+            document.getElementById("totalAmount").innerText =  json.actualPaymentAmount.toLocaleString()  + " 원";
+            document.getElementById("paymentMethod").innerText = json.paymentMethod;
+
+            var productInfo = "";
+            var totalProductAmount = 0;
+            var deliveryFee = 0;
+
+            // 상품 정보
+            json.orderProducts.forEach(function(product){
+                let mainImg = "http://144.24.93.76/images/" + product.productImageUrl ;
+                productInfo += "<div class='product-info' style='display: flex; align-items: center; margin-bottom: 10px;'>";
+                productInfo += "<img src='" + mainImg + "' alt='상품 이미지' style='width: 80px; height: 80px; margin-right: 10px; border-radius: 8px;'>";
+                productInfo += "<div>";
+                productInfo += "<p style='margin: 5px 0; font-size: 16px;'>결제 스토어 이름</p>";
+                productInfo += "<p style='margin: 5px 0; font-size: 16px;'>상품 이름: " + product.productName + "</p>";
+                productInfo += "<p style='margin: 5px 0; font-size: 16px;'>옵션: " + product.productOption + ", 개수: "+ product.quantity+" </p>";
+                productInfo += "<p style='margin: 5px 0; font-size: 16px;'>가격: " + product.productPrice.toLocaleString()  + "원</p>";
+                productInfo += "</div>";
+                productInfo += "</div>";
+
+                totalProductAmount += product.productPrice * product.quantity;
+                deliveryFee += product.deliveryPrice;
+            });
+
+            document.getElementById("productInfoContainer").innerHTML = productInfo;
+            document.getElementById("totalProductAmount").innerText = totalProductAmount.toLocaleString() + " 원";
+            document.getElementById("deliveryFee").innerText =  deliveryFee.toLocaleString() + " 원";
+        }
+
+        function viewStateInfo(json){
+
+            // 주문상태{
+
+            /*
+            step -
+            결제 대기
+            - 결제 실패
+            - 결제 취소
+            , 결제 성공
+            , 결제 승인 대기≈
+            - 쉬소된 주문
+            - 네트워크 오류
+             */
+        }
+        function orderState(){
+            fetch("/api/user/order/"+orderId+"/info/state", {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': getCookie("accessToken")
+                }
+            }).then(response => {
+                console.log(response);
+                if(response.ok){
+                    return response.json();
+                }
+                return response;
+            }).then(json => {
+                console.log(json);
+                viewStateInfo(json)
+            });
+        }
+
+        function orderInfo(){
+            // API 서버에 요청
+            fetch("/api/user/order/" + orderId + "/info", {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': getCookie("accessToken")
+                }
+            }).then(response => {
+                console.log(response);
+                if(response.ok){
+                    return response.json();
+                }
+                return response;
+            }).then(json => {
+                console.log(json);
+                viewInfo(json);
+            });
+        }
+
+        init();
+
+        function formatDate(dateString) {
+            var date = new Date(dateString);
+            var year = date.getFullYear();
+            var month = date.getMonth() + 1;
+            var day = date.getDate();
+            var hours = date.getHours();
+            var minutes = date.getMinutes();
+            var seconds = date.getSeconds();
+
+            // 날짜와 시간을 원하는 형식으로 조합하여 반환
+            return year + "." + month + "." + day + ". " + hours + ":" + minutes + ":" + seconds;
+        }
+
+    </script>
+</th:block>
 </html>
