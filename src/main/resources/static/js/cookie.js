@@ -14,8 +14,10 @@ function accessToken() {
                 if (response.ok) {
                     return response.json();
                 }
-                return accessRefreshToken();
+                var res = accessRefreshToken();
+                console.log(res);
             }).then(json => {
+                console.log(json);
                 if (json != null) {
                     isAuthentication = true;
                     authentications = json.authentications;
@@ -34,7 +36,7 @@ function accessTokenRe() {
     var accessToken = getCookie("accessToken");
     console.log("accessTokenRe() token: " + accessToken);
     if (accessToken === null || accessToken === "" || accessToken === " " || accessToken === undefined) {
-        return reject("response");
+        return Promise.reject("response"); // Reject the promise explicitly
     } else {
         return fetchWithToken("/all/api/token/access", accessToken)
             .then(response => {
@@ -42,7 +44,7 @@ function accessTokenRe() {
                     return response.json();
                 } else {
                     deleteCookie("accessToken");
-                    return reject("response");
+                    return Promise.reject("response"); // Reject the promise explicitly
                 }
             }).then(json => {
                 if (json != null) {
@@ -60,8 +62,9 @@ function accessRefreshToken() {
     var accessToken = getCookie("refreshToken");
     if (accessToken === null || accessToken === "" || accessToken === " ") {
         sout("re out")
-        logout();
-        return reject("response");
+        deleteCookie("accessToken");
+        deleteCookie("refreshToken");
+        return Promise.reject("response"); // Reject the promise explicitly
     }
     return fetchWithToken("/all/api/token/refresh", accessToken)
         .then(response => {
