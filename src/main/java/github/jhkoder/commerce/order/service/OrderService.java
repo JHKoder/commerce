@@ -5,14 +5,16 @@ import github.jhkoder.commerce.exception.ErrorCode;
 import github.jhkoder.commerce.flatform.local.ep.itemproduct.domain.ItemProduct;
 import github.jhkoder.commerce.flatform.local.ep.itemproduct.repository.ItemProductRepository;
 import github.jhkoder.commerce.order.domain.Order;
-import github.jhkoder.commerce.order.domain.OrderStatus;
-import github.jhkoder.commerce.order.repository.OrderDslRepository;
+import github.jhkoder.commerce.order.domain.OrderProduct;
+import github.jhkoder.commerce.order.repository.OrderProductRepository;
 import github.jhkoder.commerce.order.repository.OrderRepository;
-import github.jhkoder.commerce.order.service.dto.OrderValidDto;
 import github.jhkoder.commerce.order.service.request.OrderAddRequest;
-import github.jhkoder.commerce.order.service.response.OrderAddResponse;
-import github.jhkoder.commerce.order.service.response.OrderDeliveryListResponse;
+import github.jhkoder.commerce.order.service.request.OrderPayRequest;
 import github.jhkoder.commerce.order.service.response.OrderInfoResponse;
+import github.jhkoder.commerce.order.service.response.OrderPayResponse;
+import github.jhkoder.commerce.order.service.response.OrderResponse;
+import github.jhkoder.commerce.payment.domain.Payment;
+import github.jhkoder.commerce.payment.repository.PaymentRepository;
 import github.jhkoder.commerce.user.domain.User;
 import github.jhkoder.commerce.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -20,64 +22,96 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
 public class OrderService {
 
     private final OrderRepository orderRepository;
-    private final OrderDslRepository orderDslRepository;
     private final UserRepository userRepository;
     private final ItemProductRepository productRepository;
+    private final OrderProductRepository orderProductRepository;
+    private final PaymentRepository paymentRepository;
 
     // 주문 요청
     @Transactional
-    public Long request(String username, OrderAddRequest request) {
+    public Long create(String username, OrderAddRequest request) {
+        var user = findUser(username);
+        var itemProduct = findItem(request);
 
-        User user = userRepository.findByUserId(username)
-                .orElseThrow(() -> new ApiException(ErrorCode.USER_NOT_FOUND));
-
-        ItemProduct itemProduct = productRepository.findById(request.productId())
-                .orElseThrow(() -> new ApiException(ErrorCode.ORDER_NOT_PRODUCT));
-
-        Order order = orderRepository.save(Order.ofNew(itemProduct, user, request.quantity()));
+        var order = createOrder(user);
+        createOrderProduct(request, itemProduct, order);
 
         return order.getId();
     }
 
-    @Transactional(readOnly = true)
-    public boolean isOrderPaid(Long productId, Long orderId) {
-        Optional<Order> orderOptional = orderRepository.findById(orderId);
-        if (orderOptional.isPresent()) {
-            Order order = orderOptional.get();
-            return order.equalsProductId(productId) && !order.getStatus().equals(OrderStatus.STATUS_WAIT);
-        }
-        return false;
+    private OrderProduct createOrderProduct(OrderAddRequest request, ItemProduct itemProduct, Order order) {
+        return orderProductRepository.save(request.toOrderProduct(order, itemProduct));
     }
 
-    @Transactional(readOnly = true)
-    public OrderInfoResponse findUserOrderInfo(String username,Long orderId) {
+    private Order createOrder(User user) {
+        return orderRepository.save(new Order(user));
+    }
 
-        User user = userRepository.findByUserId(username)
+    private ItemProduct findItem(OrderAddRequest request) {
+        return productRepository.findById(request.productId())
+                .orElseThrow(() -> new ApiException(ErrorCode.ORDER_NOT_PRODUCT));
+    }
+
+    private User findUser(String username) {
+        return userRepository.findByUserId(username)
                 .orElseThrow(() -> new ApiException(ErrorCode.USER_NOT_FOUND));
+    }
+
+
+    @Transactional(readOnly = true)
+    public OrderInfoResponse findUserOrderInfo(String username, Long orderId) {
+
+        User user = findUser(username);
 
         Order order = orderRepository.findById(orderId)
                 .orElseThrow(() -> new ApiException(ErrorCode.ORDER_NOT_FOUND));
 
-        if(!order.getUser().getId().equals(user.getId())){
-            throw new ApiException(ErrorCode.NOT_USER_ISSUED_ORDER);
-        }
+        validOrderPay(order, user.getId());
 
-        return OrderInfoResponse.of(user,order.getProduct(),order);
+        OrderProduct orderProduct = orderProductRepository.findById(order.getId())
+                .orElseThrow();
+
+        return OrderInfoResponse.of(user, orderProduct.getProduct(), orderProduct, order);
     }
 
+    @Transactional
+    public OrderPayResponse pay(String username, OrderPayRequest request) {
+        User user = findUser(username);
+
+        Order order = orderRepository.findById(request.orderId())
+                .orElseThrow();
+
+        validOrderPay(order, user.getId());
+
+        Payment payment = paymentRepository.save(request.ofPayment(order));
+        order.updatePay(payment, request.receiptId(), request.zipCode(), request.address(), request.detailedAddress(), request.referenceItems());
+        return new OrderPayResponse(order.getId(), order.getReceiptId());
+    }
+
+    private void validOrderPay(Order order, Long userId) {
+        if (!order.getUser().getId().equals(userId)) {
+            throw new ApiException(ErrorCode.NOT_USER_ISSUED_ORDER);
+        }
+    }
 
     @Transactional(readOnly = true)
-    public List<OrderDeliveryListResponse> findByUserIdGetAddress(String username){
-        User user = userRepository.findByUserId(username)
-                .orElseThrow(() -> new ApiException(ErrorCode.USER_NOT_FOUND));
-        var list = orderDslRepository.findByUserLimit(user,30L);
-        return OrderDeliveryListResponse.of(list);
+    public OrderResponse info(String username, Long orderId) {
+        Order order = orderRepository.findById(orderId)
+                .orElseThrow();
+
+        User user = findUser(username);
+
+        List<OrderProduct> orderProducts = orderProductRepository.findByOrder(order)
+                        .orElseThrow();
+
+        System.out.println("service = item size:" + orderProducts.size());
+
+        return OrderResponse.of(user, order, orderProducts, order.getPayment());
     }
 }
